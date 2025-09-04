@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16
+    container_name: bluum-local
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./src/db/init:/docker-entrypoint-initdb.d
+      - ./src/db/backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # OPTIONAL admin UI – you said "Only Postgres" (as in: only the DB in Docker),
+  # but keeping pgAdmin here is convenient. Remove this service if you truly don’t want it.
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: bluum-admin-local
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_ADMIN_PASSWORD}
+    ports:
+      - "${DB_ADMIN_PORT}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  pg_data:
+  pgadmin_data:
