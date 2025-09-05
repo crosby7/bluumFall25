@@ -6,4 +6,8 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-require __DIR__.'/auth.php';
+Route::get('/nurses', function () {
+    return view('nurses');
+});
+
+//require __DIR__.'/auth.php';

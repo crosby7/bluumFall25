@@ -18,9 +18,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
-
-  # OPTIONAL admin UI – you said "Only Postgres" (as in: only the DB in Docker),
-  # but keeping pgAdmin here is convenient. Remove this service if you truly don’t want it.
+    
   pgadmin:
     image: dpage/pgadmin4:8
     container_name: bluum-admin-local
