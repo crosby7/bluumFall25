@@ -17,15 +17,18 @@
     {{-- Login Card --}}
     <div class="largeCard login close">
         <h2>Welcome Back!</h2>
-        <form class="loginForm">
+        <form class="loginForm" method="POST" action="{{ route('login') }}">
+            @csrf
             <button class="closeButton">X</button>
             <div class="inputGroup">
                 <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" name="loginEmail" required>
+                <input type="email" id="loginEmail" name="email" value="dev@example.com" required>
+                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
             </div>
             <div class="inputGroup">
                 <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="loginPassword" required>
+                <input type="password" id="loginPassword" name="password" value="devpass" required>
+                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
             </div>
             <button type="submit" class="submitButton">Login</button>
         </form>
