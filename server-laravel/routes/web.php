@@ -11,11 +11,13 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 Route::get('/home', function () {
-    return view('screens.home');
+    $patients = \App\Models\User::take(5)->get();
+    return view('screens.home', compact('patients'));
 })->middleware('auth')->name('home');
 
 Route::get('/patients', function () {
-    return view('screens.patients');
+    $patients = \App\Models\User::all();
+    return view('screens.patients', compact('patients'));
 })->middleware('auth')->name('patients');
 
 require __DIR__.'/auth.php';

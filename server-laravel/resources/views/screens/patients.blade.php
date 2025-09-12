@@ -5,13 +5,14 @@
 @section('content')
     <div class="pageHeader"><h2>Patients</h2></div>
     <div class="fullscreenWidget patientsPage">
+        @foreach($patients as $patient)
         <div class="patientCard">
             <div class="patientActionCenter">
                 <div class="patientProfile">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Corgi Icon">
                     <div class="patientInfo">
-                        <h2 class="patientName">Pixel#3501</h2>
-                        <p class="patientRoom">Room 3909</p>
+                        <h2 class="patientName">{{ $patient->name }}</h2>
+                        <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
                     </div>
                 </div>
                 <div class="patientTaskFilters">
@@ -37,5 +38,6 @@
                 </div>
             </div>
         </div>
+        @endforeach
     </div>
 @endsection
