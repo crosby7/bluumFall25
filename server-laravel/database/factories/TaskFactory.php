@@ -21,7 +21,7 @@ class TaskFactory extends Factory
                 'Exersice',
                 'Take your Medicine',
                 'Read for 15 minutes',
-            ]), // e.g. "Iron Sword"
+            ]),
             'description' => '',
             'xp_value' => 100,
             'gem_value' => 100,

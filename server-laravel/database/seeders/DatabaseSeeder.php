@@ -20,7 +20,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'dev',
             'email' => 'dev@example.com',
         ]);
-        User::factory(10)->create();
+        User::factory()->create([
+            'name' => 'Jared Carthalion',
+            'email' => 'jared@example.com',
+        ]);
+        User::factory()->create([
+            'name' => 'Jace Beleren',
+            'email' => 'jace@example.com',
+        ]);
+        User::factory()->create([
+            'name' => 'Lilliana Voss',
+            'email' => 'zombiez@example.com',
+        ]);                       
+        //User::factory(10)->create();
 
         Item::factory(50)->create();
         Inventory::factory(10)->create();

@@ -14,15 +14,16 @@
         <div class="widget inbox">
             <div class="widgetHeader"><h3>Inbox</h3></div>
             <div class="inboxList">
-                {{-- Example Row --}}
+                @foreach($patients->take(3) as $patient)
                 <div class="inboxRow">
                     <img class="inboxProfileIcon" src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
-                    <p class="patientDetails">Pixel#3501 | Room: 3909</p>
+                    <p class="patientDetails">{{ $patient->name }} | Room: {{ 3900 + $patient->id }}</p>
                     <img class="inboxStatusIcon" src="{{ asset('assets/tasks/statusComplete.svg') }}" alt="Status: Complete">
                     <button class="inboxVerifyButton">
                         <img src="{{ asset('assets/tasks/checkmark.svg') }}" alt="Mark Complete">
                     </button>
                 </div>
+                @endforeach
             </div>
             <div class="widgetFooter"><p>View All</p></div>
         </div>
@@ -31,13 +32,15 @@
         <div class="widget patients">
             <div class="widgetHeader"><h3>Patients</h3></div>
             <div class="patientList">
+                @foreach($patients as $patient)
                 <div class="patientCard">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
                     <div class="patientInfo">
-                        <h2 class="patientName">Pixel#3501</h2>
-                        <p class="patientRoom">Room 3909</p>
+                        <h2 class="patientName">{{ $patient->name }}</h2>
+                        <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
                     </div>
                 </div>
+                @endforeach
             </div>
             <div class="widgetFooter"><p>View All</p></div>
         </div>
