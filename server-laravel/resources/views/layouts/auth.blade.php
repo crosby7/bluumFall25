@@ -7,18 +7,6 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
-    {{-- Simple Top Bar --}}
-    <div class="topBar">
-        <div class="topBarLeft">
-            <div class="logo">
-                <img src="{{ asset('assets/common/bluumLogoMain.svg') }}" alt="Bluum">
-            </div>
-        </div>
-        <div class="topBarRight">
-            <div class="profile"><a href="{{ route('home') }}">JD</a></div>
-        </div>
-    </div>
-
     <div class="pageWrapper">
         <div class="pageContent" id="pageContent">
             @yield('content')

@@ -1,12 +1,12 @@
 :root {
-  --background-purple: #2b0868;
-  --search-purple: #553986;
-  --content-background-purple: #51288c;
-  --active-highlight-purple: #802ef6;
-  --border-highlight: #dec7ff66;
-  --transparent-highlight: rgba(255, 255, 255, 0.8);
-  --selectable-highlight: #45286e;
-  --complete-highlight: #11ab45;
+    --background-purple: #2b0868;
+    --search-purple: #553986;
+    --content-background-purple: #51288c;
+    --active-highlight-purple: #802ef6;
+    --border-highlight: #dec7ff66;
+    --transparent-highlight: rgba(255, 255, 255, 0.8);
+    --selectable-highlight: #45286e;
+    --complete-highlight: #11ab45;
 }
 
 /* =========================================== */
@@ -15,32 +15,42 @@
 
 /* Inter Font */
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
-    format("truetype");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
+    font-family: "Inter";
+    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
+        format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* Italic Inter Fontt */
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
-    format("truetype");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
+    font-family: "Inter";
+    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
+        format("truetype");
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
 }
 
 /* DT Getai Grotesk Display for logo */
 @font-face {
-  font-family: "DT Getai Grotesk Display";
-  src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
-    format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "DT Getai Grotesk Display";
+    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
+        format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Outfit Font */
+@font-face {
+    font-family: "Outfit";
+    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf")
+        format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* =========================================== */
@@ -48,429 +58,468 @@
 /* =========================================== */
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 html,
 body {
-  height: 100%;
-  font-family: "Inter", sans-serif;
+    height: 100%;
+    font-family: "Inter", sans-serif;
 }
 
 /* Top bar styles */
 .topBar {
-  display: flex;
-  height: 80px;
-  background-color: var(--background-purple);
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
-
-  .topBarLeft {
     display: flex;
+    height: 80px;
+    background-color: var(--background-purple);
     align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.8);
 
-    .hamburger {
-      cursor: pointer;
-    }
-
-    .logo {
-      width: 160px;
-      cursor: pointer;
-      margin-left: 20px;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-  }
-
-  .topBarRight {
-    display: flex;
-    align-items: center;
-
-    .searchArea {
-      background-color: var(--search-purple);
-      max-width: 580px;
-      width: 580px;
-      border-radius: 20px;
-      display: flex;
-      padding: 0 10px;
-      margin-right: 80px;
-
-      .searchIcon {
-        width: 16px;
+    .topBarLeft {
         display: flex;
         align-items: center;
 
-        img {
-          width: 100%;
-          height: auto;
-          margin-right: 8px;
+        .hamburger {
+            cursor: pointer;
         }
-      }
 
-      input {
-        background-color: var(--search-purple);
-        border: none;
-        color: white;
-        padding: 10px;
-        border-radius: 20px;
-        outline: none;
-        width: calc(100% - 16px);
-      }
+        .logo {
+            width: 160px;
+            cursor: pointer;
+            margin-left: 20px;
 
-      input::placeholder {
-        color: white;
-      }
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
     }
 
-    .searchArea:focus-within {
-      box-shadow: 0 0 8px var(--active-highlight-purple);
-    }
+    .topBarRight {
+        display: flex;
+        align-items: center;
 
-    .profile {
-      width: 30px;
-      height: 30px;
-      border: 2px solid white;
-      background-color: white;
-      border-radius: 30px;
-      text-align: center;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 26px;
+        .searchArea {
+            background-color: var(--search-purple);
+            max-width: 580px;
+            width: 580px;
+            border-radius: 20px;
+            display: flex;
+            padding: 0 10px;
+            margin-right: 80px;
 
-      /* Link tag for testing login - REMOVE */
-      a {
-        text-decoration: none;
-        color: black;
-      }
+            .searchIcon {
+                width: 16px;
+                display: flex;
+                align-items: center;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    margin-right: 8px;
+                }
+            }
+
+            input {
+                background-color: var(--search-purple);
+                border: none;
+                color: white;
+                padding: 10px;
+                border-radius: 20px;
+                outline: none;
+                width: calc(100% - 16px);
+            }
+
+            input::placeholder {
+                color: white;
+            }
+        }
+
+        .searchArea:focus-within {
+            box-shadow: 0 0 8px var(--active-highlight-purple);
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border: 2px solid white;
+            background-color: white;
+            border-radius: 30px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 26px;
+
+            /* Link tag for testing login - REMOVE */
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
     }
-  }
 }
 
 /* Sidebar styles */
 .sidebar {
-  width: 5%;
-  min-width: 40px;
-  background-color: var(--background-purple);
-  color: white;
-  height: 100%;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-
-  a {
-    text-decoration: none;
+    width: 5%;
+    min-width: 40px;
+    background-color: var(--background-purple);
     color: white;
-  }
-
-  .createButton {
-    background-color: var(--active-highlight-purple);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border: none;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
+    height: 100%;
     transition: all 0.3s ease;
-    cursor: pointer;
-
-    img {
-      width: 30px;
-      height: 30px;
-      background: none;
-    }
-
-    span {
-      display: none;
-    }
-  }
-
-  .homeButton,
-  .patientsButton,
-  .inboxButton {
+    overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    transition: all 0.3s ease;
+    gap: 10px;
+    padding: 10px;
 
-    img {
-      width: 30px;
-      height: 30px;
-      background: none;
+    a {
+        text-decoration: none;
+        color: white;
     }
 
-    span {
-      display: none;
+    .createButton {
+        background-color: var(--active-highlight-purple);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border: none;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        img {
+            width: 30px;
+            height: 30px;
+            background: none;
+        }
+
+        span {
+            display: none;
+        }
     }
-  }
+
+    .homeButton,
+    .patientsButton,
+    .inboxButton {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        transition: all 0.3s ease;
+
+        img {
+            width: 30px;
+            height: 30px;
+            background: none;
+        }
+
+        span {
+            display: none;
+        }
+    }
 }
 
 .sidebar.open {
-  width: 15%;
-  min-width: 120px;
-  padding: 20px;
-  align-items: flex-start;
+    width: 15%;
+    min-width: 120px;
+    padding: 20px;
+    align-items: flex-start;
 
-  .createButton {
-    width: 110px;
-    height: 50px;
-    border-radius: 40px;
-    padding: 0 10px;
+    .createButton {
+        width: 110px;
+        height: 50px;
+        border-radius: 40px;
+        padding: 0 10px;
 
-    span {
-      display: inline;
-      margin-left: 8px;
+        span {
+            display: inline;
+            margin-left: 8px;
+        }
     }
-  }
 
-  .homeButton,
-  .patientsButton,
-  .inboxButton {
-    width: 110px;
-    height: 50px;
-    padding: 0 10px;
+    .homeButton,
+    .patientsButton,
+    .inboxButton {
+        width: 110px;
+        height: 50px;
+        padding: 0 10px;
 
-    span {
-      display: inline;
-      margin-left: 8px;
+        span {
+            display: inline;
+            margin-left: 8px;
+        }
     }
-  }
 }
 
 /* Common Page Content Styles */
 .pageWrapper {
-  display: flex;
-  height: calc(100vh - 80px);
-  overflow: hidden;
-  background-color: var(--content-background-purple);
+    display: flex;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    background-color: var(--content-background-purple);
 }
 
 .pageContent {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  transition: flex 0.3s ease;
-  color: white;
-  padding: 20px 60px;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    transition: flex 0.3s ease;
+    color: white;
+    padding: 20px 60px;
 }
 
 .pageHeader {
-  display: flex;
-  width: 100%;
-  position: relative;
-  margin-top: 10px;
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin-top: 10px;
 
-  h2 {
-    font-size: 28px;
-  }
+    h2 {
+        font-size: 28px;
+    }
 }
 
 .close {
-  display: none;
+    display: none;
 }
 
 button {
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  border: 1px solid var(--border-highlight);
-  border-radius: 5px;
-  font-family: "Inter", sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    border: 1px solid var(--border-highlight);
+    border-radius: 5px;
+    font-family: "Inter", sans-serif;
 }
 
 button:hover {
-  background-color: var(--active-highlight-purple);
-  border: 1px solid white;
+    background-color: var(--active-highlight-purple);
+    border: 1px solid white;
 }
 
 .largeCard {
-  width: 580px;
-  height: 600px;
-  background-color: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 20px;
-  padding: 20px;
-
-  .closeButton {
+    width: 580px;
+    height: 600px;
+    background-color: white;
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
-    background-color: var(--active-highlight-purple);
-    border: none;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    font-family: "DT Getai Grotesk Display", sans-serif;
-    line-height: 30px;
-  }
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    padding: 20px;
 
-  h2 {
-    margin: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-    color: black;
-    text-align: center;
-  }
+    .closeButton {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        background-color: var(--active-highlight-purple);
+        border: none;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        line-height: 30px;
+    }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .inputGroup {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-
-      label {
-        font-size: 14px;
-        font-weight: 600;
+    h2 {
+        margin: 20px 0;
+        font-size: 24px;
+        font-weight: bold;
         color: black;
-      }
-
-      input,
-      select,
-      textarea {
-        padding: 10px;
-        border: 1px solid var(--border-highlight);
-        background-color: var(--border-highlight);
-        border-radius: 5px;
-        font-size: 14px;
-        outline: none;
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border: 1px solid var(--active-highlight-purple);
-        box-shadow: 0 0 8px var(--active-highlight-purple);
-      }
-
-      textarea {
-        resize: vertical;
-        min-height: 80px;
-      }
+        text-align: center;
     }
 
-    .submitButton {
-      width: 120px;
-      height: 40px;
-      font-size: 16px;
-      align-self: center;
-      background-color: var(--active-highlight-purple);
-      border: 2px solid var(--border-highlight);
-      margin-top: 10px;
-    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
 
-    .submitButton:hover {
-      background-color: white;
-      color: var(--active-highlight-purple);
-      border: 2px solid var(--active-highlight-purple);
+        .inputGroup {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            label {
+                font-size: 14px;
+                font-weight: 600;
+                color: black;
+            }
+
+            input,
+            select,
+            textarea {
+                padding: 10px;
+                border: 1px solid var(--border-highlight);
+                background-color: var(--border-highlight);
+                border-radius: 5px;
+                font-size: 14px;
+                outline: none;
+            }
+
+            input:focus,
+            select:focus,
+            textarea:focus {
+                border: 1px solid var(--active-highlight-purple);
+                box-shadow: 0 0 8px var(--active-highlight-purple);
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+        }
+
+        .submitButton {
+            width: 120px;
+            height: 40px;
+            font-size: 16px;
+            align-self: center;
+            background-color: var(--active-highlight-purple);
+            border: 2px solid var(--border-highlight);
+            margin-top: 10px;
+        }
+
+        .submitButton:hover {
+            background-color: white;
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
     }
-  }
 }
 
 .fullscreenWidget {
-  width: 100%;
-  min-height: 300px;
-  background-color: var(--background-purple);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
+    width: 100%;
+    min-height: 300px;
+    background-color: var(--background-purple);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
 }
 
 /* =========================================== */
 /* Login Page styles */
 /* =========================================== */
 .centralHeader {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
 }
 
 .centralLogo {
-  width: 300px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
 
-  img {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    animation: spinWithPause 12s linear infinite alternate;
-  }
+    img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+    }
 
-  .logoText {
-    font-family: "DT Getai Grotesk Display", sans-serif;
-    font-size: 48px;
-    color: white;
-    line-height: 48px;
-  }
+    .logoText {
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        font-size: 80px;
+        color: white;
+        line-height: 40px;
+    }
 }
 
-@keyframes spinWithPause {
-  0% {
-    transform: rotate(0deg);
-  }
-  20% {
-    transform: rotate(360deg);
-  }
-  50% {
-    transform: rotate(360deg);
-  }
-  70% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+.centralTagline {
+    font-family: "Outfit", "Inter", sans-serif;
+    font-size: 26px;
 }
 
-.loginButtons {
-  display: flex;
-  gap: 20px;
+. .loginButtons {
+    display: flex;
+    gap: 20px;
+    font-family: "Outfit", "Inter", sans-serif;
 
-  button {
-    width: 120px;
-    height: 40px;
-    font-size: 16px;
-    color: white;
-  }
+    button {
+        width: 120px;
+        height: 40px;
+        font-size: 16px;
+        color: white;
+    }
+}
+
+/* Rotating SVGs on Login Page */
+.decorativeShapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.rotatingShape {
+    position: absolute;
+}
+
+.yellowFlower {
+    bottom: -100px;
+    left: -100px;
+}
+
+.pinkFlower {
+    top: -100px;
+    left: -100px;
+}
+
+.blueTriangle {
+    top: -100px;
+    right: -100px;
+}
+
+.greenAsterisk {
+    bottom: -100px;
+    right: -100px;
+}
+
+.clockwise {
+    animation: spin 20s linear infinite;
+}
+
+.counterClockwise {
+    animation: spin 20s linear infinite reverse;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* =========================================== */
@@ -479,168 +528,168 @@ button:hover {
 
 /* Header Variant Styles */
 .pageHeader p {
-  background-color: var(--active-highlight-purple);
-  padding: 10px 30px;
-  margin: 0;
-  border-radius: 25px;
-  font-size: 18px;
+    background-color: var(--active-highlight-purple);
+    padding: 10px 30px;
+    margin: 0;
+    border-radius: 25px;
+    font-size: 18px;
 
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .greeting {
-  font-size: 30px;
-  font-weight: 600;
-  width: 100%;
-  text-align: center;
-  margin: 30px 0;
+    font-size: 30px;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    margin: 30px 0;
 }
 
 /* Widget Area Styles */
 .widgetArea {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .widget {
-  width: 530px;
-  height: 430px;
-  background-color: var(--background-purple);
-  border-radius: 10px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+    width: 530px;
+    height: 430px;
+    background-color: var(--background-purple);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
 }
 
 .widgetHeader {
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 
-  h3 {
-    font-size: 22px;
-  }
+    h3 {
+        font-size: 22px;
+    }
 }
 
 .widgetFooter {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 /* Home Inbox Widget Styles */
 .inboxList {
-  flex: 1;
-  overflow-y: auto;
-  border-top: 1px solid var(--border-highlight);
+    flex: 1;
+    overflow-y: auto;
+    border-top: 1px solid var(--border-highlight);
 }
 
 .inboxRow {
-  width: 100%;
-  height: 50px;
-  display: flex;
-  border-bottom: 1px solid var(--border-highlight);
-  justify-content: space-between;
-  margin: 0 auto;
-  align-items: center;
-  padding: 0 10px;
-
-  .inboxProfileIcon {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-  }
-
-  .patientDetails {
-    background-color: rgba(255, 255, 255, 0.1);
-    height: 30px;
-    line-height: 30px;
-    border-radius: 5px;
-    font-size: 13px;
-    padding: 0 10px;
-    cursor: default;
-  }
-
-  .inboxStatusIcon {
-    width: 30px;
-    height: 30px;
-  }
-
-  /* On the Patients Page */
-  .inboxStatus {
-    height: 30px;
-    background-color: var(--complete-highlight);
+    width: 100%;
+    height: 50px;
     display: flex;
+    border-bottom: 1px solid var(--border-highlight);
+    justify-content: space-between;
+    margin: 0 auto;
     align-items: center;
-    gap: 5px;
     padding: 0 10px;
-    border-radius: 20px;
 
-    img {
-      width: 20px;
-      height: 20px;
+    .inboxProfileIcon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
     }
 
-    .statusText {
-      color: white;
-      font-size: 11px;
-      cursor: default;
+    .patientDetails {
+        background-color: rgba(255, 255, 255, 0.1);
+        height: 30px;
+        line-height: 30px;
+        border-radius: 5px;
+        font-size: 13px;
+        padding: 0 10px;
+        cursor: default;
     }
-  }
 
-  .inboxVerifyButton {
-    width: 55px;
-    height: 30px;
-  }
-
-  /* On the Patients Page */
-  .inboxVerify {
-    height: 30px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
-    .verifyText {
-      color: white;
-      font-size: 13px;
+    .inboxStatusIcon {
+        width: 30px;
+        height: 30px;
     }
-  }
+
+    /* On the Patients Page */
+    .inboxStatus {
+        height: 30px;
+        background-color: var(--complete-highlight);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0 10px;
+        border-radius: 20px;
+
+        img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .statusText {
+            color: white;
+            font-size: 11px;
+            cursor: default;
+        }
+    }
+
+    .inboxVerifyButton {
+        width: 55px;
+        height: 30px;
+    }
+
+    /* On the Patients Page */
+    .inboxVerify {
+        height: 30px;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .verifyText {
+            color: white;
+            font-size: 13px;
+        }
+    }
 }
 
 /* Home Patients Widget Styles */
 .patientList {
-  flex: 1;
-  overflow-y: auto;
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  align-items: start;
-  align-content: start;
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    align-items: start;
+    align-content: start;
 
-  .patientCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 75px;
-    border-radius: 10px;
-    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
-    cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    .patientCard {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        background-color: rgba(255, 255, 255, 0.2);
+        height: 75px;
+        border-radius: 10px;
+        filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.3);
 
-    h2 {
-      font-size: 22px;
+        h2 {
+            font-size: 22px;
+        }
     }
-  }
 
-  .patientCard:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid white;
-  }
+    .patientCard:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 2px solid white;
+    }
 }
 
 /* =========================================== */
@@ -648,65 +697,65 @@ button:hover {
 /* =========================================== */
 
 .patientCard {
-  width: 100%;
-  min-height: 300px;
-  border-bottom: 2px solid var(--border-highlight);
+    width: 100%;
+    min-height: 300px;
+    border-bottom: 2px solid var(--border-highlight);
 
-  .patientActionCenter {
-    height: 110px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-
-    .patientProfile {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .patientInfo {
+    .patientActionCenter {
+        height: 110px;
         display: flex;
-        flex-direction: column;
-        cursor: default;
-      }
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+
+        .patientProfile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            img {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .patientInfo {
+                display: flex;
+                flex-direction: column;
+                cursor: default;
+            }
+        }
+
+        .patientTaskFilters {
+            display: flex;
+            gap: 20px;
+
+            .filterButton {
+                min-width: 90px;
+                height: 40px;
+                padding: 20px;
+                line-height: 0px;
+                font-size: 14px;
+                border-radius: 20px;
+                color: white;
+                background-color: var(--selectable-highlight);
+                border: none;
+            }
+
+            .filterButton.activeFilter {
+                background-color: var(--active-highlight-purple);
+                border: 1px solid white;
+                font-weight: bold;
+            }
+        }
+
+        .newTaskButton {
+            width: 120px;
+            height: 60px;
+            color: white;
+            font-size: 16px;
+            background-color: transparent;
+            border: none;
+        }
     }
-
-    .patientTaskFilters {
-      display: flex;
-      gap: 20px;
-
-      .filterButton {
-        min-width: 90px;
-        height: 40px;
-        padding: 20px;
-        line-height: 0px;
-        font-size: 14px;
-        border-radius: 20px;
-        color: white;
-        background-color: var(--selectable-highlight);
-        border: none;
-      }
-
-      .filterButton.activeFilter {
-        background-color: var(--active-highlight-purple);
-        border: 1px solid white;
-        font-weight: bold;
-      }
-    }
-
-    .newTaskButton {
-      width: 120px;
-      height: 60px;
-      color: white;
-      font-size: 16px;
-      background-color: transparent;
-      border: none;
-    }
-  }
 }
