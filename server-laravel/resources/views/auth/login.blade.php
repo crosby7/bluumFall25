@@ -4,11 +4,13 @@
 
 @section('content')
     <div class="centralHeader">
-        <div class="centralLogo">
+        <div class="loginBanner">
+            <div class="centralLogo">
             <img class="logoFlower" src="{{ asset('assets/common/bluumFlower.svg') }}" alt="">
             <h3 class="logoText">Bluum</h3>
         </div>
         <p class="centralTagline">Inpatient Companion for Kids</p>
+        </div>
         <div class="loginButtons">
             <button class="loginButton">Login</button>
             <button class="registerButton">Register</button>
