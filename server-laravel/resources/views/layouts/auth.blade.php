@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
-    <div class="fullPage">
+    <div class="fullPage loginPage">
         <div class="pageContent" id="pageContent">
             @yield('content')
         </div>

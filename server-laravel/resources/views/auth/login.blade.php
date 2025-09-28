@@ -27,31 +27,27 @@
 
     {{-- Login Card --}}
     <div class="largeCard login close">
-        <h2>Sign into Bluum</h2>
         <form class="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
             <button class="closeButton">X</button>
+            <h2>Sign into Bluum</h2>
             <div class="inputGroup">
                 <input type="email" id="loginEmail" name="email" placeholder="Email" value="dev@example.com" required>
                 {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
-            </div>
-            <div class="inputGroup">
                 <input type="password" id="loginPassword" name="password" placeholder="Password" value="devpass" required>
                 {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
             </div>
-            <button type="submit" class="submitButton">Login</button>
+            <button type="submit" class="submitButton">Log In</button>
         </form>
     </div>
 
     {{-- Register Card --}}
     <div class="largeCard register close">
-        <h2>Register with Bluum</h2>
         <form class="registerForm">
             <button class="closeButton">X</button>
+            <h2>Register with Bluum</h2>
             <div class="inputGroup">
                 <input type="email" id="registerEmail" name="registerEmail" placeholder="Email" required>
-            </div>
-            <div class="inputGroup">
                 <input type="password" id="registerPassword" name="registerPassword" placeholder="Password" required>
             </div>
             <button type="submit" class="submitButton">Register</button>
