@@ -40,4 +40,49 @@
         </div>
         @endforeach
     </div>
+
+    {{-- Pop Up for New Patient Initialization --}}
+    <div class="largeCard">
+        <button class="closeButton">X</button>
+        <form class="newPatientForm">
+            <div class="formInputs">
+                <div class="patientIDRow">
+                    <input type="text" id="patientID" name="patientID" value="#3768" readonly>
+                    <label for="patientID">
+                        <div class="patientIDLabel">
+                            <h4>Patient ID</h4>
+                            <p>Auto Generated</p>
+                        </div>
+                    </label>
+                </div>
+                <div class="inputGroup">
+                    <label for="patientContact">Patient Contact</label>
+                    <input type="text" id="patientContact" name="patientContact" placeholder="Enter email..." required>
+                </div>
+                <div class="inputGroup">
+                    <label for="roomNumber">Room Number</label>
+                    <select name="roomNumber" id="roomNumber">
+                        <option value="" disabled selected>Select room...</option>
+                        <option value="3901">Room 3901</option>
+                        <option value="3902">Room 3902</option>
+                        <option value="3903">Room 3903</option>
+                        <option value="3904">Room 3904</option>
+                        <option value="3905">Room 3905</option>
+                        <option value="3906">Room 3906</option>
+                        <option value="3907">Room 3907</option>
+                        <option value="3908">Room 3908</option>
+                        <option value="3909">Room 3909</option>
+                    </select>
+                </div>
+                <div class="inputGroup">
+                    <label for="patientNotes">Notes</label>
+                    <textarea id="patientNotes" name="patientNotes" placeholder="Anything to add about this patient..." required></textarea>
+                </div>
+            </div>
+            <div class="submitButtons">
+                <button type="submit" class="submitButton">Create Patient</button>
+                <button type="button" class="cancelButton">Cancel</button>
+            </div>
+        </form>
+    </div>
 @endsection

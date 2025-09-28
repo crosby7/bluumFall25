@@ -26,7 +26,7 @@
     </div>
 
     {{-- Login Card --}}
-    <div class="largeCard login close">
+    <div class="loginPageCard login close">
         <form class="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
             <button class="closeButton">X</button>
@@ -42,7 +42,7 @@
     </div>
 
     {{-- Register Card --}}
-    <div class="largeCard register close">
+    <div class="loginPageCard register close">
         <form class="registerForm">
             <button class="closeButton">X</button>
             <h2>Register with Bluum</h2>
