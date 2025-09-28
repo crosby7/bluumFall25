@@ -16,10 +16,10 @@
 
         {{-- Decorative Shapes --}}
         <div class="decorativeShapes">
-            <img src="{{ asset('assets/common/yellowFlower.svg') }}" alt="" class="yellowFlower rotatingShape clockwise">
-            <img src="{{ asset('assets/common/pinkFlower.svg') }}" alt="" class="pinkFlower rotatingShape clockwise">
-            <img src="{{ asset('assets/common/blueTriangle.svg') }}" alt="" class="blueTriangle rotatingShape counterClockwise">
-            <img src="{{ asset('assets/common/greenAsterisk.svg') }}" alt="" class="greenAsterisk rotatingShape counterClockwise">
+            <img src="{{ asset('assets/common/yellowShape.svg') }}" alt="" class="yellowShape rotatingShape clockwise">
+            <img src="{{ asset('assets/common/pinkShape.svg') }}" alt="" class="pinkShape rotatingShape counterClockwise">
+            <img src="{{ asset('assets/common/purpleShape.svg') }}" alt="" class="purpleShape rotatingShape clockwise">
+            <img src="{{ asset('assets/common/greenShape.svg') }}" alt="" class="greenShape rotatingShape counterClockwise">
         </div>
     </div>
 

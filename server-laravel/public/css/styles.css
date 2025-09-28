@@ -73,6 +73,18 @@ body {
     font-family: "Inter", sans-serif;
 }
 
+/* Hide all scrollbars everywhere */
+body, html, * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* Top bar styles */
 .topBar {
     display: flex;
@@ -274,6 +286,14 @@ body {
     background-color: var(--content-background-purple);
 }
 
+/* for fullscreen pages (no topbar) */
+.fullPage {
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    background-color: var(--content-background-purple);
+}
+
 .pageContent {
     width: 100%;
     height: 100%;
@@ -428,6 +448,7 @@ button:hover {
     align-items: center;
     gap: 20px;
     text-align: center;
+    z-index: 10;
 }
 
 .centralLogo {
@@ -437,6 +458,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     gap: 30px;
+    z-index: 10;
 
     img {
         width: 100px;
@@ -455,12 +477,14 @@ button:hover {
 .centralTagline {
     font-family: "Outfit", "Inter", sans-serif;
     font-size: 26px;
+    z-index: 10;
 }
 
-. .loginButtons {
+.loginButtons {
     display: flex;
     gap: 20px;
     font-family: "Outfit", "Inter", sans-serif;
+    z-index: 10;
 
     button {
         width: 120px;
@@ -485,24 +509,40 @@ button:hover {
     position: absolute;
 }
 
-.yellowFlower {
-    bottom: -100px;
-    left: -100px;
+.yellowShape {
+    bottom: 0;
+    left: 0;
+    width: 650px;
+    height: 650px;
+    margin-bottom: -200px;
+    margin-left: -250px;
 }
 
-.pinkFlower {
-    top: -100px;
-    left: -100px;
+.pinkShape {
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 350px;
+    margin-top: -100px;
+    margin-left: -125px;
 }
 
-.blueTriangle {
-    top: -100px;
-    right: -100px;
+.purpleShape {
+    top: 0;
+    right: 0;
+    width: 330px;
+    height: 330px;
+    margin-top: -100px;
+    margin-right: -100px;
 }
 
-.greenAsterisk {
-    bottom: -100px;
-    right: -100px;
+.greenShape {
+    bottom: 0;
+    right: 0;
+    width: 260px;
+    height: 260px;
+    margin-bottom: -70px;
+    margin-right: -70px;
 }
 
 .clockwise {
