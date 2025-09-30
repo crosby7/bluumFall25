@@ -26,10 +26,10 @@
     </div>
 
     {{-- Login Card --}}
-    <div class="loginPageCard login close">
+    <div class="loginPageCard popUp login close">
         <form class="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
-            <button class="closeButton">X</button>
+            <button class="closeButton xButton" type="button">X</button>
             <h2>Sign into Bluum</h2>
             <div class="inputGroup">
                 <input type="email" id="loginEmail" name="email" placeholder="Email" value="dev@example.com" required>
@@ -42,9 +42,9 @@
     </div>
 
     {{-- Register Card --}}
-    <div class="loginPageCard register close">
+    <div class="loginPageCard popUp register close">
         <form class="registerForm">
-            <button class="closeButton">X</button>
+            <button class="closeButton xButton" type="button">X</button>
             <h2>Register with Bluum</h2>
             <div class="inputGroup">
                 <input type="email" id="registerEmail" name="registerEmail" placeholder="Email" required>

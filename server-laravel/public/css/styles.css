@@ -346,7 +346,7 @@ button:hover {
     padding: 30px;
     z-index: 99;
 
-    .closeButton {
+    .xButton {
         position: absolute;
         top: 30px;
         right: 30px;
@@ -431,6 +431,16 @@ button:hover {
     }
 }
 
+.popUpRegion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 98;
+}
+
 .largeCard {
   position: absolute;
     width: 580px;
@@ -444,13 +454,13 @@ button:hover {
     padding: 30px;
     z-index: 99;
 
-    .closeButton {
+    .xButton {
         position: absolute;
         top: 30px;
         right: 30px;
         width: 35px;
         height: 35px;
-        background-color: black;
+        background-color: var(--active-highlight-purple);
         border: none;
         border-radius: 35px;
         display: flex;

@@ -15,14 +15,20 @@ if (toggleBtn) {
 // Large Cards: close button functionality
 const closeButtons = document.querySelectorAll(".closeButton");
 
-closeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    console.log("close button clicked");
-    centralHeader.classList.toggle("close");
-    button.closest(".largeCard").classList.toggle("close");
-    loginButtonDiv.classList.remove("close");
+if (closeButtons) {
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log("close button clicked");
+      button.closest(".popUp").classList.toggle("close");
+      if (button.closest(".popUp").parentElement.classList.contains("popUpRegion")) {
+        button.closest(".popUpRegion").classList.toggle("close");
+      }
+      if (loginButtonDiv) {
+        loginButtonDiv.classList.remove("close");
+      }
+    });
   });
-});
+}
 
 // Temp: submit button will just close the large card
 const submitButtons = document.querySelectorAll(".submitButton");
@@ -31,14 +37,18 @@ if (submitButtons) {
   submitButtons.forEach((button) => {
   button.addEventListener("click", () => {
     console.log("submit button clicked");
-    centralHeader.classList.toggle("close");
-    button.closest(".largeCard").classList.toggle("close");
-    loginButtonDiv.classList.remove("close");
+    button.closest(".popUp").classList.toggle("close");
+    if (button.closest(".popUp").parentElement.classList.contains("popUpRegion")) {
+      button.closest(".popUpRegion").classList.toggle("close");
+    }
+    if (loginButtonDiv) {
+      loginButtonDiv.classList.remove("close");
+    }
   });
 });
 }
 
-// login and register buttons will close header and open large card
+// login and register buttons will open popup card
 if (loginButton) {
   loginButton.addEventListener("click", () => {
   console.log("login button clicked");

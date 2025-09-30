@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Nurses App')</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/common/bluumFlower.svg') }}">
 </head>
 <body>
     {{-- Top Bar --}}
