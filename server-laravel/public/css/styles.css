@@ -19,8 +19,7 @@
 /* Inter Font */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -29,8 +28,7 @@
 /* Italic Inter Fontt */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: italic;
     font-display: swap;
@@ -39,8 +37,7 @@
 /* DT Getai Grotesk Display for logo */
 @font-face {
     font-family: "DT Getai Grotesk Display";
-    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
-        format("truetype");
+    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -49,8 +46,7 @@
 /* Outfit Font */
 @font-face {
     font-family: "Outfit";
-    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -64,6 +60,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 html,
 body {
     height: 100%;
@@ -72,15 +69,17 @@ body {
 }
 
 /* Hide all scrollbars everywhere */
-body, html, * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+body,
+html,
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 body::-webkit-scrollbar,
 html::-webkit-scrollbar,
 *::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 /* Top bar styles */
@@ -291,10 +290,10 @@ html::-webkit-scrollbar,
     background-color: var(--content-background-purple);
 
     .pageContent {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 }
 
@@ -337,7 +336,7 @@ button:hover {
 }
 
 .loginPageCard {
-  position: relative;
+    position: relative;
     width: 580px;
     height: 600px;
     background-color: white;
@@ -442,7 +441,7 @@ button:hover {
 }
 
 .largeCard {
-  position: absolute;
+    position: absolute;
     width: 580px;
     height: 600px;
     top: 50%;
@@ -510,6 +509,7 @@ button:hover {
             display: flex;
             flex-direction: column;
             gap: 5px;
+            min-width: 100px;
 
             label {
                 color: black;
@@ -544,13 +544,24 @@ button:hover {
         }
 
         select {
-            width: 30%;
+            max-width: 150px;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
             background-repeat: no-repeat;
             background-position: right 10px center;
             background-size: 16px;
+        }
+
+        .fullWidthSelect {
+            width: 100%;
+            max-width: 100%;
+            margin-top: 50px;
+        }
+
+        .twoInputs {
+            display: flex;
+            gap: 20px;
         }
 
         .submitButtons {
@@ -595,6 +606,79 @@ button:hover {
             border: 2px solid var(--active-highlight-purple);
         }
     }
+
+
+    /* For confirmation pop ups */
+    .confirmation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1 1 0;
+        height: 100%;
+
+        img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin-top: 60px;
+            flex: 1 0 0;
+        }
+
+        .confirmationText {
+            flex: 1 0 0;
+
+            h3 {
+                color: black;
+                text-align: center;
+                font-weight: bold;
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+
+            p {
+                color: grey;
+                text-align: center;
+            }
+        }
+
+        .addNewPatient,
+        .addNewTask {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: white;
+            background-color: var(--active-highlight-purple);
+            border: 2px solid var(--border-highlight);
+            cursor: pointer;
+            display: block;
+        }
+
+        .addNewPatient:hover {
+            background-color: white;
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
+
+        .maybeLater {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: var(--active-highlight-purple);
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+        }
+
+        .maybeLater:hover {
+            text-decoration: underline;
+            color: var(--selectable-highlight);
+        }
+    }
 }
 
 .fullscreenWidget {
@@ -612,8 +696,8 @@ button:hover {
 /* Login Page styles */
 /* =========================================== */
 .loginBanner {
-  margin-bottom: 20px;
-  z-index: 90;
+    margin-bottom: 20px;
+    z-index: 90;
 }
 
 .centralHeader {
@@ -642,11 +726,11 @@ button:hover {
     }
 
     .logoText {
-      font-family: "DT Getai Grotesk Display", sans-serif;
-      font-size: 100px;
-      color: white;
-      height: auto;
-      margin-top: 20px;
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        font-size: 100px;
+        color: white;
+        height: auto;
+        margin-top: 20px;
     }
 }
 
@@ -735,6 +819,7 @@ button:hover {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -932,6 +1017,7 @@ button:hover {
             display: flex;
             align-items: center;
             gap: 20px;
+
             img {
                 width: 80px;
                 height: 80px;
