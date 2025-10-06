@@ -11,7 +11,7 @@
                 <div class="patientProfile">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Corgi Icon">
                     <div class="patientInfo">
-                        <h2 class="patientName">{{ $patient->name }}</h2>
+                        <h2 class="patientName">{{ $patient->username }}</h2>
                         <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
                     </div>
                 </div>

@@ -2,47 +2,34 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PatientController;
 
 /*
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-*/
+ * Middleware to impersonate dev patient for testing (stateless)
+ * TODO: Replace with proper authentication (auth:sanctum) in production
+ */
+Route::middleware('dev.impersonate')->group(function () {
+    // Patient Profile Routes
+    Route::get('/patient', [PatientController::class, 'show']);
+    Route::get('/patient/profile', [PatientController::class, 'profile']);
+    Route::put('/patient/profile', [PatientController::class, 'updateProfile']);
 
-Route::get('/user', function (Request $request) {
-    $user = \App\Models\User::where('email', 'dev@example.com')->first();
-    Auth::setUser($user);
-    $request->setUserResolver(fn () => $user);
-    return $request->user();
-});
+    // Patient Tasks Routes
+    Route::get('/patient/tasks/current', [PatientController::class, 'currentTasks']);
 
-Route::get('/inventory', function (Request $request) {
-    $user = \App\Models\User::findOrFail(1);
+    // Patient Inventory Routes
+    Route::get('/patient/inventory', [PatientController::class, 'inventory']);
 
-    // dev impersonation (stateless)
-    Auth::setUser($user);
-    $request->setUserResolver(fn () => $user);
-
-    // Load this user's inventory
-    $inventory = $user->inventory()->with('item')->get();
-
-    return response()->json($inventory);
+    // Legacy inventory route (backwards compatibility) REMOVE LATER?
+    Route::get('/inventory', [PatientController::class, 'inventory']);
 });
 
-/*
-Route::get('/tasks', function (Request $request) {
-    // dev user id = 1
-    $user = \App\Models\User::findOrFail(1);
-
-    // dev impersonation (stateless)
-    Auth::setUser($user);
-    $request->setUserResolver(fn () => $user);
-
-    // Load this user's inventory
-    $inventory = $user->inventory()->with('item')->get();
-
-    return response()->json($inventory);
+// Temporary dev impersonation middleware
+// TODO: Remove this and use proper auth middleware in production
+Route::middleware('api')->group(function () {
+    Route::any('{any}', function (Request $request) {
+        // This won't be reached for routes defined above
+    })->where('any', '.*');
 });
-*/
 
-//require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';

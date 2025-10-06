@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventory', function (Blueprint $table) {
+        Schema::create('patient_item', function (Blueprint $table) {
             // Primary Key
-            $table->id(); 
-            
+            $table->id();
+
             // Foreign Keys
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('item_id');
 
             // Constraints
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
 
             $table->boolean('equipped')->default(false);
@@ -32,7 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('patient_item');
     }
 };
 

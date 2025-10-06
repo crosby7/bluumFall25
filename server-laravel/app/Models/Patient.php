@@ -8,9 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 //use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class Patient extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\PatientFactory> */
     use HasFactory, Notifiable; //HasApiTokens,
 
     /**
@@ -19,9 +19,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'avatar_id',
+        'experience',
+        'gems',
     ];
 
     /**
@@ -49,6 +52,16 @@ class User extends Authenticatable
 
     public function inventory()
     {
-        return $this->hasMany(\App\Models\Inventory::class);
-    }    
+        return $this->hasMany(\App\Models\PatientItem::class);
+    }
+
+    public function taskSubscriptions()
+    {
+        return $this->hasMany(TaskSubscription::class);
+    }
+
+    public function taskCompletions()
+    {
+        return $this->hasManyThrough(TaskCompletion::class, TaskSubscription::class, 'patient_id', 'subscription_id');
+    }
 }

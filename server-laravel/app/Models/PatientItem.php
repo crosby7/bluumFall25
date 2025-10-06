@@ -3,24 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-//use Laravel\Sanctum\HasApiTokens;
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class PatientItem extends Model
 {
     use HasFactory;
 
-    protected $table = 'inventory';
+    protected $table = 'patient_item';
 
     protected $fillable = [
-        'user_id',
+        'patient_id',
         'item_id',
         'equipped',
+    ];
+
+    protected $casts = [
+        'equipped' => 'boolean',
     ];
 
     public $timestamps = false;
@@ -29,5 +27,5 @@ class Inventory extends Model
     {
         return $this->belongsTo(\App\Models\Item::class);
     }
-    
+
 }
