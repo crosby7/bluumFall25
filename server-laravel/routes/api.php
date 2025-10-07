@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\Auth\PatientAuthController;
 
 // Patient Authentication Routes (public)
@@ -27,4 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Legacy inventory route (backwards compatibility) REMOVE LATER?
     Route::get('/inventory', [PatientController::class, 'inventory']);
+
+    // Item Routes
+    Route::get('/items', [ItemController::class, 'index']);
 });

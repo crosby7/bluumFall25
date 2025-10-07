@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder
         ]);
         //Patient::factory(10)->create();
 
-        Item::factory(50)->create();
+        // Seed items from predefined list
+        $this->call(ItemSeeder::class);
         PatientItem::factory(10)->create();
 
         // Seed task templates from predefined list
