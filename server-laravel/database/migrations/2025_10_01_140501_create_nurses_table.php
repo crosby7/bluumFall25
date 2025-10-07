@@ -4,6 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Nurses Table
+ *
+ * Stores nursing staff accounts who manage the nurses portal. Nurses create patients, assign tasks,
+ * verify task completions, and monitor patient progress through the web interface.
+ */
 return new class extends Migration
 {
     /**

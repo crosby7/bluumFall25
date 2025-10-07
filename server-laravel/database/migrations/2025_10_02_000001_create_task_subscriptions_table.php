@@ -5,6 +5,14 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Task Subscriptions Table
+ *
+ * Links patients to task templates with scheduling rules. When a nurse assigns a task to a patient,
+ * a subscription is created that defines when the task starts (start_at) and how often it repeats
+ * (interval_days). This acts as the recurring schedule - individual task instances are generated
+ * as task_completions based on these rules.
+ */
 return new class extends Migration
 {
     /**

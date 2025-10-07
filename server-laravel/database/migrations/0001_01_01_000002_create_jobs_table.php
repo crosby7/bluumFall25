@@ -4,6 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Jobs Tables
+ *
+ * Laravel queue system infrastructure for handling background jobs. Used for async task processing
+ * like generating scheduled task completions, sending notifications, etc. Includes job_batches
+ * for grouped operations and failed_jobs for error tracking.
+ */
 return new class extends Migration
 {
     /**

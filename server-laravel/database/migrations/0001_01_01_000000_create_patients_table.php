@@ -4,6 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Patients Table
+ *
+ * Stores patient accounts (the primary users of the tablet app). Patients earn experience points
+ * and gems by completing tasks, which they can use to customize their avatar. This table also
+ * creates password_reset_tokens and sessions tables for patient authentication.
+ */
 return new class extends Migration
 {
     /**

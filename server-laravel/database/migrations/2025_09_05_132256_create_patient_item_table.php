@@ -4,6 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Patient Item (Inventory) Table
+ *
+ * Pivot table linking patients to the items they own. Tracks patient inventory and which items
+ * are currently equipped/active. Patients acquire items by purchasing them with gems.
+ */
 return new class extends Migration
 {
     /**

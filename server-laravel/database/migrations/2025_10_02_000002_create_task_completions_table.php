@@ -4,6 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Task Completions Table
+ *
+ * Stores individual instances of scheduled tasks. Each record represents a specific occurrence
+ * of a task that should be completed at a particular time (scheduled_for). Tracks completion
+ * status (pending, completed, skipped, failed) and when it was actually completed. These records
+ * are generated from task_subscriptions and represent the actual work items patients complete.
+ */
 return new class extends Migration
 {
     /**
