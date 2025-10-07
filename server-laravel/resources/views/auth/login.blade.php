@@ -32,10 +32,12 @@
             <button class="closeButton xButton" type="button">X</button>
             <h2>Sign into Bluum</h2>
             <div class="inputGroup">
-                <input type="email" id="loginEmail" name="email" placeholder="Email" value="dev@example.com" required>
-                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
-                <input type="password" id="loginPassword" name="password" placeholder="Password" value="devpass" required>
-                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" name="email" required>
+            </div>
+            <div class="inputGroup">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="password" required>
             </div>
             <button type="submit" class="submitButton">Log In</button>
         </form>

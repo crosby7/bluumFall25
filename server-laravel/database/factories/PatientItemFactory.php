@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Item;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Inventory>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PatientItem>
  */
-class InventoryFactory extends Factory
+class PatientItemFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,9 @@ class InventoryFactory extends Factory
      */
     public function definition(): array
     {
-
         return [
-            'user_id'   => 1, // or ->inRandomOrder()->first()->id
-            'item_id'   => Item::inRandomOrder()->first()?->id ?? Item::factory(),
+            'patient_id'   => 1,
+            'item_id'   => Item::factory(),
             'equipped' => $this->faker->boolean(25), // ~25% chance equipped
         ];
     }

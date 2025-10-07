@@ -17,7 +17,7 @@
                 @foreach($patients->take(3) as $patient)
                 <div class="inboxRow">
                     <img class="inboxProfileIcon" src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
-                    <p class="patientDetails">{{ $patient->name }} | Room: {{ 3900 + $patient->id }}</p>
+                    <p class="patientDetails">{{ $patient->username }} | Room: {{ 3900 + $patient->id }}</p>
                     <img class="inboxStatusIcon" src="{{ asset('assets/tasks/statusComplete.svg') }}" alt="Status: Complete">
                     <button class="inboxVerifyButton">
                         <img src="{{ asset('assets/tasks/checkmark.svg') }}" alt="Mark Complete">
@@ -36,7 +36,7 @@
                 <div class="patientCard">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
                     <div class="patientInfo">
-                        <h2 class="patientName">{{ $patient->name }}</h2>
+                        <h2 class="patientName">{{ $patient->username }}</h2>
                         <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
                     </div>
                 </div>

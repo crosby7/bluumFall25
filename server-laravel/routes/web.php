@@ -11,12 +11,17 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 Route::get('/home', function () {
-    $patients = \App\Models\User::take(5)->get();
+    $patients = \App\Models\Patient::take(5)->get();
     return view('screens.home', compact('patients'));
 })->middleware('auth')->name('home');
 
 Route::get('/patients', function () {
-    $patients = \App\Models\User::all();
+    $patients = \App\Models\Patient::with([
+        'taskSubscriptions.task',
+        'taskSubscriptions.completions' => function ($query) {
+            $query->orderBy('scheduled_for', 'asc');
+        }
+    ])->get();
     return view('screens.patients', compact('patients'));
 })->middleware('auth')->name('patients');
 

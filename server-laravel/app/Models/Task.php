@@ -17,5 +17,13 @@ class Task extends Model
         'description',
         'xp_value',
         'gem_value',
-    ];   
+    ];
+
+    /**
+     * Relationships
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(TaskSubscription::class);
+    }
 }
