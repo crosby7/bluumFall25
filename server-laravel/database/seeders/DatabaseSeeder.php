@@ -18,9 +18,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Call NurseSeeder first
+        $this->call(NurseSeeder::class);
+
         Patient::factory()->create([
             'username' => 'devpatient',
-            'email' => 'dev@example.com',
+            'email' => 'patient@example.com',
+            'password' => 'password', // Will be hashed by model
         ]);
         Patient::factory()->create([
             'username' => 'jared',
@@ -61,15 +65,63 @@ class DatabaseSeeder extends Seeder
         // Create some inactive subscriptions (duplicates are OK for inactive)
         TaskSubscription::factory(3)->inactive()->create();
 
-        // Create specific task completions for dev patient TODAY for testing
-        $devPatient = Patient::where('email', 'dev@example.com')->first();
+        // Create specific task completions for dev patient with various statuses for testing
+        $devPatient = Patient::where('email', 'patient@example.com')->first();
         $devSubscriptions = TaskSubscription::where('patient_id', $devPatient->id)->get();
 
         foreach ($devSubscriptions as $subscription) {
-            // Create a task scheduled for today
+            // Today's pending tasks
             TaskCompletion::factory()->create([
                 'subscription_id' => $subscription->id,
-                'scheduled_for' => today()->addHours(rand(8, 18)),
+                'scheduled_for' => today()->addHours(rand(8, 12)),
+                'status' => \App\Enums\TaskStatus::PENDING,
+                'completed_at' => null,
+            ]);
+
+            // Today's completed tasks
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->addHours(rand(6, 10)),
+                'status' => \App\Enums\TaskStatus::COMPLETED,
+                'completed_at' => now()->subHours(rand(1, 3)),
+            ]);
+
+            // Overdue tasks (pending but scheduled in the past)
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->subDays(1)->addHours(rand(8, 18)),
+                'status' => \App\Enums\TaskStatus::PENDING,
+                'completed_at' => null,
+            ]);
+
+            // Yesterday's completed tasks
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->subDays(1)->addHours(rand(8, 18)),
+                'status' => \App\Enums\TaskStatus::COMPLETED,
+                'completed_at' => today()->subDays(1)->addHours(rand(10, 20)),
+            ]);
+
+            // Skipped tasks
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->subDays(rand(1, 3))->addHours(rand(8, 18)),
+                'status' => \App\Enums\TaskStatus::SKIPPED,
+                'completed_at' => null,
+            ]);
+
+            // Failed tasks
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->subDays(rand(1, 2))->addHours(rand(8, 18)),
+                'status' => \App\Enums\TaskStatus::FAILED,
+                'completed_at' => null,
+            ]);
+
+            // Future pending tasks
+            TaskCompletion::factory()->create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => today()->addDays(1)->addHours(rand(8, 18)),
                 'status' => \App\Enums\TaskStatus::PENDING,
                 'completed_at' => null,
             ]);

@@ -41,15 +41,6 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // DEVELOPMENT ONLY: Hardcoded credentials for testing
-        // TODO: Remove this in production
-        if ($this->input('email') === 'dev@example.com' && $this->input('password') === 'devpass') {
-            // Create a mock patient session for development
-            Auth::loginUsingId(1); // Assumes patient ID 1 exists, or creates a temporary session
-            RateLimiter::clear($this->throttleKey());
-            return;
-        }
-
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

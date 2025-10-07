@@ -12,6 +12,11 @@ class NurseSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Nurse::create([
+            'first_name' => 'Dev',
+            'last_name' => 'Nurse',
+            'email' => 'nurse@example.com',
+            'password' => 'password', // Will be hashed by model
+        ]);
     }
 }

@@ -22,13 +22,11 @@
             <button class="closeButton">X</button>
             <div class="inputGroup">
                 <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" name="email" value="dev@example.com" required>
-                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
+                <input type="email" id="loginEmail" name="email" required>
             </div>
             <div class="inputGroup">
                 <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="password" value="devpass" required>
-                {{-- DEVELOPMENT: Pre-filled with dev credentials --}}
+                <input type="password" id="loginPassword" name="password" required>
             </div>
             <button type="submit" class="submitButton">Login</button>
         </form>
