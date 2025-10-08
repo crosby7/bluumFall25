@@ -5,12 +5,17 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredPatientController;
+use App\Http\Controllers\Auth\RegisteredNurseController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredPatientController::class, 'store'])
     ->middleware('guest')
     ->name('register');
+
+Route::post('/register-nurse', [RegisteredNurseController::class, 'store'])
+    ->middleware('guest')
+    ->name('register.nurse');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest')

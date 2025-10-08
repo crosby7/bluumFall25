@@ -4,12 +4,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\NurseController;
+use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TaskSubscriptionController;
+use App\Http\Controllers\Api\TaskCompletionController;
 use App\Http\Controllers\Api\Auth\PatientAuthController;
 
 // Patient Authentication Routes (public)
 Route::post('/login', [PatientAuthController::class, 'login']);
 
-// Protected Patient Routes (require Sanctum authentication)
+// Nurse Portal API Routes (require web session authentication)
+Route::prefix('nurse')->middleware('auth:web')->group(function () {
+    // Patient Management
+    Route::apiResource('patients', PatientController::class)->except(['show', 'update']);
+
+    // Task Management
+    Route::apiResource('tasks', TaskController::class);
+
+    // Task Subscription Management
+    Route::apiResource('task-subscriptions', TaskSubscriptionController::class);
+    Route::post('patients/{patient}/task-subscriptions/bulk', [TaskSubscriptionController::class, 'bulkStore']);
+
+    // Task Completion Management
+    Route::apiResource('task-completions', TaskCompletionController::class);
+
+    // Item Management
+    Route::apiResource('items', ItemController::class);
+
+    // Nurse Management
+    Route::apiResource('nurses', NurseController::class);
+});
+
+// Patient App API Routes (require Sanctum token authentication)
 Route::middleware('auth:sanctum')->group(function () {
     // Auth Routes
     Route::post('/logout', [PatientAuthController::class, 'logout']);
@@ -28,7 +54,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Legacy inventory route (backwards compatibility) REMOVE LATER?
     Route::get('/inventory', [PatientController::class, 'inventory']);
-
-    // Item Routes
-    Route::get('/items', [ItemController::class, 'index']);
 });

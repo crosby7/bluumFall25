@@ -64,7 +64,12 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create some inactive subscriptions (duplicates are OK for inactive)
-        TaskSubscription::factory(3)->inactive()->create();
+        foreach (range(1, 3) as $i) {
+            TaskSubscription::factory()->inactive()->create([
+                'patient_id' => $patients->random()->id,
+                'task_id' => $tasks->random()->id,
+            ]);
+        }
 
         // Create specific task completions for dev patient with various statuses for testing
         $devPatient = Patient::where('email', 'patient@example.com')->first();
@@ -129,8 +134,24 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create task completions for existing subscriptions (random dates)
-        TaskCompletion::factory(15)->completed()->create();
-        TaskCompletion::factory(10)->pending()->create();
-        TaskCompletion::factory(5)->skipped()->create();
+        $allSubscriptions = TaskSubscription::all();
+
+        foreach (range(1, 15) as $i) {
+            TaskCompletion::factory()->completed()->create([
+                'subscription_id' => $allSubscriptions->random()->id,
+            ]);
+        }
+
+        foreach (range(1, 10) as $i) {
+            TaskCompletion::factory()->pending()->create([
+                'subscription_id' => $allSubscriptions->random()->id,
+            ]);
+        }
+
+        foreach (range(1, 5) as $i) {
+            TaskCompletion::factory()->skipped()->create([
+                'subscription_id' => $allSubscriptions->random()->id,
+            ]);
+        }
     }
 }
