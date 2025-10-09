@@ -11,8 +11,6 @@ use App\Http\Resources\PatientItemResource;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class PatientController extends Controller
 {
@@ -37,14 +35,13 @@ class PatientController extends Controller
     {
         $validated = $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:patients'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:patients'],
-            'password' => ['required', Password::defaults()],
             'avatar_id' => ['nullable', 'integer'],
             'experience' => ['nullable', 'integer', 'min:0'],
             'gems' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Auto-generate pairing code
+        $validated['pairing_code'] = Patient::generatePairingCode();
 
         $patient = Patient::create($validated);
 

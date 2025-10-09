@@ -18,7 +18,6 @@ class PatientProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'email' => $this->email,
             'avatar_id' => $this->avatar_id,
             'experience' => $this->experience,
             'gems' => $this->gems,

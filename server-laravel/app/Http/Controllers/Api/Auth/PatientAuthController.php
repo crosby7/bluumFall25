@@ -5,28 +5,33 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class PatientAuthController extends Controller
 {
     /**
-     * Handle patient login and return Sanctum token
+     * Handle patient pairing and return Sanctum token
      */
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'pairing_code' => 'required|string|size:6',
+            'device_identifier' => 'nullable|string',
         ]);
 
-        $patient = Patient::where('email', $request->email)->first();
+        $patient = Patient::where('pairing_code', $request->pairing_code)->first();
 
-        if (!$patient || !Hash::check($request->password, $patient->password)) {
+        if (!$patient) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'pairing_code' => ['The provided pairing code is incorrect.'],
             ]);
         }
+
+        // Update pairing information
+        $patient->update([
+            'paired_at' => now(),
+            'device_identifier' => $request->device_identifier,
+        ]);
 
         // Revoke all existing tokens for this patient (single device login)
         // Remove this line if you want multi-device support

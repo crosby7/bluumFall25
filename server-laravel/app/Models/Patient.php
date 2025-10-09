@@ -20,8 +20,9 @@ class Patient extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'email',
-        'password',
+        'pairing_code',
+        'paired_at',
+        'device_identifier',
         'avatar_id',
         'experience',
         'gems',
@@ -33,7 +34,7 @@ class Patient extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'pairing_code',
         'remember_token',
     ];
 
@@ -45,8 +46,7 @@ class Patient extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'paired_at' => 'datetime',
         ];
     }
 
@@ -63,5 +63,19 @@ class Patient extends Authenticatable
     public function taskCompletions()
     {
         return $this->hasManyThrough(TaskCompletion::class, TaskSubscription::class, 'patient_id', 'subscription_id');
+    }
+
+    /**
+     * Generate a unique 6-digit pairing code for this patient.
+     *
+     * @return string
+     */
+    public static function generatePairingCode(): string
+    {
+        do {
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        } while (self::where('pairing_code', $code)->exists());
+
+        return $code;
     }
 }

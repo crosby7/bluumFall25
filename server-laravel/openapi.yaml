@@ -1,0 +1,502 @@
+openapi: 3.1.3
+info:
+  title: Bluum Patient API
+  description: Essential API endpoints for the Bluum patient application
+  version: 0.1.0
+  contact:
+    name: Bluum Development Team
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: Patient authentication endpoints
+  - name: Profile
+    description: Patient profile management
+  - name: Tasks
+    description: Patient task operations
+  - name: Inventory
+    description: Patient inventory management
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Patient login
+      description: Authenticate a patient and receive a bearer token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: patient@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Bearer token for API authentication
+                    example: 1|abc123def456...
+                  patient:
+                    $ref: '#/components/schemas/Patient'
+        '422':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /logout:
+    post:
+      tags:
+        - Authentication
+      summary: Patient logout
+      description: Revoke the current authentication token
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged out successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /me:
+    get:
+      tags:
+        - Authentication
+      summary: Get authenticated patient
+      description: Retrieve the currently authenticated patient's information
+      operationId: getCurrentPatient
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Patient information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /patient/profile:
+    get:
+      tags:
+        - Profile
+      summary: Get patient profile
+      description: Retrieve the authenticated patient's full profile with stats
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Patient profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags:
+        - Profile
+      summary: Update patient profile
+      description: Update the authenticated patient's profile information
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  maxLength: 255
+                  example: coolpatient123
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: newemail@example.com
+                avatar_id:
+                  type: integer
+                  nullable: true
+                  example: 5
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile updated successfully
+                  patient:
+                    $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /patient/tasks/current:
+    get:
+      tags:
+        - Tasks
+      summary: Get current tasks
+      description: Retrieve tasks scheduled for today for the authenticated patient
+      operationId: getCurrentTasks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of current tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TaskCompletion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /patient/inventory:
+    get:
+      tags:
+        - Inventory
+      summary: Get patient inventory
+      description: Retrieve the authenticated patient's inventory items
+      operationId: getInventory
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Patient inventory
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PatientItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+      description: Laravel Sanctum token obtained from the login endpoint
+
+  schemas:
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: patient123
+        email:
+          type: string
+          format: email
+          example: patient@example.com
+        avatar_id:
+          type: integer
+          nullable: true
+          example: 3
+        experience:
+          type: integer
+          description: Patient's total XP
+          example: 250
+        gems:
+          type: integer
+          description: Patient's total gems
+          example: 50
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00.000000Z'
+
+    PatientProfile:
+      type: object
+      description: Extended patient profile with additional statistics
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: patient123
+        email:
+          type: string
+          format: email
+          example: patient@example.com
+        avatar_id:
+          type: integer
+          nullable: true
+          example: 3
+        experience:
+          type: integer
+          example: 250
+        gems:
+          type: integer
+          example: 50
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00.000000Z'
+        stats:
+          type: object
+          properties:
+            total_xp:
+              type: integer
+              example: 250
+            total_gems:
+              type: integer
+              example: 50
+            active_subscriptions:
+              type: integer
+              description: Number of active task subscriptions
+              example: 5
+            tasks_completed_today:
+              type: integer
+              example: 3
+            tasks_completed_this_week:
+              type: integer
+              example: 18
+            tasks_completed_total:
+              type: integer
+              example: 127
+            current_streak:
+              type: integer
+              description: Consecutive days with completed tasks
+              example: 7
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Take Morning Medication
+        description:
+          type: string
+          nullable: true
+          example: Take 2 pills with water
+        xp_value:
+          type: integer
+          description: Experience points awarded for completing this task
+          example: 10
+        gem_value:
+          type: integer
+          description: Gems awarded for completing this task
+          example: 5
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TaskCompletion:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        subscription_id:
+          type: integer
+          example: 5
+        scheduled_for:
+          type: string
+          format: date-time
+          description: When this task is scheduled to be completed
+          example: '2024-01-20T08:00:00.000000Z'
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the task was actually completed
+          example: null
+        status:
+          type: string
+          description: Task completion status
+          enum: [pending, completed, skipped]
+          example: pending
+        task:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Take Morning Medication
+            description:
+              type: string
+              nullable: true
+              example: Take 2 pills with water
+            xp_value:
+              type: integer
+              example: 10
+            gem_value:
+              type: integer
+              example: 5
+        subscription:
+          type: object
+          properties:
+            interval_days:
+              type: integer
+              description: How often the task repeats (in days)
+              example: 1
+            timezone:
+              type: string
+              example: America/New_York
+            is_active:
+              type: boolean
+              example: true
+
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Cool Avatar
+        description:
+          type: string
+          nullable: true
+          example: A really cool avatar for your profile
+        price:
+          type: integer
+          description: Price in gems
+          example: 100
+        image:
+          type: string
+          nullable: true
+          description: URL or path to item image
+          example: /images/items/avatar-1.png
+        category:
+          type: string
+          nullable: true
+          example: avatar
+
+    PatientItem:
+      type: object
+      properties:
+        patient_id:
+          type: integer
+          example: 1
+        item_id:
+          type: integer
+          example: 5
+        equipped:
+          type: boolean
+          description: Whether this item is currently equipped
+          example: true
+        item:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 5
+            name:
+              type: string
+              example: Cool Avatar
+            description:
+              type: string
+              nullable: true
+              example: A really cool avatar for your profile
+            price:
+              type: integer
+              description: Price in gems
+              example: 100
+            image:
+              type: string
+              nullable: true
+              description: URL or path to item image
+              example: /images/items/avatar-1.png
+            category:
+              type: string
+              nullable: true
+              example: avatar
+
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email:
+              - The provided credentials are incorrect.
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - Invalid or missing authentication token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthenticated.

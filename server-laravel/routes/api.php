@@ -51,7 +51,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Patient Inventory Routes
     Route::get('/patient/inventory', [PatientController::class, 'inventory']);
-
-    // Legacy inventory route (backwards compatibility) REMOVE LATER?
-    Route::get('/inventory', [PatientController::class, 'inventory']);
 });

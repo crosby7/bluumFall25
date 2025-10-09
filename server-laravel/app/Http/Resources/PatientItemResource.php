@@ -15,7 +15,6 @@ class PatientItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
             'patient_id' => $this->patient_id,
             'item_id' => $this->item_id,
             'equipped' => $this->equipped,

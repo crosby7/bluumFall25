@@ -18,12 +18,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('patient_item', function (Blueprint $table) {
-            // Primary Key
-            $table->id();
-
-            // Foreign Keys
+            // Foreign Keys (also serve as composite primary key)
             $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('item_id');
+
+            // Composite Primary Key
+            $table->primary(['patient_id', 'item_id']);
 
             // Constraints
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');

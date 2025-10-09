@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Schema;
  * Patients Table
  *
  * Stores patient accounts (the primary users of the tablet app). Patients earn experience points
- * and gems by completing tasks, which they can use to customize their avatar. This table also
- * creates password_reset_tokens and sessions tables for patient authentication.
+ * and gems by completing tasks, which they can use to customize their avatar. Patients authenticate
+ * using a pairing code that nurses provide when initializing them on a mobile device.
  */
 return new class extends Migration
 {
@@ -21,20 +21,14 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('pairing_code', 6)->unique();
+            $table->timestamp('paired_at')->nullable();
+            $table->string('device_identifier')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->unsignedBigInteger('avatar_id');
             $table->integer('experience')->default(0);
             $table->integer('gems')->default(0);
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -53,7 +47,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('patients');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
 };
