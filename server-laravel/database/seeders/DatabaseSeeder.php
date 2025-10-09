@@ -23,20 +23,11 @@ class DatabaseSeeder extends Seeder
 
         Patient::factory()->create([
             'username' => 'devpatient',
-            'email' => 'patient@example.com',
-            'password' => 'password', // Will be hashed by model
+            'pairing_code' => '123456',
         ]);
         Patient::factory()->create([
             'username' => 'jared',
-            'email' => 'jared@example.com',
-        ]);
-        Patient::factory()->create([
-            'username' => 'jace',
-            'email' => 'jace@example.com',
-        ]);
-        Patient::factory()->create([
-            'username' => 'lilliana',
-            'email' => 'zombiez@example.com',
+            'pairing_code' => '654321',
         ]);
         //Patient::factory(10)->create();
 
@@ -72,7 +63,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create specific task completions for dev patient with various statuses for testing
-        $devPatient = Patient::where('email', 'patient@example.com')->first();
+        $devPatient = Patient::where('username', 'devpatient')->first();
         $devSubscriptions = TaskSubscription::where('patient_id', $devPatient->id)->get();
 
         foreach ($devSubscriptions as $subscription) {
