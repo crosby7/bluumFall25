@@ -44,7 +44,7 @@
                 <img src="{{ asset('assets/common/calendarIcon.svg') }}" alt="Patients Icon">
                 <span>Patients</span>
             </a>
-            <a href="#" class="inboxButton">
+            <a href="{{ route('inbox') }}" class="inboxButton">
                 <img src="{{ asset('assets/common/inboxIcon.svg') }}" alt="Inbox Icon">
                 <span>Inbox</span>
             </a>

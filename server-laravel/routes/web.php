@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\NurseDashboardController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -10,19 +11,10 @@ Route::get('/login', function () {
     return view('auth.login');
 })->middleware('guest')->name('login');
 
-Route::get('/home', function () {
-    $patients = \App\Models\Patient::take(5)->get();
-    return view('screens.home', compact('patients'));
-})->middleware('auth')->name('home');
+Route::get('/home', [NurseDashboardController::class, 'home'])->middleware('auth')->name('home');
 
-Route::get('/patients', function () {
-    $patients = \App\Models\Patient::with([
-        'taskSubscriptions.task',
-        'taskSubscriptions.completions' => function ($query) {
-            $query->orderBy('scheduled_for', 'asc');
-        }
-    ])->get();
-    return view('screens.patients', compact('patients'));
-})->middleware('auth')->name('patients');
+Route::get('/patients', [NurseDashboardController::class, 'patients'])->middleware('auth')->name('patients');
+
+Route::get('/inbox', [NurseDashboardController::class, 'inbox'])->middleware('auth')->name('inbox');
 
 require __DIR__.'/auth.php';
