@@ -21,6 +21,8 @@ class PatientController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Patient::class);
+
         $patients = Patient::all();
         return PatientResource::collection($patients);
     }
@@ -33,6 +35,8 @@ class PatientController extends Controller
      */
     public function store(Request $request): PatientResource
     {
+        $this->authorize('create', Patient::class);
+
         $validated = $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:patients'],
             'avatar_id' => ['nullable', 'integer'],
@@ -56,6 +60,8 @@ class PatientController extends Controller
      */
     public function show(Request $request): PatientResource
     {
+        $this->authorize('view', $request->user());
+
         return new PatientResource($request->user());
     }
 
@@ -67,6 +73,8 @@ class PatientController extends Controller
      */
     public function profile(Request $request): PatientProfileResource
     {
+        $this->authorize('view', $request->user());
+
         return new PatientProfileResource($request->user());
     }
 
@@ -79,6 +87,8 @@ class PatientController extends Controller
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
         $patient = $request->user();
+
+        $this->authorize('update', $patient);
 
         $patient->update($request->validated());
 
@@ -96,6 +106,8 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient): JsonResponse
     {
+        $this->authorize('delete', $patient);
+
         $patient->delete();
 
         return response()->json([

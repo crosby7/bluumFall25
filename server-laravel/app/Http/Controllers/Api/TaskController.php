@@ -17,6 +17,8 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Task::class);
+
         $tasks = Task::all();
         return TaskResource::collection($tasks);
     }
@@ -29,6 +31,8 @@ class TaskController extends Controller
      */
     public function store(Request $request): TaskResource
     {
+        $this->authorize('create', Task::class);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -49,6 +53,8 @@ class TaskController extends Controller
      */
     public function show(Task $task): TaskResource
     {
+        $this->authorize('view', $task);
+
         return new TaskResource($task);
     }
 
@@ -61,6 +67,8 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task): TaskResource
     {
+        $this->authorize('update', $task);
+
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
@@ -81,6 +89,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task): JsonResponse
     {
+        $this->authorize('delete', $task);
+
         $task->delete();
 
         return response()->json([

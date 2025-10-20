@@ -17,6 +17,8 @@ class ItemController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Item::class);
+
         $items = Item::all();
         return ItemResource::collection($items);
     }
@@ -29,6 +31,8 @@ class ItemController extends Controller
      */
     public function store(Request $request): ItemResource
     {
+        $this->authorize('create', Item::class);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -50,6 +54,8 @@ class ItemController extends Controller
      */
     public function show(Item $item): ItemResource
     {
+        $this->authorize('view', $item);
+
         return new ItemResource($item);
     }
 
@@ -62,6 +68,8 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item): ItemResource
     {
+        $this->authorize('update', $item);
+
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
@@ -83,6 +91,8 @@ class ItemController extends Controller
      */
     public function destroy(Item $item): JsonResponse
     {
+        $this->authorize('delete', $item);
+
         $item->delete();
 
         return response()->json([

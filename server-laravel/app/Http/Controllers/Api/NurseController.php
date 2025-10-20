@@ -19,6 +19,8 @@ class NurseController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Nurse::class);
+
         $nurses = Nurse::all();
         return NurseResource::collection($nurses);
     }
@@ -31,6 +33,8 @@ class NurseController extends Controller
      */
     public function store(Request $request): NurseResource
     {
+        $this->authorize('create', Nurse::class);
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -53,6 +57,8 @@ class NurseController extends Controller
      */
     public function show(Nurse $nurse): NurseResource
     {
+        $this->authorize('view', $nurse);
+
         return new NurseResource($nurse);
     }
 
@@ -65,6 +71,8 @@ class NurseController extends Controller
      */
     public function update(Request $request, Nurse $nurse): NurseResource
     {
+        $this->authorize('update', $nurse);
+
         $validated = $request->validate([
             'first_name' => ['sometimes', 'string', 'max:255'],
             'last_name' => ['sometimes', 'string', 'max:255'],
@@ -89,6 +97,8 @@ class NurseController extends Controller
      */
     public function destroy(Nurse $nurse): JsonResponse
     {
+        $this->authorize('delete', $nurse);
+
         $nurse->delete();
 
         return response()->json([

@@ -17,6 +17,8 @@ class TaskSubscriptionController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', TaskSubscription::class);
+
         $subscriptions = TaskSubscription::with(['patient', 'task'])->get();
         return TaskSubscriptionResource::collection($subscriptions);
     }
@@ -29,6 +31,8 @@ class TaskSubscriptionController extends Controller
      */
     public function store(Request $request): TaskSubscriptionResource
     {
+        $this->authorize('create', TaskSubscription::class);
+
         $validated = $request->validate([
             'patient_id' => ['required', 'exists:patients,id'],
             'task_id' => ['required', 'exists:tasks,id'],
@@ -52,6 +56,8 @@ class TaskSubscriptionController extends Controller
      */
     public function show(TaskSubscription $taskSubscription): TaskSubscriptionResource
     {
+        $this->authorize('view', $taskSubscription);
+
         $taskSubscription->load(['patient', 'task']);
         return new TaskSubscriptionResource($taskSubscription);
     }
@@ -65,6 +71,8 @@ class TaskSubscriptionController extends Controller
      */
     public function update(Request $request, TaskSubscription $taskSubscription): TaskSubscriptionResource
     {
+        $this->authorize('update', $taskSubscription);
+
         $validated = $request->validate([
             'patient_id' => ['sometimes', 'exists:patients,id'],
             'task_id' => ['sometimes', 'exists:tasks,id'],
@@ -88,6 +96,8 @@ class TaskSubscriptionController extends Controller
      */
     public function destroy(TaskSubscription $taskSubscription): JsonResponse
     {
+        $this->authorize('delete', $taskSubscription);
+
         $taskSubscription->delete();
 
         return response()->json([
@@ -104,6 +114,8 @@ class TaskSubscriptionController extends Controller
      */
     public function bulkStore(Request $request, \App\Models\Patient $patient)
     {
+        $this->authorize('bulkStore', [TaskSubscription::class, $patient]);
+
         $validated = $request->validate([
             'subscriptions' => ['required', 'array', 'min:1'],
             'subscriptions.*.task_id' => ['required', 'exists:tasks,id'],
