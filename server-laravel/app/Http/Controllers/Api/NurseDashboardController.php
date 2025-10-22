@@ -6,22 +6,38 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Task;
+use App\Models\TaskSubscription;
 
 class NurseDashboardController extends Controller
 {
+
+    /**
+     * BaseContext: provide the patients and task subscriptions to all views
+     * 
+     */
+     public function baseContext() {
+        $patients = Patient::latest()->get();
+        $tasks = TaskSubscription::with('task')->get()->map(function ($subscription) {
+            $task = $subscription->task;
+            $task->due_time = $subscription->start_at->setTimezone($subscription->timezone)->format('g:i a');
+            $task->patient_id = $subscription->patient_id;
+            $task->status = $subscription->completions()->latest()->first() ? 'complete' : 'pending';
+            return $task;
+        });
+
+        return [
+            'patients' => $patients,
+            'tasks' => $tasks,
+        ];
+     }
+
     /**
      * Display the Home Screen
      * 
      */
     public function home()
     {
-        $patients = Patient::latest()->get();
-        $inboxItems = Task::latest()->get();
-
-        return view('screens.home', [
-            'patients' => $patients,
-            'inboxItems' => $inboxItems,
-        ]);
+        return view('screens.home', $this->baseContext());
     }
 
     /**
@@ -30,11 +46,7 @@ class NurseDashboardController extends Controller
      */
     public function patients()
     {
-        $patients = Patient::latest()->get();
-
-        return view('screens.patients', [
-            'patients' => $patients,
-        ]);
+        return view('screens.patients', $this->baseContext());
     }
 
     /**
@@ -43,10 +55,6 @@ class NurseDashboardController extends Controller
      */
     public function inbox()
     {
-        $inboxItems = Task::latest()->get();
-
-        return view('screens.inbox', [
-            'inboxItems' => $inboxItems,
-        ]);
+        return view('screens.inbox', $this->baseContext());
     }
 }

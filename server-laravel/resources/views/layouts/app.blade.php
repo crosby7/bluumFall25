@@ -53,6 +53,7 @@
         {{-- Page Content --}}
         <div class="pageContent" id="pageContent">
             @yield('content')
+            @include('components.global-modals')
         </div>
     </div>
 

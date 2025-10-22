@@ -7,6 +7,9 @@
     --transparent-highlight: rgba(255, 255, 255, 0.8);
     --selectable-highlight: #45286e;
     --complete-highlight: #11ab45;
+    --overdue-highlight: #f45c5c;
+    --general-highlight: #7b35ec;
+    --incomplete-highlight: #7b81ff;
     --login-background-purple: #734dff;
     --input-gray: #e1e1e1;
     --input-text-gray: #676767;
@@ -910,6 +913,22 @@ button:hover {
         cursor: pointer;
     }
 
+    .dueDate {
+        flex: 1 1 0;
+    }
+
+    .taskDescription {
+        flex: 1 1 0;
+    }
+
+    .inboxRowLeft {
+        flex: 1 1 0;
+    }
+
+    .inboxRowRight {
+        flex: 1 1 0;
+    }
+
     .patientDetails {
         background-color: rgba(255, 255, 255, 0.1);
         height: 30px;
@@ -926,14 +945,23 @@ button:hover {
     }
 
     /* On the Patients Page */
+
+    .statusContainer {
+        flex: 1 1 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .inboxStatus {
         height: 30px;
-        background-color: var(--complete-highlight);
         display: flex;
         align-items: center;
         gap: 5px;
         padding: 0 10px;
         border-radius: 20px;
+        max-width: 100px;
+        flex: 1 1 0;
 
         img {
             width: 20px;
@@ -945,6 +973,18 @@ button:hover {
             font-size: 11px;
             cursor: default;
         }
+    }
+
+    .completeStatus {
+        background-color: var(--complete-highlight);
+    }
+
+    .overdueStatus {
+        background-color: var(--overdue-highlight);
+    }
+
+    .generalStatus {
+        background-color: var(--general-highlight);
     }
 
     .inboxVerifyButton {
@@ -959,11 +999,16 @@ button:hover {
         display: flex;
         align-items: center;
         gap: 5px;
+        flex: 1 1 0;
 
         .verifyText {
             color: white;
             font-size: 13px;
         }
+    }
+
+    .emptyCol {
+        flex: 1 1 0;
     }
 }
 

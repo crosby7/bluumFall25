@@ -10,35 +10,39 @@
     <div class="fullscreenWidget inboxPage">
         <div class="inboxList">
             {{-- Loop through inbox items --}}
-            @foreach ($inboxItems as $item)
+            @foreach ($tasks as $task)
                 <div class="inboxRow">
                     <div class="inboxRowLeft">
                         <img
                             class="inboxProfileIcon"
-                            src="{{ asset($item->profile_icon ?? 'assets/patients/corgiIcon.svg') }}"
+                            src="{{ asset($task->profile_icon ?? 'assets/patients/corgiIcon.svg') }}"
                             alt="Patient Icon"
                         />
                         <p class="patientDetails">
-                            {{ $item->patient_name }} | Room: {{ $item->room }}
+                            {{ $task->patient_name }} | Room: {{ $task->room }}
                         </p>
                     </div>
 
-                    <p class="taskDescription">{{ $item->task_description }}</p>
+                    <p class="taskDescription">{{ $task->task_description }}</p>
 
-                    <div class="inboxStatus">
+                    <div class="inboxStatus {{ $task->status }}Status">
                         <img
-                            src="{{ asset($item->status_icon ?? 'assets/tasks/checkmark.svg') }}"
-                            alt="Status: {{ $item->status_text }}"
+                            src="{{ asset($task->status_icon ?? 'assets/common/complete.svg') }}"
+                            alt="Status: {{ ucfirst($task->status) }}"
                         />
-                        <span class="statusText">{{ $item->status_text }}</span>
+                        <span class="statusText">{{ ucfirst($task->status) }}</span>
                     </div>
 
                     <div class="inboxRowRight">
-                        <p class="dueDate">{{ $item->due_time }}</p>
+                        <p class="dueDate">{{ $task->due_time }}</p>
+                        @if ($task->status === 'pending')
                         <button class="inboxVerify">
-                            <img src="{{ asset('assets/tasks/checkmark.svg') }}" alt="Mark Complete" />
+                            <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                             <span class="verifyText">Verify</span>
                         </button>
+                        @else
+                        <div class="emptyCol"></div>
+                        @endif
                     </div>
                 </div>
             @endforeach
