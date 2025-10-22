@@ -20,7 +20,7 @@
                     <button class="filterButton">Pending Verification</button>
                     <button class="filterButton">Overdue</button>
                 </div>
-                <button class="newTaskButton">+ New Task</button>
+                <button class="newTaskButton addNewTask">+ New Task</button>
             </div>
 
             <div class="inboxList">

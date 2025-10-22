@@ -32,6 +32,53 @@ class NurseDashboardController extends Controller
      }
 
     /**
+     * Display the Search Results
+     * 
+     */
+    public function search(Request $request)
+    {
+        $query = trim($request->get('q', ''));
+
+        // If no input, return default suggestions
+        if($query === '') {
+            return response()->json([
+                ['type' => 'action', 'label' => 'Create New Patient', 'action' => 'createPatient'],
+                ['type' => 'action', 'label' => 'Create New Task', 'action' => 'createTask'],
+            ]);
+        }
+
+        $results = [];
+
+        // Search patients (room or name)
+        $patients = Patient::where('username', 'ILIKE', "%{$query}%")
+            ->orWhere('room_number', 'ILIKE', "%{$query}%")->limit(3)
+            ->get();
+
+        foreach ($patients as $patient) {
+            $results[] = [
+                'type' => 'patient',
+                'id' => $patient->id,
+                'label' => "{$patient->username} (Room: {$patient->room_number})",
+            ];
+        }
+
+        // Search pages by name (home, inbox, patients)
+        $pages = collect([
+            ['label' => 'Go Home', 'route' => route('home')],
+            ['label' => 'Go to Patients', 'route' => route('patients')],
+            ['label' => 'Go to Inbox', 'route' => route('inbox')],
+        ])->filter(function ($page) use ($query) {
+            return stripos($page['label'], $query) !== false;
+        });
+
+        foreach ($pages as $page) {
+            $results[] = array_merge(['type' => 'page'], $page);
+        }
+
+        return response()->json($results);
+    }
+
+    /**
      * Display the Home Screen
      * 
      */

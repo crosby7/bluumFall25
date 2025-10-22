@@ -23,7 +23,8 @@
                 <div class="searchIcon">
                     <img src="{{ asset('assets/common/search.svg') }}" alt="Search">
                 </div>
-                <input type="text" placeholder="Search...">
+                <input type="text" placeholder="Search..." id="globalSearch"/>
+                <div class="searchResults close" id="searchResults"></div>
             </div>
             <div class="profile"><a href="{{ route('login') }}">JD</a></div>
         </div>
@@ -32,10 +33,14 @@
     <div class="pageWrapper">
         {{-- Sidebar --}}
         <div class="sidebar" id="sidebar">
-            <a href="{{ route('home') }}" class="createButton">
+            <a class="createButton">
                 <img src="{{ asset('assets/common/createButton.svg') }}" alt="Create Icon">
                 <span>Create</span>
             </a>
+            <div class="createMenu">
+                <a class="createPatientButton addNewPatient">New Patient</a>
+                <a class="createTaskButton addNewTask">New Task</a>
+            </div>
             <a href="{{ route('home') }}" class="homeButton">
                 <img src="{{ asset('assets/common/homeIcon.svg') }}" alt="Home Icon">
                 <span>Home</span>

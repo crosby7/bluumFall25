@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NurseDashboardController;
+use App\Models\Nurse;
 
 Route::get('/', function () {
     return view('auth.login');
 })->name('login.show');
+
+Route::get('/search', [NurseDashboardController::class, 'search'])->middleware('auth')->name('search');
 
 Route::get('/login', function () {
     return view('auth.login');

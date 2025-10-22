@@ -20,7 +20,7 @@
                     <p class="patientDetails">{{ $patient->username }} | Room: {{ 3900 + $patient->id }}</p>
                     <img class="inboxStatusIcon" src="{{ asset('assets/tasks/statusComplete.svg') }}" alt="Status: Complete">
                     <button class="inboxVerifyButton">
-                        <img src="{{ asset('assets/tasks/checkmark.svg') }}" alt="Mark Complete">
+                        <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                     </button>
                 </div>
                 @endforeach
