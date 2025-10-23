@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return `<div class="search-card" data-patient="${item.id}">
                   <div>
                     <h4>${item.label}</h4>
-                    <small>${item.subtext}</small>
+                    <small>Go to Patient Profile</small>
                   </div>
                 </div>`;
                 }
@@ -204,7 +204,40 @@ document.addEventListener("DOMContentLoaded", () => {
             if (url) window.location.href = url;
             else if (action === "createPatient") showPatientModal();
             else if (action === "createTask") showTaskModal();
-            else if (patient) console.log("View patient:", patient);
+            else if (patient) {
+                const currentPath = window.location.pathname;
+                const patientPage = "/patients";
+                if (currentPath === patientPage) {
+                    // If already on patient page, just scroll there
+                    const target = document.querySelector(
+                        `[data-patient-id="${patient}"]`
+                    );
+                    console.log(
+                        "scrolling to patient: ",
+                        patient,
+                        " <target>: ",
+                        target
+                    );
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                        });
+                        target.classList.add("highlight");
+                        setTimeout(() => {
+                            target.classList.remove("highlight");
+                        }, 2000);
+                    }
+                } else {
+                    // Navigate to the patients page with anchor hash
+                    console.log(
+                        "navigating to patient page: ",
+                        patientPage,
+                        patient
+                    );
+                    window.location.href = `${patientPage}#${patient}`;
+                }
+            }
         } else if (!e.target.closest(".searchArea")) {
             results.classList.add("close");
         }

@@ -50,15 +50,14 @@ class NurseDashboardController extends Controller
         $results = [];
 
         // Search patients (room or name)
-        $patients = Patient::where('username', 'ILIKE', "%{$query}%")
-            ->orWhere('room_number', 'ILIKE', "%{$query}%")->limit(3)
+        $patients = Patient::where('username', 'ILIKE', "%{$query}%")->limit(3)
             ->get();
 
         foreach ($patients as $patient) {
             $results[] = [
                 'type' => 'patient',
                 'id' => $patient->id,
-                'label' => "{$patient->username} (Room: {$patient->room_number})",
+                'label' => "{$patient->username}",
             ];
         }
 

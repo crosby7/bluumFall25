@@ -25,7 +25,7 @@
                 </div>
                 @endforeach
             </div>
-            <div class="widgetFooter"><p>View All</p></div>
+            <div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>
         </div>
 
         {{-- Patients Widget --}}
@@ -33,7 +33,7 @@
             <div class="widgetHeader"><h3>Patients</h3></div>
             <div class="patientList">
                 @foreach($patients as $patient)
-                <div class="patientCard">
+                <div class="patientCard" onclick="window.location.href='/patients#{{ $patient->id }}'">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
                     <div class="patientInfo">
                         <h2 class="patientName">{{ $patient->username }}</h2>
@@ -42,7 +42,7 @@
                 </div>
                 @endforeach
             </div>
-            <div class="widgetFooter"><p>View All</p></div>
+            <div class="widgetFooter" onclick="window.location.href='/patients'"><p>View All</p></div>
         </div>
     </div>
 @endsection

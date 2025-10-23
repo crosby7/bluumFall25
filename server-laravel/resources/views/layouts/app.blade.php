@@ -63,5 +63,6 @@
     </div>
 
     <script src="{{ asset('scripts/nurses.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>

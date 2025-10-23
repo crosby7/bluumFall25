@@ -6,7 +6,7 @@
     <div class="pageHeader"><h2>Patients</h2></div>
     <div class="fullscreenWidget patientsPage">
         @foreach($patients as $patient)
-        <div class="patientCard">
+        <div class="patientCard" id="patient-{{ $patient->id }}" data-patient-id="{{ $patient->id }}">
             <div class="patientActionCenter">
                 <div class="patientProfile">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Corgi Icon">
@@ -31,13 +31,13 @@
                     <div class="statusContainer">
                         <div class="inboxStatus {{ $task->status }}Status">
                             @if ($task->status === 'complete')
-                            <img src="{{ asset('assets/tasks/complete.svg') }}" alt="">
+                            <img src="{{ asset('assets/common/complete.svg') }}" alt="">
                             @elseif ($task->status === 'overdue')
-                            <img src="{{ asset('assets/tasks/overdue.svg') }}" alt="">
+                            <img src="{{ asset('assets/common/overdue.svg') }}" alt="">
                             @elseif ($task->status === 'incomplete')
-                            <img src="{{ asset('assets/tasks/incomplete.svg') }}" alt="">
+                            <img src="{{ asset('assets/common/incomplete.svg') }}" alt="">
                             @else
-                            <img src="{{ asset('assets/tasks/new.svg') }}" alt="">
+                            <img src="{{ asset('assets/common/new.svg') }}" alt="">
                             @endif
                             <span class="statusText">{{ ucfirst($task->status) }}</span>
                         </div>
@@ -56,4 +56,26 @@
         </div>
         @endforeach
     </div>
+@endsection
+
+{{-- Auto-scrolling when coming from search --}}
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.location.hash) {
+            const id = window.location.hash.substring(1);
+            const target = document.querySelector(`[data-patient-id="${id}"]`);
+            if (target) {
+                // Allow DOM render
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.classList.add('highlight');
+                    setTimeout(() => {
+                        target.classList.remove('highlight');
+                    }, 2000);
+                }, 500);
+            }
+        }
+    });
+</script>
 @endsection
