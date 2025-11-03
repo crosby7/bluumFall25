@@ -15,19 +15,19 @@
                     <div class="inboxRowLeft">
                         <img
                             class="inboxProfileIcon"
-                            src="{{ asset($task->profile_icon ?? 'assets/patients/corgiIcon.svg') }}"
+                            src="{{ asset('assets/patients/corgiIcon.svg') }}"
                             alt="Patient Icon"
                         />
                         <p class="patientDetails">
-                            {{ $task->patient_name }} | Room: {{ $task->room }}
+                            {{ $patients->firstWhere('id', $task->patient_id)->username }}
                         </p>
                     </div>
 
-                    <p class="taskDescription">{{ $task->task_description }}</p>
+                    <p class="taskDescription">{{ $task->description }}</p>
 
                     <div class="inboxStatus {{ $task->status }}Status">
                         <img
-                            src="{{ asset($task->status_icon ?? 'assets/common/complete.svg') }}"
+                            src="{{ asset('assets/common/' . $task->status . '.svg') }}"
                             alt="Status: {{ ucfirst($task->status) }}"
                         />
                         <span class="statusText">{{ ucfirst($task->status) }}</span>

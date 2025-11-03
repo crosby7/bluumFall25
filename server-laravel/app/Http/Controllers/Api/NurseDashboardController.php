@@ -15,7 +15,8 @@ class NurseDashboardController extends Controller
      * BaseContext: provide the patients and task subscriptions to all views
      * 
      */
-     public function baseContext() {
+    public function baseContext()
+    {
         $patients = Patient::latest()->get();
         $tasks = TaskSubscription::with('task')->get()->map(function ($subscription) {
             $task = $subscription->task;
@@ -29,7 +30,7 @@ class NurseDashboardController extends Controller
             'patients' => $patients,
             'tasks' => $tasks,
         ];
-     }
+    }
 
     /**
      * Display the Search Results
@@ -40,7 +41,7 @@ class NurseDashboardController extends Controller
         $query = trim($request->get('q', ''));
 
         // If no input, return default suggestions
-        if($query === '') {
+        if ($query === '') {
             return response()->json([
                 ['type' => 'action', 'label' => 'Create New Patient', 'action' => 'createPatient'],
                 ['type' => 'action', 'label' => 'Create New Task', 'action' => 'createTask'],

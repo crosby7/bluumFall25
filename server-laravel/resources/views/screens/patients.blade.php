@@ -12,7 +12,7 @@
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Corgi Icon">
                     <div class="patientInfo">
                         <h2 class="patientName">{{ $patient->username }}</h2>
-                        <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
+                        <button class="patientCode" data-pairing-code="{{ $patient->pairing_code }}">Display Pairing Code</button>
                     </div>
                 </div>
                 <div class="patientTaskFilters">
@@ -76,6 +76,22 @@
                 }, 500);
             }
         }
+
+        // .patientCode button function
+        const patientCodeButtons = document.querySelectorAll('.patientCode');
+        const defaultText = 'Display Pairing Code';
+        patientCodeButtons.forEach(button => {
+            let isToggled = false;
+            button.addEventListener('click', () => {
+                if (isToggled) {
+                    button.textContent = defaultText;
+                } else {
+                    const pairingCode = button.getAttribute('data-pairing-code') || 'N/A';
+                    button.textContent = `${pairingCode}`;
+                }
+                isToggled = !isToggled;
+            });
+        });
     });
 </script>
 @endsection

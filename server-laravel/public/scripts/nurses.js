@@ -257,6 +257,9 @@ function showTaskModal() {
 
 // Show patient modal
 function showPatientModal() {
+    // Randomize username parts
+    initRandomUsername();
+
     // Open the new patient pop up
     newPatientPopUp.classList.remove("close");
 
@@ -264,4 +267,17 @@ function showPatientModal() {
     if (newPatientPopUp.parentElement.classList.contains("close")) {
         newPatientPopUp.parentElement.classList.remove("close");
     }
+}
+
+// Random Username functionality
+function initRandomUsername() {
+    const usernamePart1 = document.getElementById("usernamePart1");
+    const usernamePart2 = document.getElementById("usernamePart2");
+
+    if (!usernamePart1 || !usernamePart2) return;
+
+    const randomIndex = (n) => Math.floor(Math.random() * n);
+
+    usernamePart1.selectedIndex = randomIndex(usernamePart1.options.length);
+    usernamePart2.selectedIndex = randomIndex(usernamePart2.options.length);
 }

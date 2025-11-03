@@ -13,24 +13,39 @@
                         </div>
                     </label>
                 </div>
-                <div class="inputGroup">
+                {{-- <div class="inputGroup">
                     <label for="patientContact">Patient Contact</label>
                     <input type="text" id="patientContact" name="patientContact" placeholder="Enter email..." required>
-                </div>
-                <div class="inputGroup">
-                    <label for="roomNumber">Room Number</label>
-                    <select name="roomNumber" id="roomNumber">
-                        <option value="" disabled selected>Select room...</option>
-                        <option value="3901">Room 3901</option>
-                        <option value="3902">Room 3902</option>
-                        <option value="3903">Room 3903</option>
-                        <option value="3904">Room 3904</option>
-                        <option value="3905">Room 3905</option>
-                        <option value="3906">Room 3906</option>
-                        <option value="3907">Room 3907</option>
-                        <option value="3908">Room 3908</option>
-                        <option value="3909">Room 3909</option>
-                    </select>
+                </div> --}}
+                <div class="twoInputs">
+                    <div class="inputGroup">
+                        <label for="usernamePart1">Username Prefix</label>
+                        <select name="usernamePart1" id="usernamePart1">
+                            <option value="Blue">Blue</option>
+                            <option value="Fluffy">Fluffy</option>
+                            <option value="Happy">Happy</option>
+                            <option value="Brave">Brave</option>
+                            <option value="Funky">Funky</option>
+                            <option value="Good">Good</option>
+                            <option value="Turbo">Turbo</option>
+                            <option value="Rocky">Rocky</option>
+                            <option value="Gentle">Gentle</option>
+                        </select>
+                    </div>
+                    <div class="inputGroup">
+                        <label for="usernamePart2">Username Suffix</label>
+                        <select name="usernamePart2" id="usernamePart2">
+                            <option value="Tiger">Tiger</option>
+                            <option value="Hero">Hero</option>
+                            <option value="Falcon">Falcon</option>
+                            <option value="Wizard">Wizard</option>
+                            <option value="Fox">Fox</option>
+                            <option value="Dragon">Dragon</option>
+                            <option value="Nurse">Nurse</option>
+                            <option value="Duckling">Duckling</option>
+                            <option value="Kiddo">Kiddo</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="submitButtons">

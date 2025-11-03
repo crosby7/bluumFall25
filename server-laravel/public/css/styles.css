@@ -22,8 +22,7 @@
 /* Inter Font */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -32,8 +31,7 @@
 /* Italic Inter Fontt */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: italic;
     font-display: swap;
@@ -42,8 +40,7 @@
 /* DT Getai Grotesk Display for logo */
 @font-face {
     font-family: "DT Getai Grotesk Display";
-    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
-        format("truetype");
+    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -52,8 +49,7 @@
 /* Outfit Font */
 @font-face {
     font-family: "Outfit";
-    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -1152,6 +1148,13 @@ button:hover {
                 display: flex;
                 flex-direction: column;
                 cursor: default;
+
+                .patientCode {
+                    margin-top: 3px;
+                    padding: 4px;
+                    color: white;
+                    width: fit-content;
+                }
             }
         }
 
