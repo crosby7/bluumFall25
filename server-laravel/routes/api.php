@@ -11,10 +11,11 @@ use App\Http\Controllers\Api\TaskCompletionController;
 use App\Http\Controllers\Api\Auth\PatientAuthController;
 
 // Patient Authentication Routes (public)
-Route::post('/login', [PatientAuthController::class, 'login']);
+Route::post('/login', [PatientAuthController::class, 'login'])
+    ->middleware('throttle:auth');
 
 // Nurse Portal API Routes (require web session authentication)
-Route::prefix('nurse')->middleware('auth:web')->group(function () {
+Route::prefix('nurse')->middleware(['auth:web', 'throttle:nurse-api'])->group(function () {
     // Patient Management
     Route::apiResource('patients', PatientController::class)->except(['show', 'update']);
 
@@ -36,7 +37,7 @@ Route::prefix('nurse')->middleware('auth:web')->group(function () {
 });
 
 // Patient App API Routes (require Sanctum token authentication)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:patient-api'])->group(function () {
     // Auth Routes
     Route::post('/logout', [PatientAuthController::class, 'logout']);
     Route::get('/me', [PatientAuthController::class, 'me']);
