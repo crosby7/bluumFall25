@@ -14,6 +14,11 @@ Nurses will have the ability to select tasks for each patient, creating a schedu
 ## Features
 
 - **Patient Management**: Track patients with usernames, avatars, experience points, and gems
+- **Avatar System**:
+  - Layered avatar system with multiple avatar types (Axolotl, Corgi)
+  - Each avatar has multiple compositable layers for rendering
+  - Default avatar assignment (Corgi)
+- **Inventory System**: Patients can own and equip items purchased with gems
 - **Nurse Authentication**: Secure authentication system for nursing staff
 - **Task System**:
   - Task templates with XP and gem rewards
@@ -72,30 +77,44 @@ php artisan serve
 
 ### Main Tables
 
-- **patients**: Patient records with username, email, avatar, experience, and gems
+- **patients**: Patient records with username, avatar_id, experience, and gems
+- **avatars**: Avatar types (Axolotl, Corgi) with metadata
+- **avatar_layers**: Individual layer images for each avatar type
+- **items**: Purchasable items with price, image, and category
+- **patient_item**: Inventory junction table linking patients to owned items
 - **nurses**: Nursing staff with authentication credentials
 - **tasks**: Task templates with name, description, and reward values
 - **task_subscriptions**: Links patients to tasks with scheduling info (start_at, interval_days, timezone)
 - **task_completions**: Individual task instances with scheduled_for, completed_at, and status
-- **patient_items**: Inventory items owned by patients
 
 ### Key Relationships
 
+- Patient → Avatar (many-to-one)
+- Avatar → AvatarLayers (one-to-many)
+- Patient → PatientItems (one-to-many via patient_item pivot)
+- PatientItem → Item (many-to-one)
 - Patient → TaskSubscriptions (one-to-many)
 - TaskSubscription → Task (many-to-one)
 - TaskSubscription → TaskCompletions (one-to-many)
-- Patient → PatientItems (one-to-many)
 
 ## API Routes
 
-See `API_CONTRACT.md` for detailed API documentation.
+See `openapi.yaml` for the complete OpenAPI 3.1 specification of the patient-facing API.
 
-Key endpoints:
-- `GET /api/patients` - List all patients
-- `GET /api/patients/{id}` - Get patient details
-- `POST /api/patients` - Create new patient
-- `GET /api/tasks` - List tasks
-- Task completion and verification endpoints
+You can view the API documentation using tools like:
+- [Swagger Editor](https://editor.swagger.io/) - Paste the YAML content
+- [Stoplight Studio](https://stoplight.io/studio/)
+- VS Code extensions: "OpenAPI (Swagger) Editor" or "Swagger Viewer"
+
+Key patient-facing endpoints:
+- `POST /api/login` - Patient authentication via pairing code
+- `GET /api/me` - Get authenticated patient info (includes avatar with layers)
+- `GET /api/patient/profile` - Get patient profile with stats
+- `PATCH /api/patient/profile` - Update patient profile
+- `GET /api/patient/tasks/current` - Get today's tasks
+- `PATCH /api/patient/tasks/completions/{id}` - Update task completion
+- `GET /api/patient/inventory` - Get patient's inventory items
+- `GET /api/items` - Get shop items available for purchase
 
 ## Web Routes
 

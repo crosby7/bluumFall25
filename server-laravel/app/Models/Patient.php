@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -63,6 +64,14 @@ class Patient extends Authenticatable
     public function taskCompletions()
     {
         return $this->hasManyThrough(TaskCompletion::class, TaskSubscription::class, 'patient_id', 'subscription_id');
+    }
+
+    /**
+     * Get the avatar for this patient.
+     */
+    public function avatar(): BelongsTo
+    {
+        return $this->belongsTo(Avatar::class);
     }
 
     /**

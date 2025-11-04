@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
         // Call NurseSeeder first
         $this->call(NurseSeeder::class);
 
+        // Seed avatars before creating patients
+        $this->call(AvatarSeeder::class);
+
         Patient::factory()->create([
             'username' => 'devpatient',
             'pairing_code' => '123456',

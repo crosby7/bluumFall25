@@ -41,6 +41,9 @@ class PatientAuthController extends Controller
         // Create a new token
         $token = $patient->createToken('mobile-app')->plainTextToken;
 
+        // Load avatar with layers for the response
+        $patient->load('avatar.layers');
+
         return response()->json([
             'token' => $token,
             'patient' => PatientResource::make($patient),
@@ -65,6 +68,9 @@ class PatientAuthController extends Controller
      */
     public function me(Request $request)
     {
-        return PatientResource::make($request->user());
+        $patient = $request->user();
+        $patient->load('avatar.layers');
+
+        return PatientResource::make($patient);
     }
 }

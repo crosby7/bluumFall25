@@ -20,6 +20,7 @@ class PatientResource extends JsonResource
             'pairing_code' => $this->pairing_code,
             'paired_at' => $this->paired_at,
             'avatar_id' => $this->avatar_id,
+            'avatar' => new AvatarResource($this->whenLoaded('avatar')),
             'experience' => $this->experience,
             'gems' => $this->gems,
             'device_identifier' => $this->device_identifier,

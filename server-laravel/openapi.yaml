@@ -12,6 +12,19 @@ info:
     **Rate Limiting:**
     - `/login` endpoint: Protected by `throttle:auth` middleware
     - All other authenticated endpoints: Protected by `throttle:patient-api` middleware
+
+    **Avatar System:**
+    Each patient has an avatar composed of multiple layered images. When a patient object is returned with the `avatar` relationship loaded,
+    you'll receive an array of layer images ordered by `layer_number`. To render the avatar:
+    1. Load all layer images
+    2. Stack them in order (layer 1 = bottom, higher numbers on top)
+    3. Composite them together like Photoshop layers
+
+    Available avatars:
+    - **Axolotl** (5 layers) - A cute axolotl avatar
+    - **Corgi** (7 layers) - A cheerful corgi avatar (default for new patients)
+
+    All avatars are freely available to patients without purchase.
   version: 0.1.0
   contact:
     name: Bluum Development Team
@@ -29,6 +42,8 @@ tags:
     description: Patient task operations
   - name: Inventory
     description: Patient inventory management
+  - name: Shop
+    description: Shop items available for purchase
 
 paths:
   /login:
@@ -401,6 +416,37 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /items:
+    get:
+      tags:
+        - Shop
+      summary: Get shop items
+      description: |
+        Retrieve all items available for purchase in the shop.
+
+        **Rate Limiting:** This endpoint is protected by the `throttle:patient-api` middleware.
+      operationId: getShopItems
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of shop items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -447,7 +493,12 @@ components:
           type: integer
           nullable: true
           description: ID of the avatar selected by the patient
-          example: 3
+          example: 2
+        avatar:
+          allOf:
+            - $ref: '#/components/schemas/Avatar'
+          nullable: true
+          description: The patient's avatar with all layer images
         experience:
           type: integer
           description: Patient's total XP earned from completing tasks
@@ -488,7 +539,12 @@ components:
           type: integer
           nullable: true
           description: ID of the avatar selected by the patient
-          example: 3
+          example: 2
+        avatar:
+          allOf:
+            - $ref: '#/components/schemas/Avatar'
+          nullable: true
+          description: The patient's avatar with all layer images
         experience:
           type: integer
           description: Patient's total XP
@@ -527,6 +583,73 @@ components:
               type: integer
               description: Consecutive days with completed tasks
               example: 7
+
+    Avatar:
+      type: object
+      description: Avatar model with layered images for compositing
+      required:
+        - id
+        - name
+        - base_path
+        - layer_count
+        - is_default
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the avatar
+          example: 2
+        name:
+          type: string
+          description: Name of the avatar type
+          example: Corgi
+        description:
+          type: string
+          nullable: true
+          description: Description of the avatar
+          example: A cheerful corgi avatar
+        base_path:
+          type: string
+          description: Base path to the avatar images directory
+          example: assets/Avatar/Corgi
+        layer_count:
+          type: integer
+          description: Total number of layers for this avatar
+          example: 7
+        is_default:
+          type: boolean
+          description: Whether this is the default avatar assigned to new patients
+          example: true
+        layers:
+          type: array
+          description: Array of layer images ordered by layer_number. Stack these images on top of each other to render the complete avatar (layer 1 = bottom).
+          items:
+            $ref: '#/components/schemas/AvatarLayer'
+
+    AvatarLayer:
+      type: object
+      description: Individual layer image for avatar compositing
+      required:
+        - id
+        - layer_number
+        - layer_name
+        - image_path
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the layer
+          example: 6
+        layer_number:
+          type: integer
+          description: Order of the layer (1 is bottom, higher numbers stack on top)
+          example: 1
+        layer_name:
+          type: string
+          description: Name of the layer
+          example: FirstLayer
+        image_path:
+          type: string
+          description: Full path to the layer image file
+          example: assets/Avatar/Corgi/Corgi_FirstLayer.png
 
     Task:
       type: object

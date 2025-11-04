@@ -65,7 +65,10 @@ class PatientController extends Controller
     {
         $this->authorize('view', $request->user());
 
-        return new PatientResource($request->user());
+        $patient = $request->user();
+        $patient->load('avatar.layers');
+
+        return new PatientResource($patient);
     }
 
     /**
@@ -94,6 +97,7 @@ class PatientController extends Controller
         $this->authorize('update', $patient);
 
         $patient->update($request->validated());
+        $patient->load('avatar.layers');
 
         return response()->json([
             'message' => 'Profile updated successfully',
