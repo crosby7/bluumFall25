@@ -53,6 +53,11 @@ class ItemSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
+            // Programmatically construct the full image path
+            $imageName = $item['image'];
+            $category = $item['category'];
+            $item['image'] = "assets/items/{$category}/{$imageName}.png";
+
             Item::create($item);
         }
     }
