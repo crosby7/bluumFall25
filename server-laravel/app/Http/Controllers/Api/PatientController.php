@@ -44,6 +44,9 @@ class PatientController extends Controller
             'gems' => ['nullable', 'integer', 'min:0'],
         ]);
 
+        // Set default avatar_id if not provided
+        $validated['avatar_id'] = $validated['avatar_id'] ?? 1;
+
         // Auto-generate pairing code
         $validated['pairing_code'] = Patient::generatePairingCode();
 

@@ -34,7 +34,8 @@ if (closeButtons) {
 }
 
 // Temp: submit button will just close the large card
-const submitButtons = document.querySelectorAll(".submitButton");
+// Skip .createPatient buttons as they have their own form handler
+const submitButtons = document.querySelectorAll(".submitButton:not(.createPatient)");
 
 if (submitButtons) {
     submitButtons.forEach((button) => {
@@ -281,3 +282,82 @@ function initRandomUsername() {
     usernamePart1.selectedIndex = randomIndex(usernamePart1.options.length);
     usernamePart2.selectedIndex = randomIndex(usernamePart2.options.length);
 }
+
+// Handle patient form submission
+document.addEventListener("DOMContentLoaded", () => {
+    const patientForm = document.querySelector(".newPatientForm");
+
+    if (!patientForm) return;
+
+    patientForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get username from the two selected words
+        const usernamePart1 = document.getElementById("usernamePart1")?.value;
+        const usernamePart2 = document.getElementById("usernamePart2")?.value;
+
+        if (!usernamePart1 || !usernamePart2) {
+            alert("Please select both username parts");
+            return;
+        }
+
+        const username = usernamePart1 + usernamePart2;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        try {
+            const response = await fetch("/api/nurse/patients", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    username: username,
+                    avatar_id: 1,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.errors) {
+                    alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                } else {
+                    alert(data.message || "Failed to create patient");
+                }
+                return;
+            }
+
+            // Get pairing code from response
+            const pairingCode = data.pairing_code || data.data?.pairing_code;
+
+            if (!pairingCode) {
+                alert("Patient created but pairing code not found in response");
+                return;
+            }
+
+            // Update confirmation modal with pairing code
+            const confirmCodeElement = document.getElementById("confirmPairingCode");
+            if (confirmCodeElement) {
+                confirmCodeElement.textContent = pairingCode;
+            }
+
+            // Show confirmation modal
+            if (newPatientPopUp && confirmPatientPopUp) {
+                newPatientPopUp.classList.add("close");
+                confirmPatientPopUp.classList.remove("close");
+                patientForm.reset();
+                initRandomUsername();
+            } else {
+                // Fallback if modal elements not found
+                alert("Patient created successfully! Pairing code: " + pairingCode);
+            }
+
+        } catch (error) {
+            console.error("Error creating patient:", error);
+            alert("Error: " + error.message);
+        }
+    });
+});

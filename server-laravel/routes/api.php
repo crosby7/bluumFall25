@@ -14,28 +14,6 @@ use App\Http\Controllers\Api\Auth\PatientAuthController;
 Route::post('/login', [PatientAuthController::class, 'login'])
     ->middleware('throttle:auth');
 
-// Nurse Portal API Routes (require web session authentication)
-Route::prefix('nurse')->middleware(['auth:web', 'throttle:nurse-api'])->group(function () {
-    // Patient Management
-    Route::apiResource('patients', PatientController::class)->except(['show', 'update']);
-
-    // Task Management
-    Route::apiResource('tasks', TaskController::class);
-
-    // Task Subscription Management
-    Route::apiResource('task-subscriptions', TaskSubscriptionController::class);
-    Route::post('patients/{patient}/task-subscriptions/bulk', [TaskSubscriptionController::class, 'bulkStore']);
-
-    // Task Completion Management
-    Route::apiResource('task-completions', TaskCompletionController::class);
-
-    // Item Management
-    Route::apiResource('items', ItemController::class);
-
-    // Nurse Management
-    Route::apiResource('nurses', NurseController::class);
-});
-
 // Patient App API Routes (require Sanctum token authentication)
 Route::middleware(['auth:sanctum', 'throttle:patient-api'])->group(function () {
     // Auth Routes
@@ -45,11 +23,15 @@ Route::middleware(['auth:sanctum', 'throttle:patient-api'])->group(function () {
     // Patient Profile Routes
     Route::get('/patient', [PatientController::class, 'show']);
     Route::get('/patient/profile', [PatientController::class, 'profile']);
-    Route::put('/patient/profile', [PatientController::class, 'updateProfile']);
+    Route::patch('/patient/profile', [PatientController::class, 'updateProfile']);
 
     // Patient Tasks Routes
     Route::get('/patient/tasks/current', [PatientController::class, 'currentTasks']);
+    Route::patch('/patient/tasks/completions/{taskCompletion}', [TaskCompletionController::class, 'update']);
 
     // Patient Inventory Routes
     Route::get('/patient/inventory', [PatientController::class, 'inventory']);
+
+    // Shop Items Routes
+    Route::get('/items', [ItemController::class, 'index']);
 });

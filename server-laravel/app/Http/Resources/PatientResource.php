@@ -22,7 +22,9 @@ class PatientResource extends JsonResource
             'avatar_id' => $this->avatar_id,
             'experience' => $this->experience,
             'gems' => $this->gems,
+            'device_identifier' => $this->device_identifier,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

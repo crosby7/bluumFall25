@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -42,7 +43,7 @@ class PatientAuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'patient' => $patient,
+            'patient' => PatientResource::make($patient),
         ]);
     }
 
@@ -64,6 +65,6 @@ class PatientAuthController extends Controller
      */
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        return PatientResource::make($request->user());
     }
 }

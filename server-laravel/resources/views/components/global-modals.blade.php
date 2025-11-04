@@ -63,6 +63,7 @@
             <div class="confirmationText">
                 <h3>New Patient Registered!</h3>
                 <p>You've successfully registered a new patient.</p>
+                <p>Pairing Code: <strong id="confirmPairingCode"></strong></p>
             </div>
             <button type="button" class="addNewPatient">New Patient</button>
             <button type="button" class="closeButton maybeLater">Maybe Later</button>
