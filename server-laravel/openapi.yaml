@@ -1,4 +1,4 @@
-openapi: 3.1.3
+openapi: 3.0.3
 info:
   title: Bluum Patient API
   description: |
@@ -495,10 +495,9 @@ components:
           description: ID of the avatar selected by the patient
           example: 2
         avatar:
+          description: The patient's avatar with all layer images (only present when avatar relationship is loaded)
           allOf:
             - $ref: '#/components/schemas/Avatar'
-          nullable: true
-          description: The patient's avatar with all layer images
         experience:
           type: integer
           description: Patient's total XP earned from completing tasks
@@ -541,10 +540,9 @@ components:
           description: ID of the avatar selected by the patient
           example: 2
         avatar:
+          description: The patient's avatar with all layer images (only present when avatar relationship is loaded)
           allOf:
             - $ref: '#/components/schemas/Avatar'
-          nullable: true
-          description: The patient's avatar with all layer images
         experience:
           type: integer
           description: Patient's total XP
@@ -914,6 +912,13 @@ components:
               message:
                 type: string
                 example: Too Many Attempts.
+
+    ValidationError:
+      description: Validation error - Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
 
     InternalServerError:
       description: Internal Server Error
