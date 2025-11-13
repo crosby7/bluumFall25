@@ -22,6 +22,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->string('category');
             $table->integer('xp_value');
             $table->integer('gem_value');
             $table->timestamps();
