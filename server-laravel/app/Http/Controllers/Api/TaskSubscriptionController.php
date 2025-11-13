@@ -7,6 +7,7 @@ use App\Http\Resources\TaskSubscriptionResource;
 use App\Models\TaskSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class TaskSubscriptionController extends Controller
 {
@@ -41,6 +42,18 @@ class TaskSubscriptionController extends Controller
             'timezone' => ['nullable', 'string', 'timezone:all'],
             'is_active' => ['boolean'],
         ]);
+
+        // Check if an active subscription already exists for this patient and task
+        $existingSubscription = TaskSubscription::where('patient_id', $validated['patient_id'])
+            ->where('task_id', $validated['task_id'])
+            ->where('is_active', true)
+            ->first();
+
+        if ($existingSubscription) {
+            throw ValidationException::withMessages([
+                'task_id' => ['This task is already assigned to this patient.'],
+            ]);
+        }
 
         $subscription = TaskSubscription::create($validated);
         $subscription->load(['patient', 'task']);

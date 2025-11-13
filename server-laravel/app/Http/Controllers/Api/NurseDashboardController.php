@@ -19,11 +19,15 @@ class NurseDashboardController extends Controller
     {
         $patients = Patient::latest()->get();
         $tasks = TaskSubscription::with('task')->get()->map(function ($subscription) {
-            $task = $subscription->task;
-            $task->due_time = $subscription->start_at->setTimezone($subscription->timezone)->format('g:i a');
-            $task->patient_id = $subscription->patient_id;
-            $task->status = $subscription->completions()->latest()->first() ? 'complete' : 'pending';
-            return $task;
+            // Return a new object instead of modifying the task model
+            return (object) [
+                'id' => $subscription->task->id,
+                'name' => $subscription->task->name,
+                'description' => $subscription->task->description,
+                'due_time' => $subscription->start_at->setTimezone($subscription->timezone)->format('g:i a'),
+                'patient_id' => $subscription->patient_id,
+                'status' => $subscription->completions()->latest()->first() ? 'complete' : 'pending',
+            ];
         });
 
         return [

@@ -17,7 +17,6 @@ const closeButtons = document.querySelectorAll(".closeButton");
 if (closeButtons) {
     closeButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            console.log("close button clicked");
             button.closest(".popUp").classList.toggle("close");
             if (
                 button
@@ -34,13 +33,12 @@ if (closeButtons) {
 }
 
 // Temp: submit button will just close the large card
-// Skip .createPatient buttons as they have their own form handler
-const submitButtons = document.querySelectorAll(".submitButton:not(.createPatient)");
+// Skip .createPatient and .createTask buttons as they have their own form handlers
+const submitButtons = document.querySelectorAll(".submitButton:not(.createPatient):not(.createTask)");
 
 if (submitButtons) {
     submitButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            console.log("submit button clicked");
             button.closest(".popUp").classList.toggle("close");
             if (
                 button
@@ -90,7 +88,10 @@ const newTaskPopUp = document.querySelector(".newTask");
 if (newTaskButtons) {
     newTaskButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            showTaskModal();
+            // Try to get patient context from the closest patient card
+            const patientCard = button.closest("[data-patient-id]");
+            const patientId = patientCard ? patientCard.dataset.patientId : null;
+            showTaskModal(patientId);
         });
     });
 }
@@ -213,12 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const target = document.querySelector(
                         `[data-patient-id="${patient}"]`
                     );
-                    console.log(
-                        "scrolling to patient: ",
-                        patient,
-                        " <target>: ",
-                        target
-                    );
                     if (target) {
                         target.scrollIntoView({
                             behavior: "smooth",
@@ -246,13 +241,69 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Show task modal
-function showTaskModal() {
-    // Open the new task pop up
-    newTaskPopUp.classList.remove("close");
+async function showTaskModal(patientId = null) {
+    try {
+        // Fetch available tasks
+        const tasksResponse = await fetch("/api/nurse/tasks", {
+            headers: {
+                "Accept": "application/json",
+            },
+            credentials: "same-origin",
+        });
 
-    // Open the pop up region if it's closed
-    if (newTaskPopUp.parentElement.classList.contains("close")) {
-        newTaskPopUp.parentElement.classList.remove("close");
+        if (!tasksResponse.ok) {
+            throw new Error("Failed to fetch tasks");
+        }
+
+        const tasksData = await tasksResponse.json();
+        const tasks = tasksData.data || tasksData;
+
+        // Populate task dropdown
+        const taskSelect = document.getElementById("taskName");
+        taskSelect.innerHTML = '<option value="" disabled selected>Select task...</option>';
+        tasks.forEach(task => {
+            const option = document.createElement("option");
+            option.value = task.id;
+            option.textContent = task.name;
+            option.dataset.category = task.category || "";
+            taskSelect.appendChild(option);
+        });
+
+        // Fetch patients from the page (they're already loaded)
+        const patientCards = document.querySelectorAll("[data-patient-id]");
+        const assigneeSelect = document.getElementById("taskAssignee");
+        assigneeSelect.innerHTML = '<option value="" disabled selected>No assignee</option>';
+
+        patientCards.forEach(card => {
+            const patientIdFromCard = card.dataset.patientId;
+            const patientName = card.querySelector(".patientName")?.textContent || `Patient ${patientIdFromCard}`;
+            const option = document.createElement("option");
+            option.value = patientIdFromCard;
+            option.textContent = patientName;
+            assigneeSelect.appendChild(option);
+        });
+
+        // Pre-select patient if patientId was provided
+        if (patientId) {
+            assigneeSelect.value = patientId;
+        }
+
+        // Clear other fields
+        document.getElementById("dueDate").value = "";
+        document.getElementById("repeats").value = "none";
+        document.getElementById("category").value = "";
+
+        // Open the new task pop up
+        newTaskPopUp.classList.remove("close");
+
+        // Open the pop up region if it's closed
+        if (newTaskPopUp.parentElement.classList.contains("close")) {
+            newTaskPopUp.parentElement.classList.remove("close");
+        }
+
+    } catch (error) {
+        console.error("Error loading task modal:", error);
+        alert("Error loading task form: " + error.message);
     }
 }
 
@@ -269,6 +320,20 @@ function showPatientModal() {
         newPatientPopUp.parentElement.classList.remove("close");
     }
 }
+
+// Update category when task is selected
+document.addEventListener("DOMContentLoaded", () => {
+    const taskSelect = document.getElementById("taskName");
+    const categoryInput = document.getElementById("category");
+
+    if (taskSelect && categoryInput) {
+        taskSelect.addEventListener("change", (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const category = selectedOption.dataset.category || "";
+            categoryInput.value = category;
+        });
+    }
+});
 
 // Random Username functionality
 function initRandomUsername() {
@@ -292,6 +357,14 @@ document.addEventListener("DOMContentLoaded", () => {
     patientForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Get the submit button to disable it during submission
+        const submitButton = patientForm.querySelector('button[type="submit"]');
+
+        // Prevent double submission
+        if (submitButton.disabled) {
+            return;
+        }
+
         // Get username from the two selected words
         const usernamePart1 = document.getElementById("usernamePart1")?.value;
         const usernamePart2 = document.getElementById("usernamePart2")?.value;
@@ -303,6 +376,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const username = usernamePart1 + usernamePart2;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        // Disable submit button to prevent double submission
+        submitButton.disabled = true;
+        const originalText = submitButton.textContent;
+        submitButton.textContent = "Creating...";
 
         try {
             const response = await fetch("/api/nurse/patients", {
@@ -327,6 +405,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     alert(data.message || "Failed to create patient");
                 }
+                // Re-enable button on error
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
                 return;
             }
 
@@ -335,6 +416,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!pairingCode) {
                 alert("Patient created but pairing code not found in response");
+                // Re-enable button on error
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
                 return;
             }
 
@@ -350,14 +434,147 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmPatientPopUp.classList.remove("close");
                 patientForm.reset();
                 initRandomUsername();
+                // Re-enable button after successful submission
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
             } else {
                 // Fallback if modal elements not found
                 alert("Patient created successfully! Pairing code: " + pairingCode);
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
             }
 
         } catch (error) {
             console.error("Error creating patient:", error);
             alert("Error: " + error.message);
+            // Re-enable button on error
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        }
+    });
+});
+
+// Handle task form submission
+document.addEventListener("DOMContentLoaded", () => {
+    const taskForm = document.querySelector(".newTaskForm");
+    const confirmTaskPopUp = document.querySelector(".confirmTask");
+
+    if (!taskForm) {
+        return;
+    }
+
+    taskForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get the submit button to disable it during submission
+        const submitButton = taskForm.querySelector('button[type="submit"]');
+
+        // Prevent double submission
+        if (submitButton.disabled) {
+            return;
+        }
+
+        // Get form values
+        const taskId = document.getElementById("taskName")?.value;
+        const patientId = document.getElementById("taskAssignee")?.value;
+        const dueDate = document.getElementById("dueDate")?.value;
+        const repeats = document.getElementById("repeats")?.value;
+
+        if (!taskId || !patientId || !dueDate) {
+            alert("Please fill in all required fields");
+            return;
+        }
+
+        // Convert repeats to interval_days
+        let intervalDays;
+        switch (repeats) {
+            case "none":
+                intervalDays = 999999; // Effectively non-repeating
+                break;
+            case "daily":
+                intervalDays = 1;
+                break;
+            case "weekly":
+                intervalDays = 7;
+                break;
+            case "monthly":
+                intervalDays = 30;
+                break;
+            default:
+                intervalDays = 1;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        // Disable submit button to prevent double submission
+        submitButton.disabled = true;
+        const originalText = submitButton.textContent;
+        submitButton.textContent = "Creating...";
+
+        const requestPayload = {
+            task_id: parseInt(taskId),
+            patient_id: parseInt(patientId),
+            start_at: dueDate,
+            interval_days: intervalDays,
+            timezone: "UTC",
+            is_active: true,
+        };
+
+        try {
+            const response = await fetch("/api/nurse/task-subscriptions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                credentials: "same-origin",
+                body: JSON.stringify(requestPayload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Check for duplicate subscription error
+                if (data.message && data.message.includes("duplicate key value") ||
+                    data.message && data.message.includes("task_subscriptions_patient_task_active_unique")) {
+                    alert("This task is already assigned to this patient. Please choose a different task or patient.");
+                } else if (data.errors) {
+                    alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                } else if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert("Failed to create task subscription");
+                }
+                // Re-enable button on error
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+                return;
+            }
+
+            // Show confirmation modal
+            if (newTaskPopUp && confirmTaskPopUp) {
+                newTaskPopUp.classList.add("close");
+                confirmTaskPopUp.classList.remove("close");
+                taskForm.reset();
+                // Re-enable button after successful submission
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            } else {
+                // Fallback if modal elements not found
+                alert("Task assigned successfully!");
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+
+        } catch (error) {
+            console.error("Error creating task subscription:", error);
+            alert("Error: " + error.message);
+            // Re-enable button on error
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
         }
     });
 });
