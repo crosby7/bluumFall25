@@ -19,6 +19,7 @@ class TaskSubscriptionResource extends JsonResource
             'patient_id' => $this->patient_id,
             'task_id' => $this->task_id,
             'start_at' => $this->start_at,
+            'scheduled_time' => $this->scheduled_time,
             'interval_days' => $this->interval_days,
             'timezone' => $this->timezone,
             'is_active' => $this->is_active,

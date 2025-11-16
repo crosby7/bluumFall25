@@ -37,6 +37,7 @@ Route::prefix('api/nurse')->middleware(['auth', 'throttle:nurse-api'])->group(fu
     // Task Subscription Management
     Route::apiResource('task-subscriptions', TaskSubscriptionController::class);
     Route::post('patients/{patient}/task-subscriptions/bulk', [TaskSubscriptionController::class, 'bulkStore']);
+    Route::post('patients/{patient}/task-subscriptions/default-schedule', [TaskSubscriptionController::class, 'assignDefaultSchedule']);
 
     // Task Completion Management
     Route::apiResource('task-completions', TaskCompletionController::class);

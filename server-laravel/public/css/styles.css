@@ -642,6 +642,28 @@ button:hover {
             gap: 20px;
         }
 
+        .checkboxGroup {
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+
+            label {
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+            }
+
+            input[type="checkbox"] {
+                width: auto;
+                cursor: pointer;
+            }
+
+            span {
+                font-size: 14px;
+            }
+        }
+
         .submitButtons {
             display: flex;
             justify-content: center;

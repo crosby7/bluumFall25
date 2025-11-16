@@ -75,27 +75,15 @@
         <button class="closeButton xButton" type="button">X</button>
         <form class="newTaskForm">
             <div class="formInputs">
-                <select name="taskName" id="taskName" class="fullWidthSelect">
+                <select name="taskName" id="taskName" class="fullWidthSelect" required>
                     <option value="" disabled selected>Select task...</option>
-                    <option value="medication">Morning Medication</option>
-                    <option value="grooming">Grooming</option>
-                    <option value="ptTherapy">PT Therapy</option>
-                    <option value="breakfast">Breakfast</option>
-                    <option value="lunch">Lunch</option>
-                    <option value="dinner">Dinner</option>
-                    <option value="otTherapy">OT Therapy</option>
-                    <option value="recActivity">Recreation Activity</option>
-                    <option value="reading">School: Reading</option>
-                    <option value="math">School: Math</option>
-                    <option value="bandages">Bandage Change</option>
+                    <!-- Options populated dynamically via JavaScript -->
                 </select>
                 <div class="inputGroup">
                     <label for="taskAssignee">Assignee</label>
-                    <select name="taskAssignee" id="taskAssignee">
+                    <select name="taskAssignee" id="taskAssignee" required>
                         <option value="" disabled selected>No assignee</option>
-                        <option value="patient1">dev</option>
-                        <option value="patient2">Jared Carthalion</option>
-                        <option value="patient3">Jace Beleren</option>
+                        <!-- Options populated dynamically via JavaScript -->
                     </select>
                 </div>
                 <div class="inputGroup">
@@ -114,21 +102,20 @@
                     </div>
                     <div class="inputGroup">
                         <label for="category">Category</label>
-                        <select name="category" id="category">
-                            <option value="personal">Self Care</option>
-                            <option value="medical">Medical</option>
-                            <option value="nutritional">Nutritional</option>
-                            <option value="school">School</option>
-                            <option value="recreational">Recreational</option>
-                        </select>
+                        <input type="text" id="category" name="category" readonly placeholder="Select a task to see category">
                     </div>
                 </div>
+            </div>
+            <div class="inputGroup checkboxGroup">
+                <label for="assignDefaultSchedule">
+                    <input type="checkbox" id="assignDefaultSchedule" name="assignDefaultSchedule">
+                    <span>Assign default schedule</span>
+                </label>
             </div>
             <div class="submitButtons">
                 <button type="submit" class="submitButton createTask">Create Task</button>
                 <button type="button" class="cancelButton closeButton">Cancel</button>
             </div>
-        </form>
     </div>
 
     {{-- New Task Confirmation Modal --}}

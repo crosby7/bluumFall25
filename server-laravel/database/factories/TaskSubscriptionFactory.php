@@ -22,6 +22,7 @@ class TaskSubscriptionFactory extends Factory
             'patient_id' => Patient::factory(),
             'task_id' => Task::factory(),
             'start_at' => $this->faker->dateTimeBetween('-30 days', 'now'),
+            'scheduled_time' => $this->faker->time('H:i:s'), // Random time of day (e.g., 08:00:00, 14:30:00, 21:00:00)
             'interval_days' => $this->faker->randomElement([1, 2, 7, 14, 30]),
             'timezone' => $this->faker->randomElement(['UTC', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'Europe/London']),
             'is_active' => $this->faker->boolean(80), // 80% active
