@@ -43,8 +43,8 @@
                         </div>
                     </div>
                     @if($task->status === 'pending')
-                    <button class="inboxVerify">
-                        <img src="{{ asset('assets/tasks/complete.svg') }}" alt="Mark Complete">
+                    <button class="inboxVerify" onclick="console.log('TODO: Verify task {{ $task->id }}')">
+                        <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
                     </button>
                     @else

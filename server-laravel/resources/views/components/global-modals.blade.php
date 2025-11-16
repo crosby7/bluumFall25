@@ -116,6 +116,7 @@
                 <button type="submit" class="submitButton createTask">Create Task</button>
                 <button type="button" class="cancelButton closeButton">Cancel</button>
             </div>
+        </form>
     </div>
 
     {{-- New Task Confirmation Modal --}}

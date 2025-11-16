@@ -14,7 +14,8 @@
         <div class="widget inbox">
             <div class="widgetHeader"><h3>Inbox</h3></div>
             <div class="inboxList">
-                @foreach($patients->take(3) as $patient)
+                {{-- Commented out as this will be replaced by task views for overdue or pending verification tasks --}}
+                {{-- @foreach($patients->take(3) as $patient)
                 <div class="inboxRow">
                     <img class="inboxProfileIcon" src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
                     <p class="patientDetails">{{ $patient->username }}</p>
@@ -23,7 +24,12 @@
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                     </button>
                 </div>
-                @endforeach
+                @endforeach --}}
+                @if (1)
+                <div class="emptyWidget">
+                    <h3>No new items for you!</h3>
+                </div>
+                @endif
             </div>
             <div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>
         </div>
@@ -40,6 +46,11 @@
                     </div>
                 </div>
                 @endforeach
+                @if ($patients->isEmpty())
+                <div class="emptyWidget">
+                    <h3>No patients for now!</h3>
+                </div>
+                @endif
             </div>
             <div class="widgetFooter" onclick="window.location.href='/patients'"><p>View All</p></div>
         </div>
