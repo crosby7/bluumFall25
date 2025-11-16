@@ -24,7 +24,7 @@ class NurseDashboardController extends Controller
                 'id' => $subscription->task->id,
                 'name' => $subscription->task->name,
                 'description' => $subscription->task->description,
-                'due_time' => $subscription->start_at->setTimezone($subscription->timezone)->format('g:i a'),
+                'scheduled_time' => $subscription->scheduled_time ? \Carbon\Carbon::parse($subscription->scheduled_time)->format('g:i a') : '',
                 'patient_id' => $subscription->patient_id,
                 'status' => $subscription->completions()->latest()->first() ? 'complete' : 'pending',
             ];

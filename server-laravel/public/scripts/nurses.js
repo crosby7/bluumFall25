@@ -455,6 +455,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Handle default schedule checkbox toggling
+document.addEventListener("DOMContentLoaded", () => {
+    const defaultScheduleCheckbox = document.getElementById("assignDefaultSchedule");
+    const taskNameSelect = document.getElementById("taskName");
+    const dueDateInput = document.getElementById("dueDate");
+    const repeatsSelect = document.getElementById("repeats");
+
+    if (defaultScheduleCheckbox && taskNameSelect && dueDateInput && repeatsSelect) {
+        defaultScheduleCheckbox.addEventListener("change", (e) => {
+            const isChecked = e.target.checked;
+
+            // Toggle required attributes based on checkbox state
+            if (isChecked) {
+                // Remove required when default schedule is selected
+                taskNameSelect.removeAttribute("required");
+                dueDateInput.removeAttribute("required");
+                repeatsSelect.removeAttribute("required");
+
+                // Optionally disable these fields for clarity
+                taskNameSelect.disabled = true;
+                dueDateInput.disabled = true;
+                repeatsSelect.disabled = true;
+            } else {
+                // Re-add required when default schedule is not selected
+                taskNameSelect.setAttribute("required", "required");
+                dueDateInput.setAttribute("required", "required");
+
+                // Re-enable fields
+                taskNameSelect.disabled = false;
+                dueDateInput.disabled = false;
+                repeatsSelect.disabled = false;
+            }
+        });
+    }
+});
+
 // Handle task form submission
 document.addEventListener("DOMContentLoaded", () => {
     const taskForm = document.querySelector(".newTaskForm");
@@ -475,9 +511,75 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Get form values
-        const taskId = document.getElementById("taskName")?.value;
+        // Check if "assign default schedule" checkbox is checked
+        const assignDefaultSchedule = document.getElementById("assignDefaultSchedule")?.checked;
         const patientId = document.getElementById("taskAssignee")?.value;
+
+        if (assignDefaultSchedule) {
+            // Handle default schedule assignment
+            if (!patientId) {
+                alert("Please select a patient");
+                return;
+            }
+
+            // Disable submit button
+            submitButton.disabled = true;
+            const originalText = submitButton.textContent;
+            submitButton.textContent = "Assigning...";
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+            try {
+                const response = await fetch(`/api/nurse/patients/${patientId}/task-subscriptions/default-schedule`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                    },
+                    credentials: "same-origin",
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (data.errors) {
+                        alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                    } else if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Failed to assign default schedule");
+                    }
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                    return;
+                }
+
+                // Show confirmation modal
+                if (newTaskPopUp && confirmTaskPopUp) {
+                    newTaskPopUp.classList.add("close");
+                    confirmTaskPopUp.classList.remove("close");
+                    taskForm.reset();
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                } else {
+                    alert("Default schedule assigned successfully!");
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+
+            } catch (error) {
+                console.error("Error assigning default schedule:", error);
+                alert("Error: " + error.message);
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+
+            return; // Exit early, don't continue with single task creation
+        }
+
+        // Normal single task creation flow
+        const taskId = document.getElementById("taskName")?.value;
         const dueDate = document.getElementById("dueDate")?.value;
         const repeats = document.getElementById("repeats")?.value;
 
@@ -512,10 +614,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const originalText = submitButton.textContent;
         submitButton.textContent = "Creating...";
 
+        // Extract time component from dueDate for scheduled_time
+        const dueDateObj = new Date(dueDate);
+        const hours = String(dueDateObj.getHours()).padStart(2, '0');
+        const minutes = String(dueDateObj.getMinutes()).padStart(2, '0');
+        const seconds = String(dueDateObj.getSeconds()).padStart(2, '0');
+        const scheduledTime = `${hours}:${minutes}:${seconds}`;
+
         const requestPayload = {
             task_id: parseInt(taskId),
             patient_id: parseInt(patientId),
             start_at: dueDate,
+            scheduled_time: scheduledTime,
             interval_days: intervalDays,
             timezone: "UTC",
             is_active: true,
@@ -538,8 +648,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) {
                 // Check for duplicate subscription error
                 if (data.message && data.message.includes("duplicate key value") ||
-                    data.message && data.message.includes("task_subscriptions_patient_task_active_unique")) {
-                    alert("This task is already assigned to this patient. Please choose a different task or patient.");
+                    data.message && data.message.includes("task_subscriptions_patient_task_time_active_unique")) {
+                    alert("This task is already assigned to this patient at this time. Please choose a different time, task, or patient.");
                 } else if (data.errors) {
                     alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
                 } else if (data.message) {

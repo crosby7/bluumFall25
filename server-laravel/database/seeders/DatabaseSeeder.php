@@ -23,5 +23,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed task templates from predefined list
         $this->call(TaskTemplateSeeder::class);
+
+        // Create sample patients with task subscriptions
+        $this->call(PatientSeeder::class);
     }
 }

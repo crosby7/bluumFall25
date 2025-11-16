@@ -29,6 +29,7 @@ return new class extends Migration
 
             // Scheduling fields
             $table->timestamp('start_at');
+            $table->time('scheduled_time'); // Time of day for the task (e.g., 08:00:00, 21:00:00)
             $table->integer('interval_days')->default(1);
             $table->string('timezone', 64)->default('UTC');
             $table->boolean('is_active')->default(true);
@@ -46,13 +47,14 @@ return new class extends Migration
             $table->index(['task_id', 'is_active']);
         });
 
-        // Partial unique index: only one active subscription per patient-task pair
-        // This allows multiple inactive subscriptions but only one active one
+        // Partial unique index: only one active subscription per patient-task-time combination
+        // This allows multiple subscriptions for the same task at different times (e.g., "take meds at 8am" and "take meds at 9pm")
+        // and allows multiple inactive subscriptions for historical purposes
         // SQLite uses 1 for true, other databases use true
         if (DB::getDriverName() === 'sqlite') {
-            DB::statement('CREATE UNIQUE INDEX task_subscriptions_patient_task_active_unique ON task_subscriptions (patient_id, task_id) WHERE is_active = 1');
+            DB::statement('CREATE UNIQUE INDEX task_subscriptions_patient_task_time_active_unique ON task_subscriptions (patient_id, task_id, scheduled_time) WHERE is_active = 1');
         } else {
-            DB::statement('CREATE UNIQUE INDEX task_subscriptions_patient_task_active_unique ON task_subscriptions (patient_id, task_id) WHERE is_active = true');
+            DB::statement('CREATE UNIQUE INDEX task_subscriptions_patient_task_time_active_unique ON task_subscriptions (patient_id, task_id, scheduled_time) WHERE is_active = true');
         }
     }
 
@@ -61,7 +63,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DROP INDEX IF EXISTS task_subscriptions_patient_task_active_unique');
+        DB::statement('DROP INDEX IF EXISTS task_subscriptions_patient_task_time_active_unique');
         Schema::dropIfExists('task_subscriptions');
     }
 };

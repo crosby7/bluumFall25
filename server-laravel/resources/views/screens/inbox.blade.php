@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="inboxRowRight">
-                        <p class="dueDate">{{ $task->due_time }}</p>
+                        <p class="dueDate">{{ $task->scheduled_time }}</p>
                         @if ($task->status === 'pending')
                         <button class="inboxVerify">
                             <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />

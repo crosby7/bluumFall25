@@ -16,6 +16,7 @@ class TaskSubscription extends Model
         'patient_id',
         'task_id',
         'start_at',
+        'scheduled_time',
         'interval_days',
         'timezone',
         'is_active',
@@ -23,6 +24,7 @@ class TaskSubscription extends Model
 
     protected $casts = [
         'start_at' => 'datetime',
+        'scheduled_time' => 'datetime:H:i:s',
         'is_active' => 'boolean',
         'interval_days' => 'integer',
     ];

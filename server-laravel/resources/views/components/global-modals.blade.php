@@ -106,10 +106,16 @@
                     </div>
                 </div>
             </div>
-                <div class="submitButtons">
-                    <button type="submit" class="submitButton createTask">Create Task</button>
-                    <button type="button" class="cancelButton closeButton">Cancel</button>
-                </div>
+            <div class="inputGroup checkboxGroup">
+                <label for="assignDefaultSchedule">
+                    <input type="checkbox" id="assignDefaultSchedule" name="assignDefaultSchedule">
+                    <span>Assign default schedule</span>
+                </label>
+            </div>
+            <div class="submitButtons">
+                <button type="submit" class="submitButton createTask">Create Task</button>
+                <button type="button" class="cancelButton closeButton">Cancel</button>
+            </div>
     </div>
 
     {{-- New Task Confirmation Modal --}}
