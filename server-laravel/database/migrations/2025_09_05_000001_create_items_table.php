@@ -4,6 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Items Table
+ *
+ * Stores purchasable items in the virtual shop (avatar customization items like hats, shirts,
+ * room decorations, etc.). Patients can spend their earned gems to buy items and customize
+ * their appearance or room in the tablet app.
+ */
 return new class extends Migration
 {
     /**

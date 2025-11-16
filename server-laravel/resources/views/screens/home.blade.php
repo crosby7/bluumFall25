@@ -5,9 +5,9 @@
 @section('content')
     <div class="pageHeader">
         <h2>Home</h2>
-        <p>Monday, January 20th</p>
+        <p>{{ date('l, F jS') }}</p>
     </div>
-    <h2 class="greeting">Good Morning, Jane Doe!</h2>
+    <h2 class="greeting">Good Morning, {{ $user->name ?? "Jane Doe" }}!</h2>
 
     <div class="widgetArea">
         {{-- Inbox Widget --}}
@@ -17,15 +17,15 @@
                 @foreach($patients->take(3) as $patient)
                 <div class="inboxRow">
                     <img class="inboxProfileIcon" src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
-                    <p class="patientDetails">{{ $patient->name }} | Room: {{ 3900 + $patient->id }}</p>
+                    <p class="patientDetails">{{ $patient->username }}</p>
                     <img class="inboxStatusIcon" src="{{ asset('assets/tasks/statusComplete.svg') }}" alt="Status: Complete">
                     <button class="inboxVerifyButton">
-                        <img src="{{ asset('assets/tasks/checkmark.svg') }}" alt="Mark Complete">
+                        <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                     </button>
                 </div>
                 @endforeach
             </div>
-            <div class="widgetFooter"><p>View All</p></div>
+            <div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>
         </div>
 
         {{-- Patients Widget --}}
@@ -33,16 +33,15 @@
             <div class="widgetHeader"><h3>Patients</h3></div>
             <div class="patientList">
                 @foreach($patients as $patient)
-                <div class="patientCard">
+                <div class="patientCard" onclick="window.location.href='/patients#{{ $patient->id }}'">
                     <img src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
                     <div class="patientInfo">
-                        <h2 class="patientName">{{ $patient->name }}</h2>
-                        <p class="patientRoom">Room {{ 3900 + $patient->id }}</p>
+                        <h2 class="patientName">{{ $patient->username }}</h2>
                     </div>
                 </div>
                 @endforeach
             </div>
-            <div class="widgetFooter"><p>View All</p></div>
+            <div class="widgetFooter" onclick="window.location.href='/patients'"><p>View All</p></div>
         </div>
     </div>
 @endsection

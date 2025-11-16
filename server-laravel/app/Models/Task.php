@@ -15,7 +15,16 @@ class Task extends Model
     protected $fillable = [
         'name',
         'description',
+        'category',
         'xp_value',
         'gem_value',
-    ];   
+    ];
+
+    /**
+     * Relationships
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(TaskSubscription::class);
+    }
 }

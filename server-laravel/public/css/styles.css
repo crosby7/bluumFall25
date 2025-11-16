@@ -1,12 +1,18 @@
 :root {
-  --background-purple: #2b0868;
-  --search-purple: #553986;
-  --content-background-purple: #51288c;
-  --active-highlight-purple: #802ef6;
-  --border-highlight: #dec7ff66;
-  --transparent-highlight: rgba(255, 255, 255, 0.8);
-  --selectable-highlight: #45286e;
-  --complete-highlight: #11ab45;
+    --background-purple: #2b0868;
+    --search-purple: #553986;
+    --content-background-purple: #51288c;
+    --active-highlight-purple: #802ef6;
+    --border-highlight: #dec7ff66;
+    --transparent-highlight: rgba(255, 255, 255, 0.8);
+    --selectable-highlight: #45286e;
+    --complete-highlight: #11ab45;
+    --overdue-highlight: #f45c5c;
+    --general-highlight: #7b35ec;
+    --incomplete-highlight: #7b81ff;
+    --login-background-purple: #734dff;
+    --input-gray: #e1e1e1;
+    --input-text-gray: #676767;
 }
 
 /* =========================================== */
@@ -15,462 +21,907 @@
 
 /* Inter Font */
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
-    format("truetype");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
+    font-family: "Inter";
+    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* Italic Inter Fontt */
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
-    format("truetype");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
+    font-family: "Inter";
+    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
 }
 
 /* DT Getai Grotesk Display for logo */
 @font-face {
-  font-family: "DT Getai Grotesk Display";
-  src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
-    format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "DT Getai Grotesk Display";
+    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Outfit Font */
+@font-face {
+    font-family: "Outfit";
+    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* =========================================== */
 /* Common styles */
 /* =========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 html,
 body {
-  height: 100%;
-  font-family: "Inter", sans-serif;
+    height: 100%;
+    font-family: "Inter", sans-serif;
+    overflow: hidden;
+}
+
+/* Hide all scrollbars everywhere */
+body,
+html,
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    display: none;
 }
 
 /* Top bar styles */
 .topBar {
-  display: flex;
-  height: 80px;
-  background-color: var(--background-purple);
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
-
-  .topBarLeft {
     display: flex;
+    height: 80px;
+    background-color: var(--background-purple);
     align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.8);
 
-    .hamburger {
-      cursor: pointer;
-    }
-
-    .logo {
-      width: 160px;
-      cursor: pointer;
-      margin-left: 20px;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-  }
-
-  .topBarRight {
-    display: flex;
-    align-items: center;
-
-    .searchArea {
-      background-color: var(--search-purple);
-      max-width: 580px;
-      width: 580px;
-      border-radius: 20px;
-      display: flex;
-      padding: 0 10px;
-      margin-right: 80px;
-
-      .searchIcon {
-        width: 16px;
+    .topBarLeft {
         display: flex;
         align-items: center;
 
-        img {
-          width: 100%;
-          height: auto;
-          margin-right: 8px;
+        .hamburger {
+            cursor: pointer;
         }
-      }
 
-      input {
-        background-color: var(--search-purple);
-        border: none;
-        color: white;
-        padding: 10px;
-        border-radius: 20px;
-        outline: none;
-        width: calc(100% - 16px);
-      }
+        .logo {
+            width: 160px;
+            cursor: pointer;
+            margin-left: 20px;
 
-      input::placeholder {
-        color: white;
-      }
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
     }
 
-    .searchArea:focus-within {
-      box-shadow: 0 0 8px var(--active-highlight-purple);
-    }
+    .topBarRight {
+        display: flex;
+        align-items: center;
 
-    .profile {
-      width: 30px;
-      height: 30px;
-      border: 2px solid white;
-      background-color: white;
-      border-radius: 30px;
-      text-align: center;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 26px;
+        .searchArea {
+            background-color: var(--search-purple);
+            max-width: 580px;
+            width: 580px;
+            border-radius: 20px;
+            display: flex;
+            padding: 0 10px;
+            margin-right: 80px;
+            position: relative;
 
-      /* Link tag for testing login - REMOVE */
-      a {
-        text-decoration: none;
-        color: black;
-      }
+            .searchIcon {
+                width: 16px;
+                display: flex;
+                align-items: center;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    margin-right: 8px;
+                }
+            }
+
+            input {
+                background-color: var(--search-purple);
+                border: none;
+                color: white;
+                padding: 10px;
+                border-radius: 20px;
+                outline: none;
+                width: calc(100% - 16px);
+            }
+
+            input::placeholder {
+                color: white;
+            }
+
+            .searchResults {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                border-radius: 0.75rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                margin-top: 0.25rem;
+                overflow: hidden;
+                z-index: 50;
+                transition: opacity 0.2s ease;
+                background-color: var(--selectable-highlight);
+                color: white;
+            }
+
+            .search-card {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #f0f0f0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .search-card:hover {
+                background-color: var(--active-highlight-purple);
+            }
+
+            .search-card h4 {
+                margin: 0;
+                font-size: 0.95rem;
+            }
+
+            .search-card small {
+                color: #afafaf;
+            }
+        }
+
+        .searchArea:focus-within {
+            box-shadow: 0 0 8px var(--active-highlight-purple);
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border: 2px solid white;
+            background-color: white;
+            border-radius: 30px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 26px;
+
+            /* Link tag for testing login - REMOVE */
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
     }
-  }
 }
 
 /* Sidebar styles */
 .sidebar {
-  width: 5%;
-  min-width: 40px;
-  background-color: var(--background-purple);
-  color: white;
-  height: 100%;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-
-  a {
-    text-decoration: none;
+    width: 5%;
+    min-width: 40px;
+    background-color: var(--background-purple);
     color: white;
-  }
-
-  .createButton {
-    background-color: var(--active-highlight-purple);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border: none;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
+    height: 100%;
     transition: all 0.3s ease;
-    cursor: pointer;
-
-    img {
-      width: 30px;
-      height: 30px;
-      background: none;
-    }
-
-    span {
-      display: none;
-    }
-  }
-
-  .homeButton,
-  .patientsButton,
-  .inboxButton {
+    overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    transition: all 0.3s ease;
+    gap: 10px;
+    padding: 10px;
 
-    img {
-      width: 30px;
-      height: 30px;
-      background: none;
+    a {
+        text-decoration: none;
+        color: white;
     }
 
-    span {
-      display: none;
+    .createButton {
+        background-color: var(--active-highlight-purple);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border: none;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        img {
+            width: 30px;
+            height: 30px;
+            background: none;
+        }
+
+        span {
+            display: none;
+        }
     }
-  }
+
+    .createMenu {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: opacity 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        border: 2px solid var(--border-highlight);
+        border-radius: 10px;
+        align-items: center;
+    }
+
+    .createMenu.open {
+        opacity: 1;
+        height: auto;
+        pointer-events: auto;
+    }
+
+    .createPatientButton,
+    .createTaskButton {
+        background-color: var(--active-highlight-purple);
+        text-align: center;
+        color: white;
+        width: 110px;
+        height: 40px;
+        border: none;
+        cursor: pointer;
+        line-height: 40px;
+    }
+
+    .homeButton,
+    .patientsButton,
+    .inboxButton {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        transition: all 0.3s ease;
+
+        img {
+            width: 30px;
+            height: 30px;
+            background: none;
+        }
+
+        span {
+            display: none;
+        }
+    }
 }
 
 .sidebar.open {
-  width: 15%;
-  min-width: 120px;
-  padding: 20px;
-  align-items: flex-start;
+    width: 15%;
+    min-width: 120px;
+    padding: 20px;
+    align-items: flex-start;
 
-  .createButton {
-    width: 110px;
-    height: 50px;
-    border-radius: 40px;
-    padding: 0 10px;
+    .createButton {
+        width: 110px;
+        height: 50px;
+        border-radius: 40px;
+        padding: 0 10px;
 
-    span {
-      display: inline;
-      margin-left: 8px;
+        span {
+            display: inline;
+            margin-left: 8px;
+        }
     }
-  }
 
-  .homeButton,
-  .patientsButton,
-  .inboxButton {
-    width: 110px;
-    height: 50px;
-    padding: 0 10px;
+    .homeButton,
+    .patientsButton,
+    .inboxButton {
+        width: 110px;
+        height: 50px;
+        padding: 0 10px;
 
-    span {
-      display: inline;
-      margin-left: 8px;
+        span {
+            display: inline;
+            margin-left: 8px;
+        }
     }
-  }
 }
 
 /* Common Page Content Styles */
 .pageWrapper {
-  display: flex;
-  height: calc(100vh - 80px);
-  overflow: hidden;
-  background-color: var(--content-background-purple);
+    display: flex;
+    height: calc(100vh - 80px);
+    background-color: var(--content-background-purple);
+}
+
+/* for fullscreen pages (no topbar) */
+.fullPage {
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    background-color: var(--content-background-purple);
+
+    .pageContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .pageContent {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  transition: flex 0.3s ease;
-  color: white;
-  padding: 20px 60px;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    transition: flex 0.3s ease;
+    color: white;
+    padding: 20px 60px;
 }
 
 .pageHeader {
-  display: flex;
-  width: 100%;
-  position: relative;
-  margin-top: 10px;
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin-top: 10px;
+    cursor: default;
 
-  h2 {
-    font-size: 28px;
-  }
+    h2 {
+        font-size: 28px;
+    }
 }
 
 .close {
-  display: none;
+    display: none !important;
+}
+
+.highlight {
+    outline: 3px solid var(--active-highlight-purple);
+    background-color: var(--selectable-highlight);
+    transition: all 0.6s ease;
 }
 
 button {
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  border: 1px solid var(--border-highlight);
-  border-radius: 5px;
-  font-family: "Inter", sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    border: 1px solid var(--border-highlight);
+    border-radius: 5px;
+    font-family: "Inter", sans-serif;
 }
 
 button:hover {
-  background-color: var(--active-highlight-purple);
-  border: 1px solid white;
+    background-color: var(--active-highlight-purple);
+    border: 1px solid white;
+}
+
+.loginPageCard {
+    position: relative;
+    width: 580px;
+    height: 600px;
+    background-color: white;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 30px;
+    z-index: 99;
+
+    .xButton {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        width: 35px;
+        height: 35px;
+        background-color: var(--login-background-purple);
+        border: none;
+        border-radius: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        font-size: 16px;
+    }
+
+    h2 {
+        margin: 20px 0 40px 0;
+        font-size: 34px;
+        font-weight: bold;
+        color: black;
+        text-align: center;
+        font-family: "Outfit", "Inter", sans-serif;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        flex: 1 1 0;
+        height: 100%;
+
+        .inputGroup {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1 0 0;
+
+            input,
+            select,
+            textarea {
+                padding: 10px;
+                border: 1px solid;
+                border-radius: 5px;
+                font-size: 18px;
+                outline: none;
+                font-family: "Outfit", "Inter", sans-serif;
+            }
+
+            input:focus,
+            select:focus,
+            textarea:focus {
+                border: 1px solid var(--active-highlight-purple);
+                box-shadow: 0 0 8px var(--active-highlight-purple);
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+        }
+
+        .submitButton {
+            width: 80%;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: white;
+            background-color: var(--login-background-purple);
+            border: 2px solid var(--border-highlight);
+            margin-top: 10px;
+        }
+
+        .submitButton:hover {
+            background-color: white;
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
+    }
+}
+
+.popUpRegion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 98;
 }
 
 .largeCard {
-  width: 580px;
-  height: 600px;
-  background-color: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 20px;
-  padding: 20px;
-
-  .closeButton {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
-    background-color: var(--active-highlight-purple);
-    border: none;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    font-family: "DT Getai Grotesk Display", sans-serif;
-    line-height: 30px;
-  }
+    width: 580px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 30px;
+    z-index: 99;
 
-  h2 {
-    margin: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-    color: black;
-    text-align: center;
-  }
+    .xButton {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        width: 35px;
+        height: 35px;
+        background-color: var(--active-highlight-purple);
+        border: none;
+        border-radius: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        font-size: 16px;
+    }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .inputGroup {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-
-      label {
-        font-size: 14px;
-        font-weight: 600;
+    h2 {
+        margin: 20px 0 40px 0;
+        font-size: 34px;
+        font-weight: bold;
         color: black;
-      }
-
-      input,
-      select,
-      textarea {
-        padding: 10px;
-        border: 1px solid var(--border-highlight);
-        background-color: var(--border-highlight);
-        border-radius: 5px;
-        font-size: 14px;
-        outline: none;
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border: 1px solid var(--active-highlight-purple);
-        box-shadow: 0 0 8px var(--active-highlight-purple);
-      }
-
-      textarea {
-        resize: vertical;
-        min-height: 80px;
-      }
+        text-align: center;
+        font-family: "Outfit", "Inter", sans-serif;
     }
 
-    .submitButton {
-      width: 120px;
-      height: 40px;
-      font-size: 16px;
-      align-self: center;
-      background-color: var(--active-highlight-purple);
-      border: 2px solid var(--border-highlight);
-      margin-top: 10px;
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        flex: 1 1 0;
+        height: 100%;
+
+        .formInputs {
+            display: flex;
+            flex-direction: column;
+            flex: 1 0 0;
+            gap: 20px;
+        }
+
+        .patientIDRow {
+            display: flex;
+            gap: 10px;
+
+            label {
+                color: black;
+                font-family: "Outfit", "Inter", sans-serif;
+            }
+        }
+
+        .inputGroup {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 100px;
+
+            label {
+                color: black;
+                font-family: "Outfit", "Inter", sans-serif;
+            }
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 10px;
+            border: 1px solid;
+            background-color: var(--input-gray);
+            color: var(--input-text-gray);
+            border-radius: 5px;
+            font-size: 18px;
+            outline: none;
+            font-family: "Outfit", "Inter", sans-serif;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border: 1px solid var(--active-highlight-purple);
+            box-shadow: 0 0 8px var(--active-highlight-purple);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 200px;
+        }
+
+        select {
+            max-width: 150px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+
+        .fullWidthSelect {
+            width: 100%;
+            max-width: 100%;
+            margin-top: 50px;
+        }
+
+        .twoInputs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .checkboxGroup {
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+
+            label {
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+            }
+
+            input[type="checkbox"] {
+                width: auto;
+                cursor: pointer;
+            }
+
+            span {
+                font-size: 14px;
+            }
+        }
+
+        .submitButtons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .submitButton {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: white;
+            background-color: var(--active-highlight-purple);
+            border: 2px solid var(--border-highlight);
+            margin-top: 10px;
+        }
+
+        .submitButton:hover {
+            background-color: white;
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
+
+        .cancelButton {
+            width: 160px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: black;
+            background-color: white;
+            border: 2px solid var(--border-highlight);
+            margin-top: 10px;
+        }
+
+        .cancelButton:hover {
+            background-color: var(--input-gray);
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
     }
 
-    .submitButton:hover {
-      background-color: white;
-      color: var(--active-highlight-purple);
-      border: 2px solid var(--active-highlight-purple);
+    /* For confirmation pop ups */
+    .confirmation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1 1 0;
+        height: 100%;
+
+        img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin-top: 60px;
+            flex: 1 0 0;
+        }
+
+        .confirmationText {
+            flex: 1 0 0;
+
+            h3 {
+                color: black;
+                text-align: center;
+                font-weight: bold;
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+
+            p {
+                color: grey;
+                text-align: center;
+            }
+        }
+
+        .addNewPatient,
+        .addNewTask {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: white;
+            background-color: var(--active-highlight-purple);
+            border: 2px solid var(--border-highlight);
+            cursor: pointer;
+            display: block;
+        }
+
+        .addNewPatient:hover {
+            background-color: white;
+            color: var(--active-highlight-purple);
+            border: 2px solid var(--active-highlight-purple);
+        }
+
+        .maybeLater {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            align-self: center;
+            color: var(--active-highlight-purple);
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+        }
+
+        .maybeLater:hover {
+            text-decoration: underline;
+            color: var(--selectable-highlight);
+        }
     }
-  }
 }
 
 .fullscreenWidget {
-  width: 100%;
-  min-height: 300px;
-  background-color: var(--background-purple);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
+    width: 100%;
+    min-height: 300px;
+    max-height: calc(100vh - 200px);
+    background-color: var(--background-purple);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    overflow-y: auto;
 }
 
 /* =========================================== */
 /* Login Page styles */
 /* =========================================== */
+.loginBanner {
+    margin-bottom: 20px;
+    z-index: 90;
+}
+
 .centralHeader {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    z-index: 90;
 }
 
 .centralLogo {
-  width: 300px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-
-  img {
-    width: 100px;
     height: 100px;
-    object-fit: contain;
-    animation: spinWithPause 12s linear infinite alternate;
-  }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    z-index: 10;
 
-  .logoText {
-    font-family: "DT Getai Grotesk Display", sans-serif;
-    font-size: 48px;
-    color: white;
-    line-height: 48px;
-  }
+    img {
+        width: 90px;
+        height: 90px;
+        object-fit: contain;
+    }
+
+    .logoText {
+        font-family: "DT Getai Grotesk Display", sans-serif;
+        font-size: 100px;
+        color: white;
+        height: auto;
+        margin-top: 20px;
+    }
 }
 
-@keyframes spinWithPause {
-  0% {
-    transform: rotate(0deg);
-  }
-  20% {
-    transform: rotate(360deg);
-  }
-  50% {
-    transform: rotate(360deg);
-  }
-  70% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+.centralTagline {
+    font-family: "Outfit", "Inter", sans-serif;
+    font-size: 26px;
+    z-index: 10;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .loginButtons {
-  display: flex;
-  gap: 20px;
+    display: flex;
+    gap: 20px;
+    font-family: "Outfit", "Inter", sans-serif;
+    z-index: 10;
 
-  button {
-    width: 120px;
-    height: 40px;
-    font-size: 16px;
-    color: white;
-  }
+    button {
+        width: 120px;
+        height: 40px;
+        font-size: 16px;
+        color: white;
+    }
+}
+
+/* Rotating SVGs on Login Page */
+.decorativeShapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.rotatingShape {
+    position: absolute;
+}
+
+.yellowShape {
+    bottom: 0;
+    left: 0;
+    width: 650px;
+    height: 650px;
+    margin-bottom: -200px;
+    margin-left: -250px;
+}
+
+.pinkShape {
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 350px;
+    margin-top: -100px;
+    margin-left: -125px;
+}
+
+.purpleShape {
+    top: 0;
+    right: 0;
+    width: 330px;
+    height: 330px;
+    margin-top: -100px;
+    margin-right: -100px;
+}
+
+.greenShape {
+    bottom: 0;
+    right: 0;
+    width: 260px;
+    height: 260px;
+    margin-bottom: -70px;
+    margin-right: -70px;
+}
+
+.clockwise {
+    animation: spin 20s linear infinite;
+}
+
+.counterClockwise {
+    animation: spin 20s linear infinite reverse;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* =========================================== */
@@ -479,168 +930,213 @@ button:hover {
 
 /* Header Variant Styles */
 .pageHeader p {
-  background-color: var(--active-highlight-purple);
-  padding: 10px 30px;
-  margin: 0;
-  border-radius: 25px;
-  font-size: 18px;
+    background-color: var(--active-highlight-purple);
+    padding: 10px 30px;
+    margin: 0;
+    border-radius: 25px;
+    font-size: 18px;
 
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .greeting {
-  font-size: 30px;
-  font-weight: 600;
-  width: 100%;
-  text-align: center;
-  margin: 30px 0;
+    font-size: 30px;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    margin: 30px 0;
+    cursor: default;
 }
 
 /* Widget Area Styles */
 .widgetArea {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .widget {
-  width: 530px;
-  height: 430px;
-  background-color: var(--background-purple);
-  border-radius: 10px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+    width: 530px;
+    height: 430px;
+    background-color: var(--background-purple);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
 }
 
 .widgetHeader {
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    cursor: default;
 
-  h3 {
-    font-size: 22px;
-  }
+    h3 {
+        font-size: 22px;
+    }
 }
 
 .widgetFooter {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
 }
 
 /* Home Inbox Widget Styles */
 .inboxList {
-  flex: 1;
-  overflow-y: auto;
-  border-top: 1px solid var(--border-highlight);
+    flex: 1;
+    overflow-y: auto;
+    border-top: 1px solid var(--border-highlight);
 }
 
 .inboxRow {
-  width: 100%;
-  height: 50px;
-  display: flex;
-  border-bottom: 1px solid var(--border-highlight);
-  justify-content: space-between;
-  margin: 0 auto;
-  align-items: center;
-  padding: 0 10px;
-
-  .inboxProfileIcon {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-  }
-
-  .patientDetails {
-    background-color: rgba(255, 255, 255, 0.1);
-    height: 30px;
-    line-height: 30px;
-    border-radius: 5px;
-    font-size: 13px;
-    padding: 0 10px;
-    cursor: default;
-  }
-
-  .inboxStatusIcon {
-    width: 30px;
-    height: 30px;
-  }
-
-  /* On the Patients Page */
-  .inboxStatus {
-    height: 30px;
-    background-color: var(--complete-highlight);
+    width: 100%;
+    height: 50px;
     display: flex;
+    border-bottom: 1px solid var(--border-highlight);
+    justify-content: space-between;
+    margin: 0 auto;
     align-items: center;
-    gap: 5px;
     padding: 0 10px;
-    border-radius: 20px;
 
-    img {
-      width: 20px;
-      height: 20px;
+    .inboxProfileIcon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
     }
 
-    .statusText {
-      color: white;
-      font-size: 11px;
-      cursor: default;
+    .dueDate {
+        flex: 1 1 0;
     }
-  }
 
-  .inboxVerifyButton {
-    width: 55px;
-    height: 30px;
-  }
-
-  /* On the Patients Page */
-  .inboxVerify {
-    height: 30px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
-    .verifyText {
-      color: white;
-      font-size: 13px;
+    .taskDescription {
+        flex: 1 1 0;
     }
-  }
+
+    .inboxRowLeft {
+        flex: 1 1 0;
+    }
+
+    .inboxRowRight {
+        flex: 1 1 0;
+    }
+
+    .patientDetails {
+        background-color: rgba(255, 255, 255, 0.1);
+        height: 30px;
+        line-height: 30px;
+        border-radius: 5px;
+        font-size: 13px;
+        padding: 0 10px;
+        cursor: default;
+    }
+
+    .inboxStatusIcon {
+        width: 30px;
+        height: 30px;
+    }
+
+    /* On the Patients Page */
+
+    .statusContainer {
+        flex: 1 1 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inboxStatus {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0 10px;
+        border-radius: 20px;
+        max-width: 100px;
+        flex: 1 1 0;
+
+        img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .statusText {
+            color: white;
+            font-size: 11px;
+            cursor: default;
+        }
+    }
+
+    .completeStatus {
+        background-color: var(--complete-highlight);
+    }
+
+    .overdueStatus {
+        background-color: var(--overdue-highlight);
+    }
+
+    .generalStatus {
+        background-color: var(--general-highlight);
+    }
+
+    .inboxVerifyButton {
+        width: 55px;
+        height: 30px;
+    }
+
+    /* On the Patients Page */
+    .inboxVerify {
+        height: 30px;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex: 1 1 0;
+
+        .verifyText {
+            color: white;
+            font-size: 13px;
+        }
+    }
+
+    .emptyCol {
+        flex: 1 1 0;
+    }
 }
 
 /* Home Patients Widget Styles */
 .patientList {
-  flex: 1;
-  overflow-y: auto;
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  align-items: start;
-  align-content: start;
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    align-items: start;
+    align-content: start;
 
-  .patientCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 75px;
-    border-radius: 10px;
-    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
-    cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    .patientCard {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        background-color: rgba(255, 255, 255, 0.2);
+        height: 75px;
+        border-radius: 10px;
+        filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.3);
 
-    h2 {
-      font-size: 22px;
+        h2 {
+            font-size: 22px;
+        }
     }
-  }
 
-  .patientCard:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid white;
-  }
+    .patientCard:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 2px solid white;
+    }
 }
 
 /* =========================================== */
@@ -648,65 +1144,72 @@ button:hover {
 /* =========================================== */
 
 .patientCard {
-  width: 100%;
-  min-height: 300px;
-  border-bottom: 2px solid var(--border-highlight);
+    width: 100%;
+    border-bottom: 2px solid var(--border-highlight);
 
-  .patientActionCenter {
-    height: 110px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-
-    .patientProfile {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .patientInfo {
+    .patientActionCenter {
+        height: 110px;
         display: flex;
-        flex-direction: column;
-        cursor: default;
-      }
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+
+        .patientProfile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            img {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .patientInfo {
+                display: flex;
+                flex-direction: column;
+                cursor: default;
+
+                .patientCode {
+                    margin-top: 3px;
+                    padding: 4px;
+                    color: white;
+                    width: fit-content;
+                }
+            }
+        }
+
+        .patientTaskFilters {
+            display: flex;
+            gap: 20px;
+
+            .filterButton {
+                min-width: 90px;
+                height: 40px;
+                padding: 20px;
+                line-height: 0px;
+                font-size: 14px;
+                border-radius: 20px;
+                color: white;
+                background-color: var(--selectable-highlight);
+                border: none;
+            }
+
+            .filterButton.activeFilter {
+                background-color: var(--active-highlight-purple);
+                border: 1px solid white;
+                font-weight: bold;
+            }
+        }
+
+        .newTaskButton {
+            width: 120px;
+            height: 60px;
+            color: white;
+            font-size: 16px;
+            background-color: transparent;
+            border: none;
+        }
     }
-
-    .patientTaskFilters {
-      display: flex;
-      gap: 20px;
-
-      .filterButton {
-        min-width: 90px;
-        height: 40px;
-        padding: 20px;
-        line-height: 0px;
-        font-size: 14px;
-        border-radius: 20px;
-        color: white;
-        background-color: var(--selectable-highlight);
-        border: none;
-      }
-
-      .filterButton.activeFilter {
-        background-color: var(--active-highlight-purple);
-        border: 1px solid white;
-        font-weight: bold;
-      }
-    }
-
-    .newTaskButton {
-      width: 120px;
-      height: 60px;
-      color: white;
-      font-size: 16px;
-      background-color: transparent;
-      border: none;
-    }
-  }
 }

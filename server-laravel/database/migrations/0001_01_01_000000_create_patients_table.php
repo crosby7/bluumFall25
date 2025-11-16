@@ -4,6 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Patients Table
+ *
+ * Stores patient accounts (the primary users of the tablet app). Patients earn experience points
+ * and gems by completing tasks, which they can use to customize their avatar. Patients authenticate
+ * using a pairing code that nurses provide when initializing them on a mobile device.
+ */
 return new class extends Migration
 {
     /**
@@ -11,20 +18,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('username')->unique();
+            $table->string('pairing_code', 6)->unique();
+            $table->timestamp('paired_at')->nullable();
+            $table->string('device_identifier')->nullable();
             $table->rememberToken();
             $table->timestamps();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->unsignedBigInteger('avatar_id');
+            $table->integer('experience')->default(0);
+            $table->integer('gems')->default(0);
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -42,8 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('patients');
         Schema::dropIfExists('sessions');
     }
 };

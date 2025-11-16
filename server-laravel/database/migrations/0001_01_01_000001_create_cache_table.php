@@ -4,6 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Cache Tables
+ *
+ * Laravel framework cache infrastructure for storing temporary data and improving performance.
+ * Includes cache_locks for atomic lock operations.
+ */
 return new class extends Migration
 {
     /**

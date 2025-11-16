@@ -4,6 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Personal Access Tokens Table
+ *
+ * Laravel Sanctum table for API authentication tokens. Used to authenticate tablet devices
+ * after pairing, allowing patients to access the API securely.
+ */
 return new class extends Migration
 {
     /**

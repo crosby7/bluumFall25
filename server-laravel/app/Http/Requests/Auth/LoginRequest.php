@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
 
 class LoginRequest extends FormRequest
 {
@@ -41,15 +40,6 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
-        // DEVELOPMENT ONLY: Hardcoded credentials for testing
-        // TODO: Remove this in production
-        if ($this->input('email') === 'dev@example.com' && $this->input('password') === 'devpass') {
-            // Create a mock user session for development
-            Auth::loginUsingId(1); // Assumes user ID 1 exists, or creates a temporary session
-            RateLimiter::clear($this->throttleKey());
-            return;
-        }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
