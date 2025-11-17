@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\TaskStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +11,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TaskSubscription extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($subscription) {
+            // Automatically create an initial TaskCompletion when a subscription is created
+            TaskCompletion::create([
+                'subscription_id' => $subscription->id,
+                'scheduled_for' => Carbon::parse($subscription->start_at)->setTimeFromTimeString($subscription->scheduled_time),
+                'status' => TaskStatus::PENDING,
+            ]);
+        });
+    }
 
     protected $table = 'task_subscriptions';
 
