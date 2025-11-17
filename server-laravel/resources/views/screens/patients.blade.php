@@ -26,7 +26,7 @@
             <div class="inboxList">
                 @foreach($tasks->where('patient_id', $patient->id) as $task)
                 <div class="inboxRow">
-                    <p class="dueDate">{{ $task->scheduled_time }}</p>
+                    <p class="dueDatePatients">{{ $task->scheduled_time }}</p>
                     <p class="taskDescription">{{ $task->description }}</p>
                     <div class="statusContainer">
                         <div class="inboxStatus {{ $task->status }}Status">

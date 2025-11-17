@@ -9,7 +9,7 @@
 
     <div class="fullscreenWidget inboxPage">
         <div class="inboxList">
-            {{-- Loop through inbox items --}}
+            {{-- Loop through inbox items TODO: Tasks should only be pending or overdue -> new array will be passed --}}
             @foreach ($tasks as $task)
                 <div class="inboxRow">
                     <div class="inboxRowLeft">

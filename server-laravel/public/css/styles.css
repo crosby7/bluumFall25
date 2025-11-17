@@ -1014,7 +1014,7 @@ button:hover {
         cursor: pointer;
     }
 
-    .dueDate {
+    .dueDatePatients {
         flex: 1 1 0;
     }
 
@@ -1024,10 +1024,15 @@ button:hover {
 
     .inboxRowLeft {
         flex: 1 1 0;
+        display: flex;
+        gap: 30px;
     }
 
     .inboxRowRight {
         flex: 1 1 0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 30px;
     }
 
     .patientDetails {
@@ -1038,6 +1043,7 @@ button:hover {
         font-size: 13px;
         padding: 0 10px;
         cursor: default;
+        max-width: 150px;
     }
 
     .inboxStatusIcon {
