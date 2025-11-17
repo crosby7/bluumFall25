@@ -24,7 +24,7 @@ class TaskSubscription extends Model
             TaskCompletion::create([
                 'subscription_id' => $subscription->id,
                 'scheduled_for' => Carbon::parse($subscription->start_at)->setTimeFromTimeString($subscription->scheduled_time),
-                'status' => TaskStatus::PENDING,
+                'status' => TaskStatus::INCOMPLETE,
             ]);
         });
     }

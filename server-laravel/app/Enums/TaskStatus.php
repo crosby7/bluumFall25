@@ -8,4 +8,6 @@ enum TaskStatus: string
     case COMPLETED = 'completed';
     case SKIPPED = 'skipped';
     case FAILED = 'failed';
+    case INCOMPLETE = 'incomplete';
+    case OVERDUE = 'overdue';
 }
