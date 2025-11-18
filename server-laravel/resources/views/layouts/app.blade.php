@@ -63,6 +63,7 @@
         </div>
     </div>
 
+    <script src="{{ asset('scripts/context.js') }}"></script>
     <script src="{{ asset('scripts/nurses.js') }}"></script>
     @yield('scripts')
 </body>

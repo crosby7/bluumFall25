@@ -84,21 +84,24 @@
             }
         }
 
-        // .patientCode button function
-        const patientCodeButtons = document.querySelectorAll('.patientCode');
-        const defaultText = 'Display Pairing Code';
-        patientCodeButtons.forEach(button => {
-            let isToggled = false;
-            button.addEventListener('click', () => {
-                if (isToggled) {
-                    button.textContent = defaultText;
-                } else {
-                    const pairingCode = button.getAttribute('data-pairing-code') || 'N/A';
-                    button.textContent = `${pairingCode}`;
-                }
-                isToggled = !isToggled;
+        // .patientCode listeners attach
+        function patientCodeListener() {
+            const patientCodeButtons = document.querySelectorAll('.patientCode');
+            const defaultText = 'Display Pairing Code';
+            patientCodeButtons.forEach(button => {
+                let isToggled = false;
+                button.addEventListener('click', () => {
+                    if (isToggled) {
+                        button.textContent = defaultText;
+                    } else {
+                        const pairingCode = button.getAttribute('data-pairing-code') || 'N/A';
+                        button.textContent = `${pairingCode}`;
+                    }
+                    isToggled = !isToggled;
+                });
             });
-        });
+        }
+        
 
         // filter button functionality
         document.querySelectorAll('.patientCard').forEach(card => {
@@ -130,6 +133,61 @@
                 });
             });
         });
+
+        // Update UI on any data changes or passive refresh
+        function updatePatientUI(context) {
+            console.log('Updating Patient UI with context:', context);
+            const container = document.querySelector('.patientsPage');
+            if (!container) return;
+
+            container.innerHTML = context.patients.map(p => `
+            <div class="patientCard" id="patient-${p.id}" data-patient-id="${p.id}">
+                <div class="patientActionCenter">
+                    <div class="patientProfile">
+                        <img src="/assets/patients/corgiIcon.svg" alt="Corgi Icon">
+                        <div class="patientInfo">
+                            <h2 class="patientName">${p.username}</h2>
+                            <button class="patientCode" data-pairing-code="${p.pairing_code}">Display Pairing Code</button>
+                        </div>
+                    </div>
+                    <div class="patientTaskFilters">
+                        <button class="filterButton activeFilter">All Tasks</button>
+                        <button class="filterButton">Pending Verification</button>
+                        <button class="filterButton">Overdue</button>
+                    </div>
+                    <button class="newTaskButton addNewTask">+ New Task</button>
+                </div>
+                <div class="inboxList">
+                    ${context.tasks.filter(t => t.patient_id === p.id).map(t => `
+                    <div class="inboxRow">
+                        <p class="dueDatePatients">${t.scheduled_time}</p>
+                        <p class="taskDescription">${t.description}</p>
+                        <div class="statusContainer">
+                            <div class="inboxStatus ${t.status}Status">
+                                ${t.status === 'complete' ? '<img src="/assets/common/complete.svg" alt="">' : ''}
+                                ${t.status === 'overdue' ? '<img src="/assets/common/overdue.svg" alt="">' : ''}
+                                ${t.status === 'incomplete' ? '<img src="/assets/common/incomplete.svg" alt="">' : ''}
+                                ${t.status === 'new' ? '<img src="/assets/common/new.svg" alt="">' : ''}
+                                <span class="statusText">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span>
+                            </div>
+                        </div>
+                        ${t.status === 'pending' ? `
+                        <button class="inboxVerify" onclick="console.log('TODO: Verify task ${t.id}')">
+                            <img src="/assets/common/complete.svg" alt="Mark Complete">
+                            <span class="verifyText">Verify</span>
+                        </button>` : `<div class="emptyCol"></div>`}
+                    </div>
+                    `).join('')}
+                </div>
+            </div>
+            `).join('');
+
+            // Reattach event listeners for new elements
+            patientCodeListener();
+        }
+
+        // Start passive refresh
+        startPassiveRefresh(updatePatientUI);
     });
 </script>
 @endsection
