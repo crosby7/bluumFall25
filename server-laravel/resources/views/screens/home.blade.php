@@ -13,24 +13,32 @@
         {{-- Inbox Widget --}}
         <div class="widget inbox">
             <div class="widgetHeader"><h3>Inbox</h3></div>
+            @if ($criticalTasks->isEmpty())
+            <div class="emptyWidget">
+                <h3>No new items for you!</h3>
+            </div>
+            @else
             <div class="inboxList">
-                {{-- Commented out as this will be replaced by task views for overdue or pending verification tasks --}}
-                {{-- @foreach($patients->take(3) as $patient)
+                @foreach($criticalTasks as $task)
                 <div class="inboxRow">
                     <img class="inboxProfileIcon" src="{{ asset('assets/patients/corgiIcon.svg') }}" alt="Patient Icon">
-                    <p class="patientDetails">{{ $patient->username }}</p>
-                    <img class="inboxStatusIcon" src="{{ asset('assets/tasks/statusComplete.svg') }}" alt="Status: Complete">
+                    <p class="patientDetails">
+                        {{ $patients->firstWhere('id', $task->patient_id)->username }}
+                    </p>
+                    <img
+                        class="statusIcon {{ $task->status }}Status"
+                        src="{{ asset('assets/common/' . $task->status . '.svg') }}"
+                        alt="Status: {{ ucfirst($task->status) }}"
+                    />
+                    @if ($task->status === 'pending')
                     <button class="inboxVerifyButton">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                     </button>
+                    @endif
                 </div>
-                @endforeach --}}
-                @if (1)
-                <div class="emptyWidget">
-                    <h3>No new items for you!</h3>
-                </div>
-                @endif
+                @endforeach 
             </div>
+            @endif
             <div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>
         </div>
 

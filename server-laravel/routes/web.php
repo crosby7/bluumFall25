@@ -44,6 +44,8 @@ Route::prefix('api/nurse')->middleware(['auth', 'throttle:nurse-api'])->group(fu
 
     // Nurse Management
     Route::apiResource('nurses', NurseController::class);
+
+    Route::get('base-context', [NurseDashboardController::class, 'baseContextJson']);
 });
 
 require __DIR__.'/auth.php';

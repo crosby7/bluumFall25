@@ -5,6 +5,11 @@
 @section('content')
     <div class="pageHeader"><h2>Patients</h2></div>
     <div class="fullscreenWidget patientsPage">
+        @if ($patients->isEmpty())
+        <div class="emptyFullscreenWidget">
+            <h3>No Bluum patients to see here!</h3>
+        </div>
+        @else
         @foreach($patients as $patient)
         <div class="patientCard" id="patient-{{ $patient->id }}" data-patient-id="{{ $patient->id }}">
             <div class="patientActionCenter">
@@ -55,10 +60,12 @@
             </div>
         </div>
         @endforeach
+        @endif
     </div>
 @endsection
 
 {{-- Auto-scrolling when coming from search --}}
+{{-- Also listen for filterButtons --}}
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -90,6 +97,37 @@
                     button.textContent = `${pairingCode}`;
                 }
                 isToggled = !isToggled;
+            });
+        });
+
+        // filter button functionality
+        document.querySelectorAll('.patientCard').forEach(card => {
+            const filterButtons = card.querySelectorAll('.filterButton');
+            const inboxRows = card.querySelectorAll('.inboxRow');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('activeFilter'));
+                    button.classList.add('activeFilter');
+
+                    const filter = button.textContent.trim().toLowerCase();
+                    inboxRows.forEach(row => {
+                        const statusText = row.querySelector('.statusText').textContent.trim();
+                        if (filter === 'all tasks') {
+                            row.style.display = '';
+                        }
+                        else if (filter === 'pending verification') {
+                            row.style.display = (statusText === 'pending') ? '' : 'none';
+                        }
+                        else if (filter === 'overdue') {
+                            row.style.display = (statusText === 'overdue') ? '' : 'none';
+                        }
+                        else {
+                            row.style.display = '';
+                        }
+                    });
+                });
             });
         });
     });

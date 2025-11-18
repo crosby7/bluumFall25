@@ -30,10 +30,23 @@ class NurseDashboardController extends Controller
             ];
         });
 
+        $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->values();
+
+
         return [
             'patients' => $patients,
             'tasks' => $tasks,
+            'criticalTasks' => $criticalTasks,
         ];
+    }
+
+    /**
+     * Provide Base Context as JSON
+     * 
+     */
+    public function baseContextJson()
+    {
+        return response()->json($this->baseContext());
     }
 
     /**
