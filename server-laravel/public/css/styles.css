@@ -1023,6 +1023,9 @@ button:hover {
     margin: 0 auto;
     align-items: center;
     padding: 0 10px;
+    opacity: 1;
+    transition: all 1s ease;
+    overflow: hidden;
 
     .inboxProfileIcon {
         width: 40px;
@@ -1136,6 +1139,12 @@ button:hover {
     .emptyCol {
         flex: 1 1 0;
     }
+}
+
+.inboxRowFade {
+    opacity: 0;
+    transform: translateX(-100%);
+    height: 0;
 }
 
 /* Home Patients Widget Styles */

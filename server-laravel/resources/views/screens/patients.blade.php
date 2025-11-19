@@ -104,35 +104,37 @@
         
 
         // filter button functionality
-        document.querySelectorAll('.patientCard').forEach(card => {
-            const filterButtons = card.querySelectorAll('.filterButton');
-            const inboxRows = card.querySelectorAll('.inboxRow');
+        function setupFilterButtons() {
+            document.querySelectorAll('.patientCard').forEach(card => {
+                const filterButtons = card.querySelectorAll('.filterButton');
+                const inboxRows = card.querySelectorAll('.inboxRow');
 
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Update active state
-                    filterButtons.forEach(btn => btn.classList.remove('activeFilter'));
-                    button.classList.add('activeFilter');
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Update active state
+                        filterButtons.forEach(btn => btn.classList.remove('activeFilter'));
+                        button.classList.add('activeFilter');
 
-                    const filter = button.textContent.trim().toLowerCase();
-                    inboxRows.forEach(row => {
-                        const statusText = row.querySelector('.statusText').textContent.trim();
-                        if (filter === 'all tasks') {
-                            row.style.display = '';
-                        }
-                        else if (filter === 'pending verification') {
-                            row.style.display = (statusText === 'pending') ? '' : 'none';
-                        }
-                        else if (filter === 'overdue') {
-                            row.style.display = (statusText === 'overdue') ? '' : 'none';
-                        }
-                        else {
-                            row.style.display = '';
-                        }
+                        const filter = button.textContent.trim().toLowerCase();
+                        inboxRows.forEach(row => {
+                            const statusText = row.querySelector('.statusText').textContent.trim();
+                            if (filter === 'all tasks') {
+                                row.style.display = '';
+                            }
+                            else if (filter === 'pending verification') {
+                                row.style.display = (statusText === 'pending') ? '' : 'none';
+                            }
+                            else if (filter === 'overdue') {
+                                row.style.display = (statusText === 'overdue') ? '' : 'none';
+                            }
+                            else {
+                                row.style.display = '';
+                            }
+                        });
                     });
                 });
             });
-        });
+        }
 
         // Update UI on any data changes or passive refresh
         function updatePatientUI(context) {
@@ -184,6 +186,11 @@
 
             // Reattach event listeners for new elements
             patientCodeListener();
+
+            // Reattach filter button functionality
+            setupFilterButtons();
+
+            initInboxFadeListener();
         }
 
         // Start passive refresh
