@@ -18,7 +18,16 @@ class NurseDashboardController extends Controller
      */
     public function baseContext()
     {
-        $patients = Patient::latest()->get();
+        $patients = Patient::latest()->get()->map(function ($patient) {
+            return (object) [
+                'id' => $patient->id,
+                'username' => $patient->username,
+                'pairing_code' => $patient->pairing_code,
+                'avatar_id' => $patient->avatar_id,
+                'experience' => $patient->experience,
+                'gems' => $patient->gems,
+            ];
+        });
 
         // Fetch task subscriptions and map to unified structure
         $taskItems = TaskSubscription::with('task')->get()->map(function ($subscription) {
@@ -48,16 +57,17 @@ class NurseDashboardController extends Controller
             ];
         });
 
-        // Merge and sort by created_at descending (most recent first)
-        $tasks = $taskItems->concat($eventItems)->sortByDesc('created_at')->values();
+        // Keep tasks and events separate
+        $tasks = $taskItems->sortByDesc('created_at')->values();
+        $events = $eventItems->sortByDesc('created_at')->values();
 
-        $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->concat(
-            $tasks->where('type', 'event')
-        )->values();
+        // Critical tasks only includes pending/overdue tasks (no events)
+        $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->values();
 
         return [
             'patients' => $patients,
             'tasks' => $tasks,
+            'events' => $events,
             'criticalTasks' => $criticalTasks,
         ];
     }

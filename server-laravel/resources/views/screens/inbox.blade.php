@@ -8,14 +8,18 @@
     </div>
 
     <div class="fullscreenWidget inboxPage">
-        @if ($criticalTasks->isEmpty())
+        @php
+            // Merge critical tasks and events for inbox display
+            $inboxItems = $criticalTasks->concat($events)->sortByDesc('created_at')->values();
+        @endphp
+        @if ($inboxItems->isEmpty())
         <div class="emptyFullscreenWidget">
             <h3>No new items for you!</h3>
         </div>
         @else
         <div class="inboxList">
             {{-- Loop through inbox items -> criticalTasks or new action items (new patient) --}}
-            @foreach ($criticalTasks as $task)
+            @foreach ($inboxItems as $task)
             <div class="inboxRow">
                 <div class="inboxRowLeft">
                     <img
