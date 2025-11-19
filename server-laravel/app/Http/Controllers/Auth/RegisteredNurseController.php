@@ -22,7 +22,7 @@ class RegisteredNurseController extends Controller
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Nurse::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
