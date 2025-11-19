@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Patient;
 use App\Models\Task;
 use App\Models\TaskSubscription;
+use App\Models\TaskCompletion;
+use App\Enums\TaskStatus;
 use Carbon\Carbon;
 
 class PatientSeeder extends Seeder
@@ -63,6 +65,35 @@ class PatientSeeder extends Seeder
                     'timezone' => 'UTC',
                     'is_active' => true,
                 ]);
+            }
+        }
+
+        // Update some task completions to different statuses for test data
+        $completions = TaskCompletion::all();
+
+        if ($completions->count() > 0) {
+            // Set some completions to different statuses
+            $statusUpdates = [
+                TaskStatus::PENDING,
+                TaskStatus::PENDING,
+                TaskStatus::PENDING,
+                TaskStatus::PENDING,
+                TaskStatus::COMPLETED,
+                TaskStatus::SKIPPED,
+                TaskStatus::FAILED,
+                TaskStatus::OVERDUE,
+            ];
+
+            // Update completions to various statuses
+            foreach ($statusUpdates as $index => $status) {
+                if ($completions->count() > $index) {
+                    $completions[$index]->update(['status' => $status]);
+
+                    // Set completed_at for completed status
+                    if ($status === TaskStatus::COMPLETED) {
+                        $completions[$index]->update(['completed_at' => Carbon::now()]);
+                    }
+                }
             }
         }
     }

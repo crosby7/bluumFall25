@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Task;
 use App\Models\TaskSubscription;
+use App\Models\InboxEvent;
 
 class NurseDashboardController extends Controller
 {
@@ -18,20 +19,41 @@ class NurseDashboardController extends Controller
     public function baseContext()
     {
         $patients = Patient::latest()->get();
-        $tasks = TaskSubscription::with('task')->get()->map(function ($subscription) {
-            // Return a new object instead of modifying the task model
+
+        // Fetch task subscriptions and map to unified structure
+        $taskItems = TaskSubscription::with('task')->get()->map(function ($subscription) {
             return (object) [
                 'id' => $subscription->task->id,
+                'type' => 'task',
                 'name' => $subscription->task->name,
                 'description' => $subscription->task->description,
                 'scheduled_time' => $subscription->scheduled_time ? \Carbon\Carbon::parse($subscription->scheduled_time)->format('g:i a') : '',
                 'patient_id' => $subscription->patient_id,
                 'status' => $subscription->completions()->latest()->first()?->status->value,
+                'created_at' => $subscription->created_at,
             ];
         });
 
-        $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->values();
+        // Fetch inbox events and map to unified structure
+        $eventItems = InboxEvent::with('patient')->latest()->get()->map(function ($event) {
+            return (object) [
+                'id' => $event->id,
+                'type' => 'event',
+                'name' => ucwords(str_replace('_', ' ', $event->event_type)),
+                'description' => $event->description,
+                'scheduled_time' => $event->created_at->format('g:i a'),
+                'patient_id' => $event->patient_id,
+                'status' => null,
+                'created_at' => $event->created_at,
+            ];
+        });
 
+        // Merge and sort by created_at descending (most recent first)
+        $tasks = $taskItems->concat($eventItems)->sortByDesc('created_at')->values();
+
+        $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->concat(
+            $tasks->where('type', 'event')
+        )->values();
 
         return [
             'patients' => $patients,
