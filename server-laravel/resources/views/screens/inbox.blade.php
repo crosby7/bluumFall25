@@ -37,15 +37,17 @@
                 @if ($task->type === 'event')
                     {{-- Event items show event name --}}
                     <div class="inboxStatus eventStatus">
+                        <img src="{{ asset('assets/common/new.svg') }}" alt="">
                         <span class="statusText">{{ $task->name }}</span>
                     </div>
                 @else
                     {{-- Task items show status with icon --}}
                     <div class="inboxStatus {{ $task->status }}Status">
-                        <img
-                            src="{{ asset('assets/common/' . $task->status . '.svg') }}"
-                            alt="Status: {{ ucfirst($task->status) }}"
-                        />
+                        @if ($task->status === 'completed' || $task->status === 'pending')
+                            <img src="{{ asset('assets/common/complete.svg') }}" alt="">
+                        @elseif ($task->status === 'overdue')
+                            <img src="{{ asset('assets/common/overdue.svg') }}" alt="">
+                        @endif
                         <span class="statusText">{{ ucfirst($task->status) }}</span>
                     </div>
                 @endif
@@ -57,8 +59,6 @@
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                         <span class="verifyText">Verify</span>
                     </button>
-                    @else
-                    <div class="emptyCol"></div>
                     @endif
                 </div>
             </div>

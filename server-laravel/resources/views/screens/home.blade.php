@@ -25,15 +25,39 @@
                     <p class="patientDetails">
                         {{ $patients->firstWhere('id', $task->patient_id)->username }}
                     </p>
-                    <img
-                        class="statusIcon {{ $task->status }}Status"
-                        src="{{ asset('assets/common/' . $task->status . '.svg') }}"
+                    @if ($task->type === 'event')
+                        <img
+                        class="statusIcon eventStatus"
+                        src="{{ asset('assets/common/new.svg') }}"
                         alt="Status: {{ ucfirst($task->status) }}"
                     />
+                    @elseif ($task->status === 'completed' || $task->status === 'pending')
+                        <img
+                        class="statusIcon completedStatus"
+                        src="{{ asset('assets/common/complete.svg') }}"
+                        alt="Status: {{ ucfirst($task->status) }}" />
+                    @elseif ($task->status === 'overdue')
+                        <img
+                        class="statusIcon overdueStatus"
+                        src="{{ asset('assets/common/overdue.svg') }}"
+                        alt="Status: {{ ucfirst($task->status) }}" />
+                    @elseif ($task->status === 'incomplete' || $task->status === 'skipped' || $task->status === 'failed')
+                        <img
+                        class="statusIcon {{$task->status}}Status"
+                        src="{{ asset('assets/common/incomplete.svg') }}"
+                        alt="Status: {{ ucfirst($task->status) }}" />
+                    @else
+                        <img
+                        class="statusIcon generalStatus"
+                        src="{{ asset('assets/common/new.svg') }}"
+                        alt="Status: {{ ucfirst($task->status) }}" />
+                    @endif
                     @if ($task->status === 'pending')
                     <button class="inboxVerifyButton">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                     </button>
+                    @else
+                    <div class="homeEmptyCol"></div>
                     @endif
                 </div>
                 @endforeach 

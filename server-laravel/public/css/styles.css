@@ -22,8 +22,7 @@
 /* Inter Font */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -32,8 +31,7 @@
 /* Italic Inter Fontt */
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Inter/Inter-Italic-VariableFont_opsz\,wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: italic;
     font-display: swap;
@@ -42,8 +40,7 @@
 /* DT Getai Grotesk Display for logo */
 @font-face {
     font-family: "DT Getai Grotesk Display";
-    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf")
-        format("truetype");
+    src: url("/assets/fonts/getaiGrotesk/DTGetaiGroteskDisplay-Black.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -52,8 +49,7 @@
 /* Outfit Font */
 @font-face {
     font-family: "Outfit";
-    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf")
-        format("truetype");
+    src: url("/assets/fonts/Outfit/Outfit-VariableFont_wght.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -1065,9 +1061,11 @@ button:hover {
         max-width: 150px;
     }
 
-    .inboxStatusIcon {
-        width: 30px;
-        height: 30px;
+    .statusIcon {
+        width: 26px;
+        height: 26px;
+        border-radius: 30px;
+        padding: 4px;
     }
 
     /* On the Patients Page */
@@ -1101,17 +1099,20 @@ button:hover {
         }
     }
 
-    .completeStatus {
+    .completedStatus,
+    .pendingStatus {
         background-color: var(--complete-highlight);
     }
 
     .overdueStatus,
-    .skippedStatus {
+    .skippedStatus,
+    .failedStatus {
         background-color: var(--overdue-highlight);
     }
 
     .generalStatus,
-    .incompleteStatus {
+    .incompleteStatus,
+    .eventStatus {
         background-color: var(--general-highlight);
     }
 
@@ -1136,8 +1137,19 @@ button:hover {
         }
     }
 
+    .inboxVerifyContainer {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: flex-end;
+    }
+
     .emptyCol {
         flex: 1 1 0;
+    }
+
+    .homeEmptyCol {
+        width: 55px;
+        height: 30px;
     }
 }
 

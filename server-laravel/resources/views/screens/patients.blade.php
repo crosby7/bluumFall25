@@ -21,9 +21,9 @@
                     </div>
                 </div>
                 <div class="patientTaskFilters">
-                    <button class="filterButton activeFilter">All Tasks</button>
-                    <button class="filterButton">Pending Verification</button>
-                    <button class="filterButton">Overdue</button>
+                    <button class="filterButton activeFilter" data-filter="All Tasks">All Tasks</button>
+                    <button class="filterButton" data-filter="Pending">Pending Verification</button>
+                    <button class="filterButton" data-filter="Overdue">Overdue</button>
                 </div>
                 <button class="newTaskButton addNewTask">+ New Task</button>
             </div>
@@ -35,11 +35,11 @@
                     <p class="taskDescription">{{ $task->description }}</p>
                     <div class="statusContainer">
                         <div class="inboxStatus {{ $task->status }}Status">
-                            @if ($task->status === 'complete')
+                            @if ($task->status === 'complete' || $task->status === 'pending')
                             <img src="{{ asset('assets/common/complete.svg') }}" alt="">
                             @elseif ($task->status === 'overdue')
                             <img src="{{ asset('assets/common/overdue.svg') }}" alt="">
-                            @elseif ($task->status === 'incomplete')
+                            @elseif ($task->status === 'incomplete' || $task->status === 'skipped' || $task->status === 'failed')
                             <img src="{{ asset('assets/common/incomplete.svg') }}" alt="">
                             @else
                             <img src="{{ asset('assets/common/new.svg') }}" alt="">
@@ -48,10 +48,10 @@
                         </div>
                     </div>
                     @if($task->status === 'pending')
-                    <button class="inboxVerify" onclick="console.log('TODO: Verify task {{ $task->id }}')">
+                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="console.log('TODO: Verify task {{ $task->id }}')">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
-                    </button>
+                    </button></div>
                     @else
                     <div class="emptyCol"></div>
                     @endif
@@ -115,20 +115,26 @@
                         filterButtons.forEach(btn => btn.classList.remove('activeFilter'));
                         button.classList.add('activeFilter');
 
-                        const filter = button.textContent.trim().toLowerCase();
+                        const filter = button.dataset.filter;
+                        console.log('filtering by: ', filter);
                         inboxRows.forEach(row => {
                             const statusText = row.querySelector('.statusText').textContent.trim();
-                            if (filter === 'all tasks') {
+                            console.log('row status: ', statusText);
+                            if (filter === 'All Tasks') {
                                 row.style.display = '';
+                                console.log('show all: filter: ', filter, " status: ", statusText);
                             }
-                            else if (filter === 'pending verification') {
-                                row.style.display = (statusText === 'pending') ? '' : 'none';
+                            else if (filter === 'Pending') {
+                                row.style.display = (statusText === 'Pending') ? '' : 'none';
+                                console.log('Pending: filter: ', filter, " status: ", statusText);
                             }
-                            else if (filter === 'overdue') {
-                                row.style.display = (statusText === 'overdue') ? '' : 'none';
+                            else if (filter === 'Overdue') {
+                                row.style.display = (statusText === 'Overdue') ? '' : 'none';
+                                console.log('Overdue: filter: ', filter, " status: ", statusText);
                             }
                             else {
                                 row.style.display = '';
+                                console.log('default show all: filter: ', filter, " status: ", statusText);
                             }
                         });
                     });
@@ -153,9 +159,9 @@
                         </div>
                     </div>
                     <div class="patientTaskFilters">
-                        <button class="filterButton activeFilter">All Tasks</button>
-                        <button class="filterButton">Pending Verification</button>
-                        <button class="filterButton">Overdue</button>
+                        <button class="filterButton activeFilter" data-filter="All Tasks">All Tasks</button>
+                        <button class="filterButton" data-filter="Pending">Pending Verification</button>
+                        <button class="filterButton" data-filter="Overdue">Overdue</button>
                     </div>
                     <button class="newTaskButton addNewTask">+ New Task</button>
                 </div>
@@ -166,18 +172,19 @@
                         <p class="taskDescription">${t.description}</p>
                         <div class="statusContainer">
                             <div class="inboxStatus ${t.status}Status">
-                                ${t.status === 'complete' ? '<img src="/assets/common/complete.svg" alt="">' : ''}
-                                ${t.status === 'overdue' ? '<img src="/assets/common/overdue.svg" alt="">' : ''}
-                                ${t.status === 'incomplete' ? '<img src="/assets/common/incomplete.svg" alt="">' : ''}
-                                ${t.status === 'new' ? '<img src="/assets/common/new.svg" alt="">' : ''}
+                                ${t.status === 'complete' || t.status === 'pending' ? 
+                                `<img src="/assets/common/complete.svg" alt="">` : t.status === 'overdue' ? 
+                                `<img src="/assets/common/overdue.svg" alt="">` : t.status === 'incomplete' || t.status === 'skipped' || t.status === 'failed' ? 
+                                `<img src="/assets/common/incomplete.svg" alt="">` : 
+                                `<img src="/assets/common/new.svg" alt="">`}
                                 <span class="statusText">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span>
                             </div>
                         </div>
                         ${t.status === 'pending' ? `
-                        <button class="inboxVerify" onclick="console.log('TODO: Verify task ${t.id}')">
+                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(${t.id})">
                             <img src="/assets/common/complete.svg" alt="Mark Complete">
                             <span class="verifyText">Verify</span>
-                        </button>` : `<div class="emptyCol"></div>`}
+                        </button></div>` : `<div class="emptyCol"></div>`}
                     </div>
                     `).join('')}
                 </div>

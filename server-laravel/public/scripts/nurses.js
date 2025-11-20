@@ -733,10 +733,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Attach click listener to inboxrows. Needs to be a function to be reattached after UI updates.
 function initInboxFadeListener() {
-    document.querySelectorAll(".inboxRow").forEach((row) => {
-        row.addEventListener("click", () => {
-            console.log("Clicked row for task:", row);
-            row.classList.add("inboxRowFade");
+    document.querySelectorAll(".inboxVerify").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            console.log("Clicked verify button for task:", btn);
+            const inboxRow = btn.closest(".inboxRow");
+            inboxRow.classList.add("inboxRowFade");
         });
     });
 }
