@@ -93,4 +93,16 @@ class ItemPolicy
         // Neither nurses nor patients can force delete items
         return false;
     }
+
+    /**
+     * Determine whether the user can purchase the item.
+     *
+     * Only patients can purchase items.
+     * Nurses do not interact with the shop.
+     */
+    public function purchase(Nurse|Patient $user, Item $item): bool
+    {
+        // Only patients can purchase items
+        return $user instanceof Patient;
+    }
 }
