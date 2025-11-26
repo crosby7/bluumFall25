@@ -30,12 +30,12 @@
 
             <div class="inboxList">
                 @foreach($tasks->where('patient_id', $patient->id) as $task)
-                <div class="inboxRow">
+                <div class="inboxRow" data-completion-id="{{ $task->id }}">
                     <p class="dueDatePatients">{{ $task->scheduled_time }}</p>
                     <p class="taskDescription">{{ $task->description }}</p>
                     <div class="statusContainer">
                         <div class="inboxStatus {{ $task->status }}Status">
-                            @if ($task->status === 'complete' || $task->status === 'pending')
+                            @if ($task->status === 'completed' || $task->status === 'pending')
                             <img src="{{ asset('assets/common/complete.svg') }}" alt="">
                             @elseif ($task->status === 'overdue')
                             <img src="{{ asset('assets/common/overdue.svg') }}" alt="">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     @if($task->status === 'pending')
-                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="console.log('TODO: Verify task {{ $task->id }}')">
+                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, updatePatientUI, {{ $task->id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
                     </button></div>
@@ -143,7 +143,7 @@
         }
 
         // Update UI on any data changes or passive refresh
-        function updatePatientUI(context) {
+        window.updatePatientUI = function (context) {
             console.log('Updating Patient UI with context:', context);
             const container = document.querySelector('.patientsPage');
             if (!container) return;
@@ -167,12 +167,12 @@
                 </div>
                 <div class="inboxList">
                     ${context.tasks.filter(t => t.patient_id === p.id).map(t => `
-                    <div class="inboxRow">
+                    <div class="inboxRow" data-completion-id="${t.id}">
                         <p class="dueDatePatients">${t.scheduled_time}</p>
                         <p class="taskDescription">${t.description}</p>
                         <div class="statusContainer">
                             <div class="inboxStatus ${t.status}Status">
-                                ${t.status === 'complete' || t.status === 'pending' ? 
+                                ${t.status === 'completed' || t.status === 'pending' ? 
                                 `<img src="/assets/common/complete.svg" alt="">` : t.status === 'overdue' ? 
                                 `<img src="/assets/common/overdue.svg" alt="">` : t.status === 'incomplete' || t.status === 'skipped' || t.status === 'failed' ? 
                                 `<img src="/assets/common/incomplete.svg" alt="">` : 
@@ -181,7 +181,7 @@
                             </div>
                         </div>
                         ${t.status === 'pending' ? `
-                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(${t.id})">
+                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, updatePatientUI, ${t.id})">
                             <img src="/assets/common/complete.svg" alt="Mark Complete">
                             <span class="verifyText">Verify</span>
                         </button></div>` : `<div class="emptyCol"></div>`}
@@ -196,8 +196,6 @@
 
             // Reattach filter button functionality
             setupFilterButtons();
-
-            initInboxFadeListener();
         }
 
         // Start passive refresh

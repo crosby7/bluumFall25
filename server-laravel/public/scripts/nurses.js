@@ -731,13 +731,73 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// Attach click listener to inboxrows. Needs to be a function to be reattached after UI updates.
-function initInboxFadeListener() {
-    document.querySelectorAll(".inboxVerify").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            console.log("Clicked verify button for task:", btn);
-            const inboxRow = btn.closest(".inboxRow");
-            inboxRow.classList.add("inboxRowFade");
+// Function to verify tasks - calls AJAX completeTask() function
+// inboxRow.classList.add("inboxRowFade");
+async function verifyTask(btn, callback, taskId) {
+    console.log("Verifying task ID:", taskId);
+    const row = btn.closest(".inboxRow");
+
+    const result = await completeTask(taskId);
+
+    console.log("task verify result: ", result);
+
+    if (result) {
+        // On success, fade out the row
+        rowFade(row);
+
+        // Refresh the dynamic content
+        refreshBaseContext(callback);
+    }
+}
+
+function rowFade(row) {
+    row.classList.add("inboxRowFade");
+    console.log("Fading row:", row);
+
+    // Replace status container completedStatus
+    setTimeout(() => {
+        console.log("Replacing status container with completed status");
+        const statusContainer = row.querySelector(".statusContainer");
+        if (statusContainer) {
+            statusContainer.innerHTML =
+                "<div class='inboxStatus completedStatus'><img src='/assets/common/complete.svg' alt='' /><span>Completed</span></div>";
+        }
+    }, 2000);
+
+    // Reintroduce row
+    setTimeout(() => {
+        console.log("Reintroducing row:", row);
+        row.classList.remove("inboxRowFade");
+    }, 5000);
+}
+
+// AJAX function to mark task as complete
+async function completeTask(taskId) {
+    try {
+        console.log("Completing task ID:", taskId);
+        const response = await fetch(`/api/nurse/task-completions/${taskId}`, {
+            method: "PATCH",
+            headers: {
+                Accept: "application/json",
+                Accept: "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content,
+            },
+            body: JSON.stringify({
+                status: "completed",
+                completed_at: new Date().toISOString(),
+            }),
         });
-    });
+
+        if (!response.ok) {
+            console.error("Failed to complete task:", response.statusText);
+            return null;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error completing task:", error);
+        return null;
+    }
 }

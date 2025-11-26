@@ -71,6 +71,7 @@ class TaskCompletionController extends Controller
      */
     public function update(Request $request, TaskCompletion $taskCompletion): TaskCompletionResource
     {
+        \Log::info('Updating TaskCompletion ID: ' . $taskCompletion->id);
         $this->authorize('update', $taskCompletion);
 
         $validated = $request->validate([
@@ -79,6 +80,8 @@ class TaskCompletionController extends Controller
             'completed_at' => ['sometimes', 'nullable', 'date'],
             'status' => ['sometimes', Rule::enum(TaskStatus::class)],
         ]);
+
+        \Log::info('Validated Data: ', $validated);
 
         $taskCompletion->update($validated);
         $taskCompletion->load(['subscription.task']);
