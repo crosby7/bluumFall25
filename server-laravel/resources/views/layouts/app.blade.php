@@ -56,6 +56,12 @@
             </a>
         </div>
 
+        {{-- Create Menu Popover --}}
+        <div class="createMenuPopover" id="createMenuPopover">
+                <a class="createPatientButton addNewPatient">New Patient</a>
+                <a class="createTaskButton addNewTask">New Task</a>
+        </div>
+
         {{-- Page Content --}}
         <div class="pageContent" id="pageContent">
             @yield('content')

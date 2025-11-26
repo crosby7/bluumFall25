@@ -120,25 +120,32 @@ const createButton = document.querySelector(".createButton");
 const createPatientButton = document.querySelector(".createPatientButton");
 const createTaskButton = document.querySelector(".createTaskButton");
 const createMenu = document.querySelector(".createMenu");
+const createMenuPopover = document.getElementById("createMenuPopover");
+const sideBar = document.getElementById("sidebar");
 
-if (createButton) {
+if (sideBar && createButton) {
     createButton.addEventListener("click", () => {
-        if (!createMenu.classList.contains("open")) {
-            createMenu.style.height = "0px";
-            createMenu.classList.toggle("open");
-            void createMenu.offsetWidth;
-            createMenu.style.height = createMenu.scrollHeight + "px";
+        if (sideBar.classList.contains("open")) {
+            if (!createMenu.classList.contains("open")) {
+                createMenu.style.height = "0px";
+                createMenu.classList.toggle("open");
+                void createMenu.offsetWidth;
+                createMenu.style.height = createMenu.scrollHeight + "px";
+            } else {
+                createMenu.style.height = createMenu.scrollHeight + "px";
+                void createMenu.offsetWidth;
+                createMenu.style.height = "0px";
+                createMenu.addEventListener(
+                    "transitionend",
+                    () => {
+                        createMenu.classList.remove("open");
+                    },
+                    { once: true }
+                );
+            }
         } else {
-            createMenu.style.height = createMenu.scrollHeight + "px";
-            void createMenu.offsetWidth;
-            createMenu.style.height = "0px";
-            createMenu.addEventListener(
-                "transitionend",
-                () => {
-                    createMenu.classList.remove("open");
-                },
-                { once: true }
-            );
+            // Toggle popover visibility
+            createMenuPopover.classList.toggle("open");
         }
     });
 }

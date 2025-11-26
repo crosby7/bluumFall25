@@ -275,12 +275,6 @@ html::-webkit-scrollbar,
         align-items: center;
     }
 
-    .createMenu.open {
-        opacity: 1;
-        height: auto;
-        pointer-events: auto;
-    }
-
     .createPatientButton,
     .createTaskButton {
         background-color: var(--active-highlight-purple);
@@ -315,6 +309,45 @@ html::-webkit-scrollbar,
     }
 }
 
+.createMenuPopover {
+    position: absolute;
+    left: 80px;
+    top: 100px;
+    display: flex;
+    background-color: var(--transparent-highlight);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 0;
+    transition: opacity 0.3s ease, width 0.3s ease, max-height 0.3s ease;
+    width: 0;
+    max-height: 0;
+    opacity: 0;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+
+    .createPatientButton,
+    .createTaskButton {
+        background-color: var(--active-highlight-purple);
+        text-align: center;
+        border: 2px solid var(--border-highlight);
+        color: white;
+        width: 110px;
+        height: 40px;
+        border: none;
+        cursor: pointer;
+        line-height: 40px;
+        border-radius: 6px;
+    }
+}
+
+.sidebar:not(.open)+.createMenuPopover.open {
+    width: 118px;
+    max-height: none;
+    opacity: 1;
+    padding: 4px;
+}
+
 .sidebar.open {
     width: 15%;
     min-width: 120px;
@@ -331,6 +364,12 @@ html::-webkit-scrollbar,
             display: inline;
             margin-left: 8px;
         }
+    }
+
+    .createMenu.open {
+        opacity: 1;
+        height: auto;
+        pointer-events: auto;
     }
 
     .homeButton,
@@ -485,6 +524,16 @@ button:hover {
             textarea {
                 resize: vertical;
                 min-height: 80px;
+            }
+        }
+
+        .twoInputs {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+
+            .inputGroup {
+                width: calc(50% - 10px);
             }
         }
 
