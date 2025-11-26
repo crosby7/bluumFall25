@@ -5,11 +5,22 @@ const loginButton = document.querySelector(".loginButton");
 const registerButton = document.querySelector(".registerButton");
 const loginButtonDiv = document.querySelector(".loginButtons");
 
+const newTaskPopUp = document.querySelector(".newTask");
+
 if (toggleBtn) {
     toggleBtn.addEventListener("click", () => {
         sidebar.classList.toggle("open");
     });
 }
+
+// find the common refresh function for the specific page we're on
+window.runPageRefresh = function (context) {
+    if (typeof window.pageRefreshFunction === "function") {
+        window.pageRefreshFunction(context);
+    } else {
+        console.warn("No pageRefreshFunction() defined for this page.");
+    }
+};
 
 // Large Cards: close button functionality
 const closeButtons = document.querySelectorAll(".closeButton");
@@ -83,22 +94,26 @@ if (newPatientButtons) {
     });
 }
 
-// newTaskButton will opent the new task popup
-const newTaskButtons = document.querySelectorAll(".addNewTask");
-const newTaskPopUp = document.querySelector(".newTask");
+function attachNewTaskListeners() {
+    // newTaskButton will opent the new task popup
+    const newTaskButtons = document.querySelectorAll(".addNewTask");
 
-if (newTaskButtons) {
-    newTaskButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            // Try to get patient context from the closest patient card
-            const patientCard = button.closest("[data-patient-id]");
-            const patientId = patientCard
-                ? patientCard.dataset.patientId
-                : null;
-            showTaskModal(patientId);
+    if (newTaskButtons) {
+        newTaskButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                console.log(
+                    "New Task button clicked for patient ID:",
+                    button.closest("[data-patient-id]")?.dataset.patientId
+                );
+                showTaskModal(
+                    button.closest("[data-patient-id]")?.dataset.patientId ||
+                        null
+                );
+            });
         });
-    });
+    }
 }
+attachNewTaskListeners();
 
 // Create button (sidebar) will open create menu
 const createButton = document.querySelector(".createButton");
@@ -732,8 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Function to verify tasks - calls AJAX completeTask() function
-// inboxRow.classList.add("inboxRowFade");
-async function verifyTask(btn, callback, taskId) {
+async function verifyTask(btn, taskId) {
     console.log("Verifying task ID:", taskId);
     const row = btn.closest(".inboxRow");
 
@@ -746,7 +760,7 @@ async function verifyTask(btn, callback, taskId) {
         rowFade(row);
 
         // Refresh the dynamic content
-        refreshBaseContext(callback);
+        refreshBaseContext(window.runPageRefresh);
     }
 }
 
@@ -779,14 +793,17 @@ async function completeTask(taskId) {
             method: "PATCH",
             headers: {
                 Accept: "application/json",
-                Accept: "application/json",
+                "Content-Type": "application/json",
                 "X-CSRF-TOKEN": document.querySelector(
                     'meta[name="csrf-token"]'
                 ).content,
             },
             body: JSON.stringify({
                 status: "completed",
-                completed_at: new Date().toISOString(),
+                completed_at: new Date()
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace("T", " "),
             }),
         });
 

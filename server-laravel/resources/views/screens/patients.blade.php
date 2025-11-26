@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     @if($task->status === 'pending')
-                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, updatePatientUI, {{ $task->id }})">
+                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
                     </button></div>
@@ -181,7 +181,7 @@
                             </div>
                         </div>
                         ${t.status === 'pending' ? `
-                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, updatePatientUI, ${t.id})">
+                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${t.id})">
                             <img src="/assets/common/complete.svg" alt="Mark Complete">
                             <span class="verifyText">Verify</span>
                         </button></div>` : `<div class="emptyCol"></div>`}
@@ -193,6 +193,7 @@
 
             // Reattach event listeners for new elements
             patientCodeListener();
+            attachNewTaskListeners();
 
             // Reattach filter button functionality
             setupFilterButtons();
@@ -200,6 +201,9 @@
 
         // Start passive refresh
         startPassiveRefresh(updatePatientUI);
+
+        // Assign updatePatientUI as common refresh function
+        window.pageRefreshFunction = updatePatientUI;
     });
 </script>
 @endsection

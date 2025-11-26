@@ -74,12 +74,17 @@ class TaskCompletionController extends Controller
         \Log::info('Updating TaskCompletion ID: ' . $taskCompletion->id);
         $this->authorize('update', $taskCompletion);
 
-        $validated = $request->validate([
-            'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
-            'scheduled_for' => ['sometimes', 'date'],
-            'completed_at' => ['sometimes', 'nullable', 'date'],
-            'status' => ['sometimes', Rule::enum(TaskStatus::class)],
-        ]);
+        try {
+            $validated = $request->validate([
+                'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
+                'scheduled_for' => ['sometimes', 'date'],
+                'completed_at' => ['sometimes', 'nullable', 'date'],
+                'status' => ['sometimes', Rule::enum(TaskStatus::class)],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed: ' . $e->errors());
+            throw $e;
+        }
 
         \Log::info('Validated Data: ', $validated);
 
