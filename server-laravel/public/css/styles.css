@@ -1071,6 +1071,7 @@ button:hover {
     opacity: 1;
     transition: all 1s ease;
     overflow: hidden;
+    position: relative;
 
     .inboxProfileIcon {
         width: 40px;
@@ -1193,6 +1194,7 @@ button:hover {
         justify-content: flex-end;
     }
 
+
     .emptyCol {
         flex: 1 1 0;
     }
@@ -1203,10 +1205,37 @@ button:hover {
     }
 }
 
-.inboxRowFade {
-    opacity: 0;
-    transform: translateX(-100%);
-    height: 0;
+.inboxPage .inboxVerifyContainer {
+    flex: 0;
+}
+
+.inboxRow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--general-highlight);
+    pointer-events: none;
+    z-index: 10;
+    transform: translateX(100%);
+}
+
+.inboxRowAnim::after {
+    animation: sweep-left 2s ease;
+}
+
+@keyframes sweep-left {
+    0% {
+        opacity: 1;
+        transform: translateX(100%);
+        height: 50px;
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 /* Home Patients Widget Styles */

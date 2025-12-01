@@ -43,29 +43,29 @@ if (closeButtons) {
     });
 }
 
-// Temp: submit button will just close the large card
-// Skip .createPatient and .createTask buttons as they have their own form handlers
-const submitButtons = document.querySelectorAll(
-    ".submitButton:not(.createPatient):not(.createTask)"
-);
+// // Temp: submit button will just close the large card
+// // Skip .createPatient and .createTask buttons as they have their own form handlers
+// const submitButtons = document.querySelectorAll(
+//     ".submitButton:not(.createPatient):not(.createTask)"
+// );
 
-if (submitButtons) {
-    submitButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            button.closest(".popUp").classList.toggle("close");
-            if (
-                button
-                    .closest(".popUp")
-                    .parentElement.classList.contains("popUpRegion")
-            ) {
-                button.closest(".popUpRegion").classList.toggle("close");
-            }
-            if (loginButtonDiv) {
-                loginButtonDiv.classList.remove("close");
-            }
-        });
-    });
-}
+// if (submitButtons) {
+//     submitButtons.forEach((button) => {
+//         button.addEventListener("click", () => {
+//             button.closest(".popUp").classList.toggle("close");
+//             if (
+//                 button
+//                     .closest(".popUp")
+//                     .parentElement.classList.contains("popUpRegion")
+//             ) {
+//                 button.closest(".popUpRegion").classList.toggle("close");
+//             }
+//             if (loginButtonDiv) {
+//                 loginButtonDiv.classList.remove("close");
+//             }
+//         });
+//     });
+// }
 
 // login and register buttons will open popup card
 if (loginButton) {
@@ -472,6 +472,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Re-enable button after successful submission
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
+
+                // Refresh page content
+                refreshBaseContext(window.runPageRefresh);
             } else {
                 // Fallback if modal elements not found
                 alert(
@@ -615,6 +618,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     taskForm.reset();
                     submitButton.disabled = false;
                     submitButton.textContent = originalText;
+
+                    // Refresh page content
+                    refreshBaseContext(window.runPageRefresh);
                 } else {
                     alert("Default schedule assigned successfully!");
                     submitButton.disabled = false;
@@ -763,33 +769,40 @@ async function verifyTask(btn, taskId) {
     console.log("task verify result: ", result);
 
     if (result) {
-        // On success, fade out the row
-        rowFade(row);
-
-        // Refresh the dynamic content
-        refreshBaseContext(window.runPageRefresh);
+        // On success, animate out the row
+        rowAnim(row);
     }
 }
 
-function rowFade(row) {
-    row.classList.add("inboxRowFade");
-    console.log("Fading row:", row);
+function rowAnim(row) {
+    row.classList.add("inboxRowAnim");
+    console.log("Anim row:", row);
 
     // Replace status container completedStatus
     setTimeout(() => {
         console.log("Replacing status container with completed status");
         const statusContainer = row.querySelector(".statusContainer");
+        const verifyButtonContainer = row.querySelector(
+            ".inboxVerifyContainer"
+        );
+        // there is a gap on inboxRowRight (inbox page), remove gap when clearing verify button
+        const inboxRowRight = row.querySelector(".inboxRowRight");
         if (statusContainer) {
             statusContainer.innerHTML =
-                "<div class='inboxStatus completedStatus'><img src='/assets/common/complete.svg' alt='' /><span>Completed</span></div>";
+                "<div class='inboxStatus completedStatus'><img src='/assets/common/complete.svg' alt='' /><span class='statusText'>Completed</span></div>";
         }
-    }, 2000);
+        if (verifyButtonContainer) {
+            verifyButtonContainer.innerHTML = "";
+        }
+        if (inboxRowRight) {
+            inboxRowRight.style.gap = "0";
+        }
+    }, 600);
 
     // Reintroduce row
     setTimeout(() => {
-        console.log("Reintroducing row:", row);
-        row.classList.remove("inboxRowFade");
-    }, 5000);
+        row.classList.remove("inboxRowAnim");
+    }, 2000);
 }
 
 // AJAX function to mark task as complete

@@ -34,6 +34,7 @@
 
                 <p class="taskDescription">{{ $task->description }}</p>
 
+                <div class="statusContainer">
                 @if ($task->type === 'event')
                     {{-- Event items show event name --}}
                     <div class="inboxStatus eventStatus">
@@ -42,23 +43,27 @@
                     </div>
                 @else
                     {{-- Task items show status with icon --}}
-                    <div class="inboxStatus {{ $task->status }}Status">
+                        <div class="inboxStatus {{ $task->status }}Status">
                         @if ($task->status === 'completed' || $task->status === 'pending')
                             <img src="{{ asset('assets/common/complete.svg') }}" alt="">
                         @elseif ($task->status === 'overdue')
                             <img src="{{ asset('assets/common/overdue.svg') }}" alt="">
                         @endif
                         <span class="statusText">{{ ucfirst($task->status) }}</span>
-                    </div>
+                        </div>
                 @endif
+                </div>
+
 
                 <div class="inboxRowRight">
                     <p class="dueDate">{{ $task->scheduled_time }}</p>
                     @if ($task->type !== 'event' && $task->status === 'pending')
-                    <button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
+                    <div class="inboxVerifyContainer">
+                        <button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                         <span class="verifyText">Verify</span>
                     </button>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -103,7 +108,7 @@
                         </div>
 
                         <p class='taskDescription'>${item.description || ''}</p>
-
+                        <div class="statusContainer">
                         ${isEvent
                             ? `<div class="inboxStatus eventStatus">
                                 ${statusIcon}
@@ -113,13 +118,14 @@
                                 ${statusIcon}
                                 <span class="statusText">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
                                </div>`}
+                        </div>
                         <div class="inboxRowRight">
                             <p class="dueDate">${item.scheduled_time || ''}</p>
                             ${!isEvent && status === 'pending' ? `
-                            <button class="inboxVerify" onclick="verifyTask(this, ${item.id})">
+                            <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${item.id})">
                                 <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                                 <span class="verifyText">Verify</span>
-                            </button>` : ''}
+                            </button></div>` : ''}
                         </div>
                     </div>
                 `;
@@ -133,3 +139,4 @@
         window.pageRefreshFunction = updateInboxUI;
     })
 </script>
+@endsection
