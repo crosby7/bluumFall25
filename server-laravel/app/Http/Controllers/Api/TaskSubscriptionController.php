@@ -171,12 +171,8 @@ class TaskSubscriptionController extends Controller
 
     /**
      * Assign default schedule to a patient.
-     * Creates a basic daily schedule with essential tasks:
-     * - Morning Medication at 8:00 AM
-     * - Grooming at 9:00 AM
-     * - Lunch at 12:00 PM
-     * - Grooming at 7:00 PM
-     * - Night Medications at 8:00 PM
+     * Creates a full daily schedule matching the PatientSeeder schedule.
+     * All tasks are created with status pending (incomplete).
      *
      * @param \App\Models\Patient $patient
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -185,56 +181,35 @@ class TaskSubscriptionController extends Controller
     {
         $this->authorize('bulkStore', [TaskSubscription::class, $patient]);
 
-        // Get task IDs by name
-        $morningMedicationTask = \App\Models\Task::where('name', 'Morning Medication')->first();
-        $groomingTask = \App\Models\Task::where('name', 'Grooming')->first();
-        $lunchTask = \App\Models\Task::where('name', 'Lunch')->first();
-        $nightMedicationsTask = \App\Models\Task::where('name', 'Night Medications')->first();
-
-        if (!$morningMedicationTask || !$groomingTask || !$lunchTask || !$nightMedicationsTask) {
-            return response()->json([
-                'message' => 'One or more required tasks not found in the system',
-            ], 404);
-        }
-
-        // Define default schedule
-        $defaultSchedule = [
-            [
-                'task_id' => $morningMedicationTask->id,
-                'scheduled_time' => '08:00:00',
-                'start_at' => now()->format('Y-m-d H:i:s'),
-            ],
-            [
-                'task_id' => $groomingTask->id,
-                'scheduled_time' => '09:00:00',
-                'start_at' => now()->format('Y-m-d H:i:s'),
-            ],
-            [
-                'task_id' => $lunchTask->id,
-                'scheduled_time' => '12:00:00',
-                'start_at' => now()->format('Y-m-d H:i:s'),
-            ],
-            [
-                'task_id' => $groomingTask->id,
-                'scheduled_time' => '19:00:00', // 7:00 PM
-                'start_at' => now()->format('Y-m-d H:i:s'),
-            ],
-            [
-                'task_id' => $nightMedicationsTask->id,
-                'scheduled_time' => '20:00:00', // 8:00 PM
-                'start_at' => now()->format('Y-m-d H:i:s'),
-            ],
+        // Define task schedules matching PatientSeeder
+        $taskSchedules = [
+            'Morning Medication' => '08:00:00',
+            'Grooming' => '09:00:00',
+            'School: Reading' => '10:00:00',
+            'PT Therapy' => '10:30:00',
+            'School: Math' => '11:00:00',
+            'Lunch' => '12:00:00',
+            'Bandage Change' => '13:00:00',
+            'OT Therapy' => '14:00:00',
+            'Rec Activity' => '15:00:00',
+            'Night Medications' => '20:00:00',
         ];
+
+        // Get all tasks
+        $tasks = \App\Models\Task::all();
 
         $createdSubscriptions = [];
 
-        foreach ($defaultSchedule as $scheduleItem) {
+        // Assign all tasks to the patient with their scheduled times
+        foreach ($tasks as $task) {
+            $scheduledTime = $taskSchedules[$task->name] ?? '12:00:00';
+
             $subscriptionData = [
                 'patient_id' => $patient->id,
-                'task_id' => $scheduleItem['task_id'],
-                'start_at' => $scheduleItem['start_at'],
-                'scheduled_time' => $scheduleItem['scheduled_time'],
-                'interval_days' => 1, // Daily
+                'task_id' => $task->id,
+                'start_at' => now()->format('Y-m-d H:i:s'),
+                'scheduled_time' => $scheduledTime,
+                'interval_days' => 1, // Daily tasks
                 'timezone' => 'UTC',
                 'is_active' => true,
             ];
