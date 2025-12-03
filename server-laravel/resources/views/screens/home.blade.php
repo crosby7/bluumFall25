@@ -118,38 +118,74 @@
                     </div>
                 `;
                 inboxContainer.innerHTML += `<div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>`;
-                return;
+            }
+            else {
+                // inbox is not empty. set inbox content
+                inboxContainer.innerHTML += `<div class='inboxList'>` + inboxItems.map(item => {
+                    const patient = context.patients.find(p => p.id === item.patient_id) || {};
+                    const isEvent = item.type === 'event';
+                    const status = item.status || 'new';
+
+                    const statusIcon = isEvent
+                        ? '<img class="statusIcon eventStatus" src="{{ asset('assets/common/new.svg') }}" alt="">'
+                        : status === 'completed' || status === 'pending'
+                            ? '<img class="statusIcon '+ status +'Status" src="{{ asset('assets/common/complete.svg') }}" alt="">'
+                            : status === 'overdue'
+                                ? '<img class="statusIcon overdueStatus" src="{{ asset('assets/common/overdue.svg') }}" alt="">'
+                                : '<img class="statusIcon newStatus" src="{{ asset('assets/common/new.svg') }}" alt="">';
+
+                    return `
+                            <div class='inboxRow'>
+                                <img class='inboxProfileIcon' src='{{ asset('assets/patients/corgiIcon.svg') }}' alt='Patient Icon' />
+                                <p class='patientDetails'>${patient.username || 'Patient'}</p>
+                                ${statusIcon}
+                                    ${!isEvent && status === 'pending' ? `
+                                    <button class="inboxVerifyButton">
+                                        <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
+                                    </button>` : `<div class="homeEmptyCol"></div>`}
+                            </div>
+                    `;
+                }).join('');
             }
 
-            // inbox is not empty. set inbox content
-            inboxContainer.innerHTML += `<div class='inboxList'>` + inboxItems.map(item => {
-                const patient = context.patients.find(p => p.id === item.patient_id) || {};
-                const isEvent = item.type === 'event';
-                const status = item.status || 'new';
-
-                const statusIcon = isEvent
-                    ? '<img class="statusIcon eventStatus" src="{{ asset('assets/common/new.svg') }}" alt="">'
-                    : status === 'completed' || status === 'pending'
-                        ? '<img class="statusIcon '+ status +'Status" src="{{ asset('assets/common/complete.svg') }}" alt="">'
-                        : status === 'overdue'
-                            ? '<img class="statusIcon overdueStatus" src="{{ asset('assets/common/overdue.svg') }}" alt="">'
-                            : '<img class="statusIcon newStatus" src="{{ asset('assets/common/new.svg') }}" alt="">';
-
-                return `
-                        <div class='inboxRow'>
-                            <img class='inboxProfileIcon' src='{{ asset('assets/patients/corgiIcon.svg') }}' alt='Patient Icon' />
-                            <p class='patientDetails'>${patient.username || 'Patient'}</p>
-                            ${statusIcon}
-                                ${!isEvent && status === 'pending' ? `
-                                <button class="inboxVerifyButton">
-                                    <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
-                                </button>` : `<div class="homeEmptyCol"></div>`}
-                        </div>
-                `;
-            }).join('');
-
-            // set footer
+            // set inbox footer
             inboxContainer.innerHTML += `</div><div class="widgetFooter" onclick="window.location.href='/inbox'"><p>View All</p></div>`;
+
+            console.log('inbox updated, now for patients');
+            // update patients widget
+            const patientsContainer = document.querySelector('.patients');
+            if (!patientsContainer) return;
+
+            patientsContainer.innerHTML = `<div class='widgetHeader'><h3>Patients</h3></div>`;
+            const patients = context.patients || [];
+
+            // if no patients, show empty state
+            if (patients.length === 0) {
+                patientsContainer.innerHTML += `
+                    <div class='emptyWidget'>
+                        <h3>No patients for now!</h3>
+                    </div>
+                `;
+                patientsContainer.innerHTML += `<div class="widgetFooter" onclick="window.location.href='/patients'"><p>View All</p></div>`;
+            }
+            else {
+                // patients exist, show patient list
+                patientsContainer.innerHTML += `<div class='patientList'>` + patients.map(patient => `
+                    <div class='patientCard' onclick="window.location.href='/patients#${patient.id}'">
+                        <img src='{{ asset('assets/patients/corgiIcon.svg') }}' alt='Patient Icon' />
+                        <div class='patientInfo'>
+                            <h2 class='patientName'>${patient.username}</h2>
+                        </div>
+                    </div>
+                `).join('') + `</div>`;
+            }
+
+            
+
+            // set patients footer
+            patientsContainer.innerHTML += `<div class="widgetFooter" onclick="window.location.href='/patients'"><p>View All</p></div>`;
+            console.log('patients updated');
+            return;
         }
 
         // Start passive refresh

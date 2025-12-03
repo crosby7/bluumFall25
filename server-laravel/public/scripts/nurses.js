@@ -89,6 +89,13 @@ const confirmPatientPopUp = document.querySelector(".confirmPatient");
 if (newPatientButtons) {
     newPatientButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            // if confirmation is displayed, close it first
+            if (
+                confirmPatientPopUp &&
+                !confirmPatientPopUp.classList.contains("close")
+            ) {
+                confirmPatientPopUp.classList.add("close");
+            }
             showPatientModal();
         });
     });
@@ -105,6 +112,16 @@ function attachNewTaskListeners() {
                     "New Task button clicked for patient ID:",
                     button.closest("[data-patient-id]")?.dataset.patientId
                 );
+
+                // if confirmation is open, close it first
+                const confirmTaskPopUp = document.querySelector(".confirmTask");
+                if (
+                    confirmTaskPopUp &&
+                    !confirmTaskPopUp.classList.contains("close")
+                ) {
+                    confirmTaskPopUp.classList.add("close");
+                }
+
                 showTaskModal(
                     button.closest("[data-patient-id]")?.dataset.patientId ||
                         null
