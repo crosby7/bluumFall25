@@ -408,6 +408,11 @@ document.addEventListener("DOMContentLoaded", () => {
             'meta[name="csrf-token"]'
         )?.content;
 
+        // Check if "assign default schedule" checkbox is checked
+        const assignDefaultSchedule = document.getElementById(
+            "assignDefaultSchedulePatient"
+        )?.checked;
+
         // Disable submit button to prevent double submission
         submitButton.disabled = true;
         const originalText = submitButton.textContent;
@@ -445,8 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Get pairing code from response
+            // Get pairing code and patient ID from response
             const pairingCode = data.pairing_code || data.data?.pairing_code;
+            const patientId = data.id || data.data?.id;
 
             if (!pairingCode) {
                 alert("Patient created but pairing code not found in response");
@@ -454,6 +460,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
                 return;
+            }
+
+            // If default schedule checkbox is checked, assign default schedule
+            if (assignDefaultSchedule && patientId) {
+                try {
+                    const scheduleResponse = await fetch(
+                        `/api/nurse/patients/${patientId}/task-subscriptions/default-schedule`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                                "X-CSRF-TOKEN": csrfToken,
+                            },
+                            credentials: "same-origin",
+                        }
+                    );
+
+                    if (!scheduleResponse.ok) {
+                        const scheduleData = await scheduleResponse.json();
+                        console.error("Failed to assign default schedule:", scheduleData);
+                        // Don't block patient creation, just log the error
+                    }
+                } catch (scheduleError) {
+                    console.error("Error assigning default schedule:", scheduleError);
+                    // Don't block patient creation, just log the error
+                }
             }
 
             // Update confirmation modal with pairing code

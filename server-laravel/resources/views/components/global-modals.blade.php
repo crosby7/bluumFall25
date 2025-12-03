@@ -48,6 +48,12 @@
                     </div>
                 </div>
             </div>
+            <div class="inputGroup checkboxGroup">
+                <label for="assignDefaultSchedulePatient">
+                    <input type="checkbox" id="assignDefaultSchedulePatient" name="assignDefaultSchedulePatient" checked>
+                    <span>Assign default schedule</span>
+                </label>
+            </div>
             <div class="submitButtons">
                 <button type="submit" class="submitButton createPatient">Create Patient</button>
                 <button type="button" class="cancelButton closeButton">Cancel</button>
@@ -105,12 +111,6 @@
                         <input type="text" id="category" name="category" readonly placeholder="Select a task to see category">
                     </div>
                 </div>
-            </div>
-            <div class="inputGroup checkboxGroup">
-                <label for="assignDefaultSchedule">
-                    <input type="checkbox" id="assignDefaultSchedule" name="assignDefaultSchedule">
-                    <span>Assign default schedule</span>
-                </label>
             </div>
             <div class="submitButtons">
                 <button type="submit" class="submitButton createTask">Create Task</button>
