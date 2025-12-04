@@ -63,9 +63,9 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-3. Compile assets
+3. Start the Docker Container for PostGres
 ```bash
-npm run dev
+docker compose up -d
 ```
 
 4. Start the server
