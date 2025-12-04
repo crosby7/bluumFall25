@@ -32,6 +32,10 @@
                 <div class="searchResults close" id="searchResults"></div>
             </div>
             <div class="profile"><a href="{{ route('login') }}"><i class="fa-solid fa-user"></i></a></div>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;">Logout</button>
+            </form>
         </div>
     </div>
 

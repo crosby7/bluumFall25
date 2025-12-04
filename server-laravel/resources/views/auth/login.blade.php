@@ -40,23 +40,23 @@
     </div>
 
     {{-- Register Card --}}
-    {{-- TODO: registration route and handling --}}
     <div class="loginPageCard popUp register close">
-        <form class="registerForm" method="POST" action="{{ route('register') }}">
+        <form class="registerForm" method="POST" action="{{ route('register.nurse') }}">
             @csrf
             <button class="closeButton xButton" type="button">X</button>
             <h2>Register with Bluum</h2>
             <div class="twoInputs">
                     <div class="inputGroup">
-                        <input type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                        <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
                     </div>
                     <div class="inputGroup">
-                        <input type="text" id="lastName" name="lastName" placeholder="Last Name">
+                        <input type="text" id="last_name" name="last_name" placeholder="Last Name">
                     </div>
                 </div>
             <div class="inputGroup">
-                <input type="email" id="registerEmail" name="registerEmail" placeholder="Email" required>
-                <input type="password" id="registerPassword" name="registerPassword" placeholder="Password" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
             </div>
             <button type="submit" class="submitButton">Register</button>
         </form>

@@ -14,20 +14,20 @@ Route::get('/', function () {
     return view('auth.login');
 })->name('login.show');
 
-Route::get('/search', [NurseDashboardController::class, 'search'])->middleware('auth')->name('search');
+Route::get('/search', [NurseDashboardController::class, 'search'])->middleware(['auth', 'verified'])->name('search');
 
 Route::get('/login', function () {
     return view('auth.login');
 })->middleware('guest')->name('login');
 
-Route::get('/home', [NurseDashboardController::class, 'home'])->middleware('auth')->name('home');
+Route::get('/home', [NurseDashboardController::class, 'home'])->middleware(['auth', 'verified'])->name('home');
 
-Route::get('/patients', [NurseDashboardController::class, 'patients'])->middleware('auth')->name('patients');
+Route::get('/patients', [NurseDashboardController::class, 'patients'])->middleware(['auth', 'verified'])->name('patients');
 
-Route::get('/inbox', [NurseDashboardController::class, 'inbox'])->middleware('auth')->name('inbox');
+Route::get('/inbox', [NurseDashboardController::class, 'inbox'])->middleware(['auth', 'verified'])->name('inbox');
 
 // Nurse Portal API Routes (using web session authentication)
-Route::prefix('api/nurse')->middleware(['auth', 'throttle:nurse-api'])->group(function () {
+Route::prefix('api/nurse')->middleware(['auth', 'verified', 'throttle:nurse-api'])->group(function () {
     // Patient Management
     Route::apiResource('patients', PatientController::class)->except(['show', 'update']);
 

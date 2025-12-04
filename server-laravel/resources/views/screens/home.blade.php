@@ -7,7 +7,7 @@
         <h2>Home</h2>
         <p>{{ date('l, F jS') }}</p>
     </div>
-    <h2 class="greeting">Good Morning, {{ $user->name ?? "Jane Doe" }}!</h2>
+    <h2 class="greeting">Good Morning, {{ $nurse->first_name }} {{ $nurse->last_name }}!</h2>
 
     <div class="widgetArea">
         {{-- Inbox Widget --}}
