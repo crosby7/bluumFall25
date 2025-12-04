@@ -14,10 +14,12 @@ class NurseDashboardController extends Controller
 
     /**
      * BaseContext: provide the patients and task subscriptions to all views
-     * 
+     *
      */
     public function baseContext()
     {
+        $nurse = auth()->user();
+
         $patients = Patient::latest()->get()->map(function ($patient) {
             return (object) [
                 'id' => $patient->id,
@@ -65,6 +67,7 @@ class NurseDashboardController extends Controller
         $criticalTasks = $tasks->whereIn('status', ['pending', 'overdue'])->values();
 
         return [
+            'nurse' => $nurse,
             'patients' => $patients,
             'tasks' => $tasks,
             'events' => $events,
