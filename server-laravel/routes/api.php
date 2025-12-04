@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\PurchaseItemController;
 use App\Http\Controllers\Api\NurseController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TaskSubscriptionController;
@@ -34,4 +35,5 @@ Route::middleware(['auth:sanctum', 'throttle:patient-api'])->group(function () {
 
     // Shop Items Routes
     Route::get('/items', [ItemController::class, 'index']);
+    Route::post('/items/{item}/purchase', [PurchaseItemController::class, 'purchase']);
 });

@@ -7,6 +7,10 @@
     <title>@yield('title', 'Nurses App')</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/common/bluumFlower.svg') }}">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 </head>
 <body>
     {{-- Top Bar --}}
@@ -27,7 +31,7 @@
                 <input type="text" placeholder="Search..." id="globalSearch"/>
                 <div class="searchResults close" id="searchResults"></div>
             </div>
-            <div class="profile"><a href="{{ route('login') }}">JD</a></div>
+            <div class="profile"><a href="{{ route('login') }}"><i class="fa-solid fa-user"></i></a></div>
         </div>
     </div>
 
@@ -56,6 +60,12 @@
             </a>
         </div>
 
+        {{-- Create Menu Popover --}}
+        <div class="createMenuPopover" id="createMenuPopover">
+                <a class="createPatientButton addNewPatient">New Patient</a>
+                <a class="createTaskButton addNewTask">New Task</a>
+        </div>
+
         {{-- Page Content --}}
         <div class="pageContent" id="pageContent">
             @yield('content')
@@ -64,6 +74,7 @@
     </div>
 
     <script src="{{ asset('scripts/nurses.js') }}"></script>
+    <script src="{{ asset('scripts/context.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

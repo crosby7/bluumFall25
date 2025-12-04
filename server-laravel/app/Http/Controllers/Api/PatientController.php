@@ -9,6 +9,7 @@ use App\Http\Resources\PatientProfileResource;
 use App\Http\Resources\TaskCompletionResource;
 use App\Http\Resources\PatientItemResource;
 use App\Models\Patient;
+use App\Models\InboxEvent;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -51,6 +52,14 @@ class PatientController extends Controller
         $validated['pairing_code'] = Patient::generatePairingCode();
 
         $patient = Patient::create($validated);
+
+        // Create inbox event for patient creation
+        InboxEvent::create([
+            'event_type' => 'patient_created',
+            'patient_id' => $patient->id,
+            'nurse_id' => $request->user()?->id,
+            'description' => "New patient '{$patient->username}' created",
+        ]);
 
         return new PatientResource($patient);
     }

@@ -24,6 +24,7 @@ class TaskCompletionResource extends JsonResource
                 'id' => $this->subscription->task->id,
                 'name' => $this->subscription->task->name,
                 'description' => $this->subscription->task->description,
+                'category' => $this->subscription->task->category,
                 'xp_value' => $this->subscription->task->xp_value,
                 'gem_value' => $this->subscription->task->gem_value,
             ],

@@ -48,6 +48,12 @@
                     </div>
                 </div>
             </div>
+            <div class="inputGroup checkboxGroup">
+                <label for="assignDefaultSchedulePatient">
+                    <input type="checkbox" id="assignDefaultSchedulePatient" name="assignDefaultSchedulePatient" checked>
+                    <span>Assign default schedule</span>
+                </label>
+            </div>
             <div class="submitButtons">
                 <button type="submit" class="submitButton createPatient">Create Patient</button>
                 <button type="button" class="cancelButton closeButton">Cancel</button>
@@ -65,7 +71,7 @@
                 <p>You've successfully registered a new patient.</p>
                 <p>Pairing Code: <strong id="confirmPairingCode"></strong></p>
             </div>
-            <button type="button" class="addNewPatient">New Patient</button>
+            <button type="button" class="addNewPatient confirmationAddNewPatient">New Patient</button>
             <button type="button" class="closeButton maybeLater">Maybe Later</button>
         </div>
     </div>
@@ -106,16 +112,11 @@
                     </div>
                 </div>
             </div>
-            <div class="inputGroup checkboxGroup">
-                <label for="assignDefaultSchedule">
-                    <input type="checkbox" id="assignDefaultSchedule" name="assignDefaultSchedule">
-                    <span>Assign default schedule</span>
-                </label>
-            </div>
             <div class="submitButtons">
                 <button type="submit" class="submitButton createTask">Create Task</button>
                 <button type="button" class="cancelButton closeButton">Cancel</button>
             </div>
+        </form>
     </div>
 
     {{-- New Task Confirmation Modal --}}
@@ -127,7 +128,7 @@
                 <h3>Task Created!</h3>
                 <p>You've successfully assigned a new task.</p>
             </div>
-            <button type="button" class="addNewTask">New Task</button>
+            <button type="button" class="addNewTask confirmationAddNewTask">New Task</button>
             <button type="button" class="closeButton maybeLater">Maybe Later</button>
         </div>
     </div>

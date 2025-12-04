@@ -208,11 +208,11 @@ html::-webkit-scrollbar,
             font-weight: bold;
             cursor: pointer;
             line-height: 26px;
+            color: var(--background-purple);
 
             /* Link tag for testing login - REMOVE */
             a {
                 text-decoration: none;
-                color: black;
             }
         }
     }
@@ -275,12 +275,6 @@ html::-webkit-scrollbar,
         align-items: center;
     }
 
-    .createMenu.open {
-        opacity: 1;
-        height: auto;
-        pointer-events: auto;
-    }
-
     .createPatientButton,
     .createTaskButton {
         background-color: var(--active-highlight-purple);
@@ -315,6 +309,45 @@ html::-webkit-scrollbar,
     }
 }
 
+.createMenuPopover {
+    position: absolute;
+    left: 80px;
+    top: 100px;
+    display: flex;
+    background-color: var(--transparent-highlight);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 0;
+    transition: opacity 0.3s ease, width 0.3s ease, max-height 0.3s ease;
+    width: 0;
+    max-height: 0;
+    opacity: 0;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+
+    .createPatientButton,
+    .createTaskButton {
+        background-color: var(--active-highlight-purple);
+        text-align: center;
+        border: 2px solid var(--border-highlight);
+        color: white;
+        width: 110px;
+        height: 40px;
+        border: none;
+        cursor: pointer;
+        line-height: 40px;
+        border-radius: 6px;
+    }
+}
+
+.sidebar:not(.open)+.createMenuPopover.open {
+    width: 118px;
+    max-height: none;
+    opacity: 1;
+    padding: 4px;
+}
+
 .sidebar.open {
     width: 15%;
     min-width: 120px;
@@ -331,6 +364,12 @@ html::-webkit-scrollbar,
             display: inline;
             margin-left: 8px;
         }
+    }
+
+    .createMenu.open {
+        opacity: 1;
+        height: auto;
+        pointer-events: auto;
     }
 
     .homeButton,
@@ -485,6 +524,16 @@ button:hover {
             textarea {
                 resize: vertical;
                 min-height: 80px;
+            }
+        }
+
+        .twoInputs {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+
+            .inputGroup {
+                width: calc(50% - 10px);
             }
         }
 
@@ -791,6 +840,26 @@ button:hover {
     overflow-y: auto;
 }
 
+.emptyWidget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.emptyFullscreenWidget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    h3 {
+        font-size: 30px;
+    }
+}
+
 /* =========================================== */
 /* Login Page styles */
 /* =========================================== */
@@ -979,7 +1048,8 @@ button:hover {
 }
 
 .widgetFooter {
-    margin-bottom: 10px;
+    margin-bottom: 4px;
+    padding-top: 10px;
     cursor: pointer;
 }
 
@@ -999,6 +1069,10 @@ button:hover {
     margin: 0 auto;
     align-items: center;
     padding: 0 10px;
+    opacity: 1;
+    transition: all 1s ease;
+    overflow: hidden;
+    position: relative;
 
     .inboxProfileIcon {
         width: 40px;
@@ -1006,7 +1080,7 @@ button:hover {
         cursor: pointer;
     }
 
-    .dueDate {
+    .dueDatePatients {
         flex: 1 1 0;
     }
 
@@ -1016,10 +1090,15 @@ button:hover {
 
     .inboxRowLeft {
         flex: 1 1 0;
+        display: flex;
+        gap: 30px;
     }
 
     .inboxRowRight {
         flex: 1 1 0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 30px;
     }
 
     .patientDetails {
@@ -1030,11 +1109,16 @@ button:hover {
         font-size: 13px;
         padding: 0 10px;
         cursor: default;
+        max-width: 150px;
+        min-width: 110px;
+        text-align: center;
     }
 
-    .inboxStatusIcon {
-        width: 30px;
-        height: 30px;
+    .statusIcon {
+        width: 26px;
+        height: 26px;
+        border-radius: 30px;
+        padding: 4px;
     }
 
     /* On the Patients Page */
@@ -1068,15 +1152,20 @@ button:hover {
         }
     }
 
-    .completeStatus {
+    .completedStatus,
+    .pendingStatus {
         background-color: var(--complete-highlight);
     }
 
-    .overdueStatus {
+    .overdueStatus,
+    .skippedStatus,
+    .failedStatus {
         background-color: var(--overdue-highlight);
     }
 
-    .generalStatus {
+    .generalStatus,
+    .incompleteStatus,
+    .eventStatus {
         background-color: var(--general-highlight);
     }
 
@@ -1093,6 +1182,8 @@ button:hover {
         align-items: center;
         gap: 5px;
         flex: 1 1 0;
+        max-width: 100px;
+        transition: 3s all ease;
 
         .verifyText {
             color: white;
@@ -1100,8 +1191,53 @@ button:hover {
         }
     }
 
+    .inboxVerifyContainer {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+
     .emptyCol {
         flex: 1 1 0;
+    }
+
+    .homeEmptyCol {
+        width: 55px;
+        height: 30px;
+    }
+}
+
+.inboxPage .inboxVerifyContainer {
+    flex: 0;
+}
+
+.inboxRow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--general-highlight);
+    pointer-events: none;
+    z-index: 10;
+    transform: translateX(100%);
+}
+
+.inboxRowAnim::after {
+    animation: sweep-left 2s ease;
+}
+
+@keyframes sweep-left {
+    0% {
+        opacity: 1;
+        transform: translateX(100%);
+        height: 50px;
+    }
+
+    100% {
+        transform: translateX(-100%);
     }
 }
 

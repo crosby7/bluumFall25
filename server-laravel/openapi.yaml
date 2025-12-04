@@ -447,6 +447,84 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /items/{item}/purchase:
+    post:
+      tags:
+        - Shop
+      summary: Purchase an item
+      description: |
+        Purchase a shop item for the authenticated patient using gems.
+
+        This endpoint performs the following validations:
+        - Checks if the patient already owns the item
+        - Verifies the patient has enough gems to purchase the item
+        - Uses a database transaction to ensure atomicity of the purchase
+
+        **Rate Limiting:** This endpoint is protected by the `throttle:patient-api` middleware.
+      operationId: purchaseItem
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: item
+          in: path
+          required: true
+          description: ID of the item to purchase
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Item purchased successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PatientItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item not found.
+        '422':
+          description: Validation error - already owned or insufficient gems
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                alreadyOwned:
+                  summary: Item already owned
+                  value:
+                    message: You already own this item.
+                insufficientGems:
+                  summary: Insufficient gems
+                  value:
+                    message: Insufficient gems. You need 100 gems but only have 50.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          description: Purchase transaction failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Purchase failed. Please try again.
+
 components:
   securitySchemes:
     bearerAuth:

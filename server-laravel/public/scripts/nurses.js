@@ -5,11 +5,22 @@ const loginButton = document.querySelector(".loginButton");
 const registerButton = document.querySelector(".registerButton");
 const loginButtonDiv = document.querySelector(".loginButtons");
 
+const newTaskPopUp = document.querySelector(".newTask");
+
 if (toggleBtn) {
     toggleBtn.addEventListener("click", () => {
         sidebar.classList.toggle("open");
     });
 }
+
+// find the common refresh function for the specific page we're on
+window.runPageRefresh = function (context) {
+    if (typeof window.pageRefreshFunction === "function") {
+        window.pageRefreshFunction(context);
+    } else {
+        console.warn("No pageRefreshFunction() defined for this page.");
+    }
+};
 
 // Large Cards: close button functionality
 const closeButtons = document.querySelectorAll(".closeButton");
@@ -32,27 +43,29 @@ if (closeButtons) {
     });
 }
 
-// Temp: submit button will just close the large card
-// Skip .createPatient and .createTask buttons as they have their own form handlers
-const submitButtons = document.querySelectorAll(".submitButton:not(.createPatient):not(.createTask)");
+// // Temp: submit button will just close the large card
+// // Skip .createPatient and .createTask buttons as they have their own form handlers
+// const submitButtons = document.querySelectorAll(
+//     ".submitButton:not(.createPatient):not(.createTask)"
+// );
 
-if (submitButtons) {
-    submitButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            button.closest(".popUp").classList.toggle("close");
-            if (
-                button
-                    .closest(".popUp")
-                    .parentElement.classList.contains("popUpRegion")
-            ) {
-                button.closest(".popUpRegion").classList.toggle("close");
-            }
-            if (loginButtonDiv) {
-                loginButtonDiv.classList.remove("close");
-            }
-        });
-    });
-}
+// if (submitButtons) {
+//     submitButtons.forEach((button) => {
+//         button.addEventListener("click", () => {
+//             button.closest(".popUp").classList.toggle("close");
+//             if (
+//                 button
+//                     .closest(".popUp")
+//                     .parentElement.classList.contains("popUpRegion")
+//             ) {
+//                 button.closest(".popUpRegion").classList.toggle("close");
+//             }
+//             if (loginButtonDiv) {
+//                 loginButtonDiv.classList.remove("close");
+//             }
+//         });
+//     });
+// }
 
 // login and register buttons will open popup card
 if (loginButton) {
@@ -76,50 +89,80 @@ const confirmPatientPopUp = document.querySelector(".confirmPatient");
 if (newPatientButtons) {
     newPatientButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            // if confirmation is displayed, close it first
+            if (
+                confirmPatientPopUp &&
+                !confirmPatientPopUp.classList.contains("close")
+            ) {
+                confirmPatientPopUp.classList.add("close");
+            }
             showPatientModal();
         });
     });
 }
 
-// newTaskButton will opent the new task popup
-const newTaskButtons = document.querySelectorAll(".addNewTask");
-const newTaskPopUp = document.querySelector(".newTask");
+function attachNewTaskListeners() {
+    // newTaskButton will opent the new task popup
+    const newTaskButtons = document.querySelectorAll(".addNewTask");
 
-if (newTaskButtons) {
-    newTaskButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            // Try to get patient context from the closest patient card
-            const patientCard = button.closest("[data-patient-id]");
-            const patientId = patientCard ? patientCard.dataset.patientId : null;
-            showTaskModal(patientId);
+    if (newTaskButtons) {
+        newTaskButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                console.log(
+                    "New Task button clicked for patient ID:",
+                    button.closest("[data-patient-id]")?.dataset.patientId
+                );
+
+                // if confirmation is open, close it first
+                const confirmTaskPopUp = document.querySelector(".confirmTask");
+                if (
+                    confirmTaskPopUp &&
+                    !confirmTaskPopUp.classList.contains("close")
+                ) {
+                    confirmTaskPopUp.classList.add("close");
+                }
+
+                showTaskModal(
+                    button.closest("[data-patient-id]")?.dataset.patientId ||
+                        null
+                );
+            });
         });
-    });
+    }
 }
+attachNewTaskListeners();
 
 // Create button (sidebar) will open create menu
 const createButton = document.querySelector(".createButton");
 const createPatientButton = document.querySelector(".createPatientButton");
 const createTaskButton = document.querySelector(".createTaskButton");
 const createMenu = document.querySelector(".createMenu");
+const createMenuPopover = document.getElementById("createMenuPopover");
+const sideBar = document.getElementById("sidebar");
 
-if (createButton) {
+if (sideBar && createButton) {
     createButton.addEventListener("click", () => {
-        if (!createMenu.classList.contains("open")) {
-            createMenu.style.height = "0px";
-            createMenu.classList.toggle("open");
-            void createMenu.offsetWidth;
-            createMenu.style.height = createMenu.scrollHeight + "px";
+        if (sideBar.classList.contains("open")) {
+            if (!createMenu.classList.contains("open")) {
+                createMenu.style.height = "0px";
+                createMenu.classList.toggle("open");
+                void createMenu.offsetWidth;
+                createMenu.style.height = createMenu.scrollHeight + "px";
+            } else {
+                createMenu.style.height = createMenu.scrollHeight + "px";
+                void createMenu.offsetWidth;
+                createMenu.style.height = "0px";
+                createMenu.addEventListener(
+                    "transitionend",
+                    () => {
+                        createMenu.classList.remove("open");
+                    },
+                    { once: true }
+                );
+            }
         } else {
-            createMenu.style.height = createMenu.scrollHeight + "px";
-            void createMenu.offsetWidth;
-            createMenu.style.height = "0px";
-            createMenu.addEventListener(
-                "transitionend",
-                () => {
-                    createMenu.classList.remove("open");
-                },
-                { once: true }
-            );
+            // Toggle popover visibility
+            createMenuPopover.classList.toggle("open");
         }
     });
 }
@@ -246,7 +289,7 @@ async function showTaskModal(patientId = null) {
         // Fetch available tasks
         const tasksResponse = await fetch("/api/nurse/tasks", {
             headers: {
-                "Accept": "application/json",
+                Accept: "application/json",
             },
             credentials: "same-origin",
         });
@@ -260,8 +303,9 @@ async function showTaskModal(patientId = null) {
 
         // Populate task dropdown
         const taskSelect = document.getElementById("taskName");
-        taskSelect.innerHTML = '<option value="" disabled selected>Select task...</option>';
-        tasks.forEach(task => {
+        taskSelect.innerHTML =
+            '<option value="" disabled selected>Select task...</option>';
+        tasks.forEach((task) => {
             const option = document.createElement("option");
             option.value = task.id;
             option.textContent = task.name;
@@ -272,11 +316,14 @@ async function showTaskModal(patientId = null) {
         // Fetch patients from the page (they're already loaded)
         const patientCards = document.querySelectorAll("[data-patient-id]");
         const assigneeSelect = document.getElementById("taskAssignee");
-        assigneeSelect.innerHTML = '<option value="" disabled selected>No assignee</option>';
+        assigneeSelect.innerHTML =
+            '<option value="" disabled selected>No assignee</option>';
 
-        patientCards.forEach(card => {
+        patientCards.forEach((card) => {
             const patientIdFromCard = card.dataset.patientId;
-            const patientName = card.querySelector(".patientName")?.textContent || `Patient ${patientIdFromCard}`;
+            const patientName =
+                card.querySelector(".patientName")?.textContent ||
+                `Patient ${patientIdFromCard}`;
             const option = document.createElement("option");
             option.value = patientIdFromCard;
             option.textContent = patientName;
@@ -300,7 +347,6 @@ async function showTaskModal(patientId = null) {
         if (newTaskPopUp.parentElement.classList.contains("close")) {
             newTaskPopUp.parentElement.classList.remove("close");
         }
-
     } catch (error) {
         console.error("Error loading task modal:", error);
         alert("Error loading task form: " + error.message);
@@ -375,7 +421,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const username = usernamePart1 + usernamePart2;
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        const csrfToken = document.querySelector(
+            'meta[name="csrf-token"]'
+        )?.content;
+
+        // Check if "assign default schedule" checkbox is checked
+        const assignDefaultSchedule = document.getElementById(
+            "assignDefaultSchedulePatient"
+        )?.checked;
 
         // Disable submit button to prevent double submission
         submitButton.disabled = true;
@@ -387,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json",
+                    Accept: "application/json",
                     "X-CSRF-TOKEN": csrfToken,
                 },
                 credentials: "same-origin",
@@ -401,7 +454,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!response.ok) {
                 if (data.errors) {
-                    alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                    alert(
+                        "Validation Error:\n" +
+                            Object.values(data.errors).flat().join("\n")
+                    );
                 } else {
                     alert(data.message || "Failed to create patient");
                 }
@@ -411,8 +467,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Get pairing code from response
+            // Get pairing code and patient ID from response
             const pairingCode = data.pairing_code || data.data?.pairing_code;
+            const patientId = data.id || data.data?.id;
 
             if (!pairingCode) {
                 alert("Patient created but pairing code not found in response");
@@ -422,8 +479,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // If default schedule checkbox is checked, assign default schedule
+            if (assignDefaultSchedule && patientId) {
+                try {
+                    const scheduleResponse = await fetch(
+                        `/api/nurse/patients/${patientId}/task-subscriptions/default-schedule`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                                "X-CSRF-TOKEN": csrfToken,
+                            },
+                            credentials: "same-origin",
+                        }
+                    );
+
+                    if (!scheduleResponse.ok) {
+                        const scheduleData = await scheduleResponse.json();
+                        console.error("Failed to assign default schedule:", scheduleData);
+                        // Don't block patient creation, just log the error
+                    }
+                } catch (scheduleError) {
+                    console.error("Error assigning default schedule:", scheduleError);
+                    // Don't block patient creation, just log the error
+                }
+            }
+
             // Update confirmation modal with pairing code
-            const confirmCodeElement = document.getElementById("confirmPairingCode");
+            const confirmCodeElement =
+                document.getElementById("confirmPairingCode");
             if (confirmCodeElement) {
                 confirmCodeElement.textContent = pairingCode;
             }
@@ -437,14 +522,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Re-enable button after successful submission
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
+
+                // Refresh page content
+                refreshBaseContext(window.runPageRefresh);
             } else {
                 // Fallback if modal elements not found
-                alert("Patient created successfully! Pairing code: " + pairingCode);
+                alert(
+                    "Patient created successfully! Pairing code: " + pairingCode
+                );
                 // Re-enable button
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
             }
-
         } catch (error) {
             console.error("Error creating patient:", error);
             alert("Error: " + error.message);
@@ -457,12 +546,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Handle default schedule checkbox toggling
 document.addEventListener("DOMContentLoaded", () => {
-    const defaultScheduleCheckbox = document.getElementById("assignDefaultSchedule");
+    const defaultScheduleCheckbox = document.getElementById(
+        "assignDefaultSchedule"
+    );
     const taskNameSelect = document.getElementById("taskName");
     const dueDateInput = document.getElementById("dueDate");
     const repeatsSelect = document.getElementById("repeats");
 
-    if (defaultScheduleCheckbox && taskNameSelect && dueDateInput && repeatsSelect) {
+    if (
+        defaultScheduleCheckbox &&
+        taskNameSelect &&
+        dueDateInput &&
+        repeatsSelect
+    ) {
         defaultScheduleCheckbox.addEventListener("change", (e) => {
             const isChecked = e.target.checked;
 
@@ -512,7 +608,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Check if "assign default schedule" checkbox is checked
-        const assignDefaultSchedule = document.getElementById("assignDefaultSchedule")?.checked;
+        const assignDefaultSchedule = document.getElementById(
+            "assignDefaultSchedule"
+        )?.checked;
         const patientId = document.getElementById("taskAssignee")?.value;
 
         if (assignDefaultSchedule) {
@@ -527,24 +625,32 @@ document.addEventListener("DOMContentLoaded", () => {
             const originalText = submitButton.textContent;
             submitButton.textContent = "Assigning...";
 
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            const csrfToken = document.querySelector(
+                'meta[name="csrf-token"]'
+            )?.content;
 
             try {
-                const response = await fetch(`/api/nurse/patients/${patientId}/task-subscriptions/default-schedule`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRF-TOKEN": csrfToken,
-                    },
-                    credentials: "same-origin",
-                });
+                const response = await fetch(
+                    `/api/nurse/patients/${patientId}/task-subscriptions/default-schedule`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
+                        },
+                        credentials: "same-origin",
+                    }
+                );
 
                 const data = await response.json();
 
                 if (!response.ok) {
                     if (data.errors) {
-                        alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                        alert(
+                            "Validation Error:\n" +
+                                Object.values(data.errors).flat().join("\n")
+                        );
                     } else if (data.message) {
                         alert(data.message);
                     } else {
@@ -562,12 +668,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     taskForm.reset();
                     submitButton.disabled = false;
                     submitButton.textContent = originalText;
+
+                    // Refresh page content
+                    refreshBaseContext(window.runPageRefresh);
                 } else {
                     alert("Default schedule assigned successfully!");
                     submitButton.disabled = false;
                     submitButton.textContent = originalText;
                 }
-
             } catch (error) {
                 console.error("Error assigning default schedule:", error);
                 alert("Error: " + error.message);
@@ -607,7 +715,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 intervalDays = 1;
         }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        const csrfToken = document.querySelector(
+            'meta[name="csrf-token"]'
+        )?.content;
 
         // Disable submit button to prevent double submission
         submitButton.disabled = true;
@@ -616,9 +726,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Extract time component from dueDate for scheduled_time
         const dueDateObj = new Date(dueDate);
-        const hours = String(dueDateObj.getHours()).padStart(2, '0');
-        const minutes = String(dueDateObj.getMinutes()).padStart(2, '0');
-        const seconds = String(dueDateObj.getSeconds()).padStart(2, '0');
+        const hours = String(dueDateObj.getHours()).padStart(2, "0");
+        const minutes = String(dueDateObj.getMinutes()).padStart(2, "0");
+        const seconds = String(dueDateObj.getSeconds()).padStart(2, "0");
         const scheduledTime = `${hours}:${minutes}:${seconds}`;
 
         const requestPayload = {
@@ -636,7 +746,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json",
+                    Accept: "application/json",
                     "X-CSRF-TOKEN": csrfToken,
                 },
                 credentials: "same-origin",
@@ -647,11 +757,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!response.ok) {
                 // Check for duplicate subscription error
-                if (data.message && data.message.includes("duplicate key value") ||
-                    data.message && data.message.includes("task_subscriptions_patient_task_time_active_unique")) {
-                    alert("This task is already assigned to this patient at this time. Please choose a different time, task, or patient.");
+                if (
+                    (data.message &&
+                        data.message.includes("duplicate key value")) ||
+                    (data.message &&
+                        data.message.includes(
+                            "task_subscriptions_patient_task_time_active_unique"
+                        ))
+                ) {
+                    alert(
+                        "This task is already assigned to this patient at this time. Please choose a different time, task, or patient."
+                    );
                 } else if (data.errors) {
-                    alert("Validation Error:\n" + Object.values(data.errors).flat().join("\n"));
+                    alert(
+                        "Validation Error:\n" +
+                            Object.values(data.errors).flat().join("\n")
+                    );
                 } else if (data.message) {
                     alert(data.message);
                 } else {
@@ -678,7 +799,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 submitButton.disabled = false;
                 submitButton.textContent = originalText;
             }
-
         } catch (error) {
             console.error("Error creating task subscription:", error);
             alert("Error: " + error.message);
@@ -688,3 +808,83 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// Function to verify tasks - calls AJAX completeTask() function
+async function verifyTask(btn, taskId) {
+    console.log("Verifying task ID:", taskId);
+    const row = btn.closest(".inboxRow");
+
+    const result = await completeTask(taskId);
+
+    console.log("task verify result: ", result);
+
+    if (result) {
+        // On success, animate out the row
+        rowAnim(row);
+    }
+}
+
+function rowAnim(row) {
+    row.classList.add("inboxRowAnim");
+    console.log("Anim row:", row);
+
+    // Replace status container completedStatus
+    setTimeout(() => {
+        console.log("Replacing status container with completed status");
+        const statusContainer = row.querySelector(".statusContainer");
+        const verifyButtonContainer = row.querySelector(
+            ".inboxVerifyContainer"
+        );
+        // there is a gap on inboxRowRight (inbox page), remove gap when clearing verify button
+        const inboxRowRight = row.querySelector(".inboxRowRight");
+        if (statusContainer) {
+            statusContainer.innerHTML =
+                "<div class='inboxStatus completedStatus'><img src='/assets/common/complete.svg' alt='' /><span class='statusText'>Completed</span></div>";
+        }
+        if (verifyButtonContainer) {
+            verifyButtonContainer.innerHTML = "";
+        }
+        if (inboxRowRight) {
+            inboxRowRight.style.gap = "0";
+        }
+    }, 600);
+
+    // Reintroduce row
+    setTimeout(() => {
+        row.classList.remove("inboxRowAnim");
+    }, 2000);
+}
+
+// AJAX function to mark task as complete
+async function completeTask(taskId) {
+    try {
+        console.log("Completing task ID:", taskId);
+        const response = await fetch(`/api/nurse/task-completions/${taskId}`, {
+            method: "PATCH",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content,
+            },
+            body: JSON.stringify({
+                status: "completed",
+                completed_at: new Date()
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace("T", " "),
+            }),
+        });
+
+        if (!response.ok) {
+            console.error("Failed to complete task:", response.statusText);
+            return null;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error completing task:", error);
+        return null;
+    }
+}
