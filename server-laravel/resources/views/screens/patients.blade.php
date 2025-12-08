@@ -177,7 +177,7 @@
                                 `<img src="/assets/common/overdue.svg" alt="">` : t.status === 'incomplete' || t.status === 'skipped' || t.status === 'failed' ? 
                                 `<img src="/assets/common/incomplete.svg" alt="">` : 
                                 `<img src="/assets/common/new.svg" alt="">`}
-                                <span class="statusText">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span>
+                               <span class="statusText">${t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Unknown'}</span>
                             </div>
                         </div>
                         ${t.status === 'pending' ? `

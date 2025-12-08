@@ -1,6 +1,7 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
 import React, { useEffect } from 'react';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { CharacterProvider } from '@/context/CharacterContext';
 
 function RootLayoutContent() {
   const { isLoggedIn } = useAuth();
@@ -35,7 +36,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootLayoutContent/> 
+      <CharacterProvider>     
+      <RootLayoutContent/>  
+      </CharacterProvider>
     </AuthProvider>
   );
 }

@@ -14,7 +14,25 @@ import { useAuth } from "@/context/AuthContext";
 
 const LoginScreen = () => {
   const [code, setCode] = useState("");
-  const { signIn } = useAuth();
+  const { signIn, isLoading, error } = useAuth();
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const handleLogin = async () => {
+    setLocalError(null);
+
+    if (!/^\d{6}$/.test(code)) {
+      setLocalError("Please enter a valid 6-digit activation code");
+      return;
+    }
+
+    try {
+      await signIn(code);
+    } catch (err) {
+      console.error("Login error:", err);
+    }
+  };
+
+  const displayError = localError || error;
 
   return (
     <ImageBackground
@@ -47,17 +65,30 @@ const LoginScreen = () => {
           placeholder="Activation Code"
           placeholderTextColor={Colors.placeholder}
           value={code}
-          onChangeText={setCode}
+          onChangeText={(text) => {
+            setCode(text);
+            setLocalError(null);
+          }}
           autoCapitalize="none"
+          keyboardType="number-pad"
+          maxLength={6}
+          editable={!isLoading}
         />
       </View>
 
+      {displayError && (
+        <Text style={styles.errorText}>{displayError}</Text>
+      )}
+
       <TouchableOpacity
-        style={styles.customButton}
+        style={[styles.customButton, isLoading && styles.buttonDisabled]}
         activeOpacity={0.8}
-        onPress={signIn}
+        onPress={handleLogin}
+        disabled={isLoading}
       >
-        <Text style={styles.buttonText}>Log In</Text>
+        <Text style={styles.buttonText}>
+          {isLoading ? "Logging in..." : "Log In"}
+        </Text>
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -136,6 +167,20 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  errorText: {
+    color: "#ff4444",
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    padding: 10,
+    borderRadius: 8,
+    width: "50%",
+    alignSelf: "center",
   },
 });
 

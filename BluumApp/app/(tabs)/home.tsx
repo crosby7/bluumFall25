@@ -1,7 +1,8 @@
 import { MiniTaskCard } from "@/components/miniTaskCard";
 import { effectiveHeight, effectiveWidth } from "@/constants/dimensions";
 import { Colors } from "@/constants/theme";
-import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import React, { useState, useCallback } from "react";
 import {
   Image,
   ImageBackground,
@@ -11,33 +12,134 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
+  RefreshControl // Added for refresh functionality
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { apiClient } from '../../services/api'; 
+import { useFocusEffect } from 'expo-router'; // Used for refreshing data on navigation
 
-const characterData = {
-  dog: {
-    pfp: require("../assets/icons/rowdyPFP.svg"),
-    character: require("../assets/icons/rowdyCharacter.svg"),
-  },
-  axolotl: {
-    pfp: require("../assets/icons/axolotlPFP.svg"),
-    character: require("../assets/icons/axolotlCharacter.svg"),
-  },
-};
-
-type characterKey = keyof typeof characterData;
+// Character Imports
+import { useCharacter } from "@/context/CharacterContext";
+import { CharacterView } from "@/components/character/CharacterView";
+import { CHARACTER_ASSETS } from "@/components/character/CharacterAssets";
 
 const HomeScreen = () => {
+  const { patient } = useAuth();
+  
+  // Get Live Character Data from Context
+  const { species, equippedItems } = useCharacter(); 
+  
   const styles = createStyles(effectiveWidth, effectiveHeight);
-  const [selectedChar, setSelectedChar] = useState<characterKey>("axolotl");
-  const currentCharData = characterData[selectedChar];
-  const currentPfpImage = currentCharData.pfp;
-  const currentCharacterImage = currentCharData.character;
+
+  // Task State
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Refresh tasks when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
+
+  const fetchTasks = async () => {
+    try {
+      const response = await apiClient.getCurrentTasks();
+      const taskList = Array.isArray(response) ? response : (response.data || []);
+      setTasks(taskList);
+    } catch (error) {
+      console.error("Error fetching tasks", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchTasks();
+  }, []);
+
+  const handleToggleTask = async (taskId: number, isCurrentlyChecked: boolean) => {
+    // If checked, move to 'pending' (green/verify). If unchecked, move back to 'incomplete'.
+    const newStatus = isCurrentlyChecked ? 'incomplete' : 'pending';
+    
+    // Optimistic Update
+    const originalTasks = [...tasks];
+    setTasks(prevTasks => prevTasks.map(t => 
+      t.id === taskId ? { ...t, status: newStatus } : t
+    ));
+
+    try {
+      await apiClient.updateTaskCompletion(taskId, {
+        status: newStatus as any
+      });
+    } catch (error) {
+      setTasks(originalTasks);
+      Alert.alert("Error", "Could not update task status");
+    }
+  };
+
+  // Helper Functions (Time formatting and Styling)
+  const formatTime = (isoString: string) => {
+    if(!isoString) return "Anytime";
+    const date = new Date(isoString);
+    // Fix: Force UTC timezone to display the raw time stored in DB (wall clock time)
+    return date.toLocaleTimeString([], { 
+      hour: 'numeric', 
+      minute: '2-digit', 
+      timeZone: 'UTC' 
+    });
+  };
+
+  const getTaskStyle = (task: any) => {
+    const name = task.name.toLowerCase();
+    const category = task.category ? task.category.toLowerCase() : '';
+
+    if (name.includes('school') && name.includes('math')) {
+        return { bg: '#d4f6d7ff', icon: require("../assets/icons/schoolMath.png") };
+    }
+    if (category.includes('therapy') || name.includes('bandage') || name.includes('pt ') || name.includes('exercise') || name.includes('walk')) {
+      return { bg: '#ffcbe9ff', icon: require("../assets/icons/medical.png") };
+    }
+    if (category.includes('education') || name.includes('school') || name.includes('homework') || name.includes('read')) {
+      return { bg: '#fdcdcdff', icon: require("../assets/icons/school.png") };
+    }
+    if (name.includes('breakfast')) return { bg: Colors.taskNutritionBreakfast, icon: require("../assets/icons/breakfast.png") };
+    if (name.includes('lunch') || category.includes('meals')) return { bg: Colors.taskNutritionLunch, icon: require("../assets/icons/lunch.png") };
+    if (name.includes('dinner')) return { bg: Colors.taskNutritionDinner, icon: require("../assets/icons/dinner.png") };
+    if (category.includes('medical') || name.includes('medication') || name.includes('pill')) {
+      return { bg: Colors.taskMedicine, icon: require("../assets/icons/medicine.png") };
+    }
+    if (name.includes('water') || name.includes('drink')) {
+      return { bg: Colors.taskWater, icon: require("../assets/icons/medicine.png") };
+    }
+    return { bg: '#ffd093ff', icon: undefined };
+  };
+
+  // Filter: Show only top 2 tasks that are NOT verified (completed) yet
+  const displayTasks = tasks
+    .filter(t => t.status !== 'completed')
+    .slice(0, 2);
+
+  // Derive the PFP automatically based on context species
+  const currentPfpImage = CHARACTER_ASSETS[species].pfp;
 
   return (
     <SafeAreaView style={styles.bg}>
       <SafeAreaView style={styles.appContainer}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={onRefresh} 
+              tintColor={Colors.white} 
+            />
+          }
+        >
           <View style={styles.roomView}>
             <ImageBackground
               source={require("../assets/images/room.png")}
@@ -67,10 +169,10 @@ const HomeScreen = () => {
               </View>
             </View>
 
-            <View style={styles.characterPlaceholder} />
-            <ImageBackground></ImageBackground>
-            <Image
-              source={currentCharacterImage}
+            {/* DYNAMIC CHARACTER COMPONENT */}
+            <CharacterView 
+              species={species} 
+              equippedItems={equippedItems} 
               style={styles.characterPlaceholder}
             />
           </View>
@@ -78,21 +180,21 @@ const HomeScreen = () => {
           <View style={styles.infoCards}>
             <View style={[styles.infoCard, styles.statsCard]}>
               <View style={styles.profileHeader}>
-                <Text style={styles.username}>[Rowdy#7890]</Text>
+                <Text style={styles.username}>{patient?.username || 'Guest'}</Text>
                 <View style={styles.currencyContainer}>
                   <View style={styles.currencyCount}>
-                    <Image 
-                      source={require("../assets/icons/xpIcon.png")} 
+                    <Image
+                      source={require("../assets/icons/xpIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>[800 XP]</Text>
+                    <Text style={styles.currencyText}>{patient?.experience || 0} XP</Text>
                   </View>
                   <View style={[styles.currencyCount, styles.gemCount]}>
                     <Image
                       source={require("../assets/icons/currencyIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>[1000]</Text>
+                    <Text style={styles.currencyText}>{patient?.gems || 0}</Text>
                   </View>
                 </View>
               </View>
@@ -131,23 +233,30 @@ const HomeScreen = () => {
 
             <View style={[styles.infoCard, styles.tasksCard]}>
               <Text style={styles.cardTitle}>Upcoming Tasks</Text>
-              <MiniTaskCard
-                icon={require("../assets/icons/breakfast.png")}
-                iconBG= {Colors.taskNutritionBreakfast}
-                title="Breakfast"
-                time="8:00 am"
-                duration="30 mins"
-                energy="100"
-                completed={false}
-              />
-              <MiniTaskCard
-                icon={require("../assets/icons/medicine.png")}
-                iconBG= {Colors.taskMedicine}
-                title="Morning Medication"
-                time="8:15 am"
-                energy="50"
-                completed={false}
-              />
+              
+              {displayTasks.length > 0 ? (
+                displayTasks.map(item => {
+                  const style = getTaskStyle(item.task);
+                  return (
+                    <MiniTaskCard
+                      key={item.id}
+                      id={item.id}
+                      icon={style.icon}
+                      iconBG={style.bg}
+                      title={item.task.name}
+                      time={formatTime(item.scheduled_for)}
+                      energy={item.task.xp_value.toString()}
+                      completed={item.status === 'pending'}
+                      onToggle={handleToggleTask}
+                    />
+                  );
+                })
+              ) : (
+                <Text style={{color: Colors.textSecondary, textAlign: 'center', padding: 10}}>
+                  All caught up!
+                </Text>
+              )}
+              
             </View>
           </View>
 
