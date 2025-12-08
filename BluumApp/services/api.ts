@@ -40,8 +40,10 @@ class ApiClient {
     } catch (error) {
       clearTimeout(timeoutId);
       if ((error as Error).name === 'AbortError') {
+        console.error(`[API] Request timeout: ${url}`);
         throw new Error('Request timeout');
       }
+      console.error(`[API] Network error:`, error);
       throw error;
     }
   }

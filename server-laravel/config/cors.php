@@ -15,12 +15,24 @@ return [
     |
     */
 
-   'allowed_origins' => [], // LEAVE EMPTY. Do not put env() here.
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-'allowed_origins_patterns' => [
-    '/localhost:\d+/',    // This covers 8081, 3000, 8082...
-    '/127\.0\.0\.1:\d+/', // This covers the IP version
-],
+    'allowed_methods' => ['*'],
 
-'supports_credentials' => false, // <--- CHANGE THIS TO FALSE
+    'allowed_origins' => [],
+
+    'allowed_origins_patterns' => [
+        '/localhost:\d+/',    // This covers 8081, 3000, 8082...
+        '/127\.0\.0\.1:\d+/', // This covers the IP version
+        '/10\.\d+\.\d+\.\d+:\d+/', // This covers local network IPs
+        '/.*\.sharedwithexpose\.com/', // Expose public URLs
+    ],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => false,
 ];

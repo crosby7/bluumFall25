@@ -17,6 +17,7 @@ export interface Patient {
 export interface Avatar {
   id: number;
   name: string;
+  species: 'axolotl' | 'dog' | 'cat';
   description?: string | null;
   base_path: string;
   layer_count: number;

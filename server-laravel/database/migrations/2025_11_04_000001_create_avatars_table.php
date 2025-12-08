@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('avatars', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
+            $table->enum('species', ['axolotl', 'dog', 'cat'])->default('axolotl');
             $table->text('description')->nullable();
             $table->string('base_path', 200);
             $table->integer('layer_count');
