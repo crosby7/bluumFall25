@@ -43,29 +43,24 @@ if (closeButtons) {
     });
 }
 
-// // Temp: submit button will just close the large card
-// // Skip .createPatient and .createTask buttons as they have their own form handlers
-// const submitButtons = document.querySelectorAll(
-//     ".submitButton:not(.createPatient):not(.createTask)"
-// );
+// clicking the profile icon will toggle sign out popover
+const profileIcon = document.querySelector(".profile");
+const signOutPopover = document.getElementById("signOutPopover");
 
-// if (submitButtons) {
-//     submitButtons.forEach((button) => {
-//         button.addEventListener("click", () => {
-//             button.closest(".popUp").classList.toggle("close");
-//             if (
-//                 button
-//                     .closest(".popUp")
-//                     .parentElement.classList.contains("popUpRegion")
-//             ) {
-//                 button.closest(".popUpRegion").classList.toggle("close");
-//             }
-//             if (loginButtonDiv) {
-//                 loginButtonDiv.classList.remove("close");
-//             }
-//         });
-//     });
-// }
+if (profileIcon && signOutPopover) {
+    profileIcon.addEventListener("click", () => {
+        signOutPopover.classList.toggle("open");
+    });
+    // close popover when clicking outside
+    document.addEventListener("click", (e) => {
+        if (
+            !e.target.closest(".profile") &&
+            !e.target.closest("#signOutPopover")
+        ) {
+            signOutPopover.classList.remove("open");
+        }
+    });
+}
 
 // login and register buttons will open popup card
 if (loginButton) {
@@ -497,11 +492,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     if (!scheduleResponse.ok) {
                         const scheduleData = await scheduleResponse.json();
-                        console.error("Failed to assign default schedule:", scheduleData);
+                        console.error(
+                            "Failed to assign default schedule:",
+                            scheduleData
+                        );
                         // Don't block patient creation, just log the error
                     }
                 } catch (scheduleError) {
-                    console.error("Error assigning default schedule:", scheduleError);
+                    console.error(
+                        "Error assigning default schedule:",
+                        scheduleError
+                    );
                     // Don't block patient creation, just log the error
                 }
             }

@@ -199,6 +199,7 @@ html::-webkit-scrollbar,
         }
 
         .profile {
+            position: relative;
             width: 30px;
             height: 30px;
             border: 2px solid white;
@@ -339,6 +340,45 @@ html::-webkit-scrollbar,
         line-height: 40px;
         border-radius: 6px;
     }
+}
+
+.signOutPopover {
+    position: absolute;
+    right: -20px;
+    top: 30px;
+    display: flex;
+    background-color: var(--transparent-highlight);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 0;
+    transition: opacity 0.3s ease, width 0.3s ease, max-height 0.3s ease;
+    width: 0;
+    max-height: 0;
+    opacity: 0;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+
+    .signOutButton {
+        background-color: var(--active-highlight-purple);
+        text-align: center;
+        border: 2px solid var(--border-highlight);
+        color: white;
+        width: 110px;
+        height: 40px;
+        border: none;
+        cursor: pointer;
+        line-height: 40px;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+}
+
+.signOutPopover.open {
+    width: 118px;
+    max-height: none;
+    opacity: 1;
+    padding: 4px;
 }
 
 .sidebar:not(.open)+.createMenuPopover.open {
