@@ -366,11 +366,18 @@ html::-webkit-scrollbar,
         color: white;
         width: 110px;
         height: 40px;
-        border: none;
         cursor: pointer;
         line-height: 40px;
         border-radius: 6px;
         font-size: 16px;
+        font-family: "Inter", sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .signOutButton:hover {
+        background-color: white;
+        color: var(--active-highlight-purple);
+        border: 2px solid var(--active-highlight-purple);
     }
 }
 

@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Verify Email - Nurses')
+@section('title', 'Verify Email - Admin')
 
 @section('content')
     <div class="centralHeader">

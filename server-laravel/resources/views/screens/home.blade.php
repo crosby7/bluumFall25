@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', "Nurse's Home Page")
+@section('title', "Admin Home Page")
 
 @section('content')
     <div class="pageHeader">
