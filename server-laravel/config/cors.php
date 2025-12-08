@@ -15,24 +15,12 @@ return [
     |
     */
 
-    'paths' => ['*'],
+   'allowed_origins' => [], // LEAVE EMPTY. Do not put env() here.
 
-    'allowed_methods' => ['*'],
+'allowed_origins_patterns' => [
+    '/localhost:\d+/',    // This covers 8081, 3000, 8082...
+    '/127\.0\.0\.1:\d+/', // This covers the IP version
+],
 
-    'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:3000'),
-        'http://localhost:8081',
-    ],
-
-
-    'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
-    'exposed_headers' => [],
-
-    'max_age' => 0,
-
-    'supports_credentials' => true,
-
+'supports_credentials' => false, // <--- CHANGE THIS TO FALSE
 ];

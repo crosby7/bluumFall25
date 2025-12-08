@@ -21,7 +21,7 @@ export function Navbar({ state, navigation }: BottomTabBarProps) {
       onPress={() => setIsOpen(!isOpen)}>
         <Image
           style={[styles.navIcon, styles.navToggleIcon]}
-          source={require("../app/assets/icons/navigation.svg")}
+          source={require("../app/assets/icons/navigation.png")}
         />
       </TouchableOpacity>
       {isOpen && (
@@ -35,7 +35,7 @@ export function Navbar({ state, navigation }: BottomTabBarProps) {
                 styles.navButtonIcon,
                 activeRouteName === 'home' && { tintColor: '#DEC7FF' }
               ]}
-              source={require("../app/assets/icons/homeIcon.svg")}
+              source={require("../app/assets/icons/homeIcon.png")}
             />
             <Text style={[
               styles.navIconText,
@@ -54,7 +54,7 @@ export function Navbar({ state, navigation }: BottomTabBarProps) {
                 styles.navButtonIcon,
                 activeRouteName === 'shop' && { tintColor: '#DEC7FF' } 
               ]}
-              source={require("../app/assets/icons/shopIcon.svg")}
+              source={require("../app/assets/icons/shopIcon.png")}
             />
             <Text style={[
               styles.navIconText,
@@ -73,7 +73,7 @@ export function Navbar({ state, navigation }: BottomTabBarProps) {
                 styles.navButtonIcon,
                 activeRouteName === 'tasks' && { tintColor: '#DEC7FF' }
               ]}
-              source={require("../app/assets/icons/tasksIcon.svg")}
+              source={require("../app/assets/icons/tasksIcon.png")}
             />
             <Text style={[
               styles.navIconText,

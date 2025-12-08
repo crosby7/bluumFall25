@@ -12,37 +12,66 @@ import {
 import { Colors } from "../constants/theme";
  
  type TaskCardProps = {
+   id: number;
    icon?: ImageSourcePropType;
    iconBG: string;
    title: string;
    time: string;
-   duration?: string; // <-- The ? makes this prop optional
+   duration?: string; 
    energy: string;
    completed: boolean;
+   onToggle: (id: number, currentStatus: boolean) => void;
  };
  
- export const MiniTaskCard = ({ icon, iconBG, title, time, duration, energy, completed }: TaskCardProps) => {
+ export const MiniTaskCard = ({ 
+    id, 
+    icon, 
+    iconBG, 
+    title, 
+    time, 
+    duration, 
+    energy, 
+    completed, 
+    onToggle 
+  }: TaskCardProps) => {
    return (
      <View style={styles.taskCard}>
        <View style={[styles.placeholderImage, { backgroundColor: iconBG }]} > 
-        <Image
-        source={icon}
-        
-        />
+        {/* Render icon if it exists */}
+        {icon && (
+          <Image
+            source={icon}
+            style={{ width: '60%', height: '60%', resizeMode: 'contain' }}
+          />
+        )}
        </View>
+       
        <View style={styles.taskDetails}>
          <Text style={styles.taskTitle}>{title}</Text>
          <Text style={styles.taskTime}>
            {time} {duration && `· ${duration}`}
          </Text>
        </View>
+       
        <View style={styles.taskEnergy}>
          <Image style={styles.energyIcon} source={require("../app/assets/icons/xpIcon.png")}/>
          <Text style={styles.taskEnergyText}>{energy}</Text>
        </View>
-         <TouchableOpacity style={styles.checkbox}>
+       
+         <TouchableOpacity 
+            style={styles.checkbox} 
+            onPress={() => onToggle(id, completed)}
+         >
             <Image
-            source={require("../app/assets/icons/checkBox.png")}
+              // ALWAYS use checkBox.png
+              source={require("../app/assets/icons/checkBox.png")}
+              style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'contain',
+                // Turn GREEN if completed, otherwise undefined (original color)
+                tintColor: completed ? '#27A36A' : undefined 
+              }}
             />
          </TouchableOpacity>
      </View>

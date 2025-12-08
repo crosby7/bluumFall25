@@ -1,76 +1,183 @@
 import { MiniTaskCard } from "@/components/miniTaskCard";
 import { effectiveHeight, effectiveWidth } from "@/constants/dimensions";
 import { Colors } from "@/constants/theme";
-import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import React, { useState, useCallback } from "react";
 import {
   Image,
-  ImageBackground,
+  ImageSourcePropType, // Ensure this is imported
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Alert,
+  ImageBackground,
+  RefreshControl,
+  Dimensions, // Ensure Dimensions is imported or used correctly
+  ViewStyle, // Import ViewStyle
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { apiClient } from '../../services/api'; 
+import { useFocusEffect } from 'expo-router'; 
+import { useCharacter } from "@/context/CharacterContext";
+import { CharacterView } from "@/components/character/CharacterView";
+import { CHARACTER_ASSETS } from "@/components/character/CharacterAssets";
 
-const characterData = {
-  dog: {
-    pfp: require("../assets/icons/rowdyPFP.svg"),
-    character: require("../assets/icons/rowdyCharacter.svg"),
-  },
-  axolotl: {
-    pfp: require("../assets/icons/axolotlPFP.svg"),
-    character: require("../assets/icons/axolotlCharacter.svg"),
-  },
+// --- START: New Button Component for consistency ---
+const HomeActionButton = ({ icon, onPress }: { icon: ImageSourcePropType, onPress: () => void }) => {
+    // Get dimensions inside the functional component if needed dynamically
+    const { width, height } = Dimensions.get('window'); 
+    
+    // FIX: Explicitly type the object as ViewStyle to satisfy TypeScript
+    const iconButtonStyle: ViewStyle = {
+      width: width * 0.09,
+      height: width * 0.09,
+      borderRadius: (width * 0.12) / 2,
+      backgroundColor:  '#844AFF',
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+    
+    return (
+        <TouchableOpacity onPress={onPress} style={iconButtonStyle}>
+            <Image 
+                source={icon} 
+                style={{ width: '60%', height: '60%', resizeMode: 'contain', tintColor: 'white'}} 
+            />
+        </TouchableOpacity>
+    );
 };
+// --- END: New Button Component ---
 
-type characterKey = keyof typeof characterData;
 
 const HomeScreen = () => {
+  const { patient } = useAuth();
+  
+  const { species, equippedItems } = useCharacter(); 
+  
   const styles = createStyles(effectiveWidth, effectiveHeight);
-  const [selectedChar, setSelectedChar] = useState<characterKey>("axolotl");
-  const currentCharData = characterData[selectedChar];
-  const currentPfpImage = currentCharData.pfp;
-  const currentCharacterImage = currentCharData.character;
+
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
+
+  const fetchTasks = async () => {
+    try {
+      const response = await apiClient.getCurrentTasks();
+      const taskList = Array.isArray(response) ? response : (response.data || []);
+      setTasks(taskList);
+    } catch (error) {
+      console.error("Error fetching tasks", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchTasks();
+  }, []);
+
+  const handleToggleTask = async (taskId: number, isCurrentlyChecked: boolean) => {
+    const newStatus = isCurrentlyChecked ? 'incomplete' : 'pending';
+    
+    const originalTasks = [...tasks];
+    setTasks(prevTasks => prevTasks.map(t => 
+      t.id === taskId ? { ...t, status: newStatus } : t
+    ));
+
+    try {
+      await apiClient.updateTaskCompletion(taskId, {
+        status: newStatus as any
+      });
+    } catch (error) {
+      setTasks(originalTasks);
+      Alert.alert("Error", "Could not update task status");
+    }
+  };
+
+  const formatTime = (isoString: string) => {
+    if(!isoString) return "Anytime";
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], { 
+      hour: 'numeric', 
+      minute: '2-digit', 
+      timeZone: 'UTC' 
+    });
+  };
+
+  const getTaskStyle = (task: any) => {
+    const name = task.name.toLowerCase();
+    const category = task.category ? task.category.toLowerCase() : '';
+
+    if (name.includes('school') && name.includes('math')) {
+        return { bg: '#d4f6d7ff', icon: require("../assets/icons/schoolMath.png") };
+    }
+    if (category.includes('therapy') || name.includes('bandage') || name.includes('pt ') || name.includes('exercise') || name.includes('walk')) {
+      return { bg: '#ffcbe9ff', icon: require("../assets/icons/medical.png") };
+    }
+    if (category.includes('education') || name.includes('school') || name.includes('homework') || name.includes('read')) {
+      return { bg: '#fdcdcdff', icon: require("../assets/icons/school.png") };
+    }
+    if (name.includes('breakfast')) return { bg: Colors.taskNutritionBreakfast, icon: require("../assets/icons/breakfast.png") };
+    if (name.includes('lunch') || category.includes('meals')) return { bg: Colors.taskNutritionLunch, icon: require("../assets/icons/lunch.png") };
+    if (name.includes('dinner')) return { bg: Colors.taskNutritionDinner, icon: require("../assets/icons/dinner.png") };
+    if (category.includes('medical') || name.includes('medication') || name.includes('pill')) {
+      return { bg: Colors.taskMedicine, icon: require("../assets/icons/medicine.png") };
+    }
+    if (name.includes('water') || name.includes('drink')) {
+      return { bg: Colors.taskWater, icon: require("../assets/icons/medicine.png") };
+    }
+    return { bg: '#ffd093ff', icon: undefined };
+  };
+
+  const displayTasks = tasks
+    .filter(t => t.status !== 'completed')
+    .slice(0, 2);
+
+  const currentPfpImage = CHARACTER_ASSETS[species].pfp;
 
   return (
     <SafeAreaView style={styles.bg}>
       <SafeAreaView style={styles.appContainer}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={onRefresh} 
+              tintColor={Colors.white} 
+            />
+          }
+        >
           <View style={styles.roomView}>
             <ImageBackground
               source={require("../assets/images/room.png")}
               style={styles.roomBackground}
             />
             <View style={styles.wall}>
+              
               <View style={styles.roomActions}>
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/closetButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/roomButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/poseButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
+                {/* UPATED BUTTONS: Now using the robust HomeActionButton */}
+                <HomeActionButton icon={require("../assets/icons/closetButton.png")} onPress={() => console.log('Go to Shop/Closet')} />
+                <HomeActionButton icon={require("../assets/icons/roomButton.png")} onPress={() => console.log('Go to Room/Background Shop')} />
+                <HomeActionButton icon={require("../assets/icons/poseButton.png")} onPress={() => console.log('Go to Pose Shop')} />
               </View>
+
             </View>
 
-            <View style={styles.characterPlaceholder} />
-            <ImageBackground></ImageBackground>
-            <Image
-              source={currentCharacterImage}
+            <CharacterView 
+              species={species} 
+              equippedItems={equippedItems} 
               style={styles.characterPlaceholder}
             />
           </View>
@@ -78,21 +185,21 @@ const HomeScreen = () => {
           <View style={styles.infoCards}>
             <View style={[styles.infoCard, styles.statsCard]}>
               <View style={styles.profileHeader}>
-                <Text style={styles.username}>[Rowdy#7890]</Text>
+                <Text style={styles.username}>{patient?.username || 'Guest'}</Text>
                 <View style={styles.currencyContainer}>
                   <View style={styles.currencyCount}>
-                    <Image 
-                      source={require("../assets/icons/xpIcon.png")} 
+                    <Image
+                      source={require("../assets/icons/xpIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>[800 XP]</Text>
+                    <Text style={styles.currencyText}>{patient?.experience || 0} XP</Text>
                   </View>
                   <View style={[styles.currencyCount, styles.gemCount]}>
                     <Image
                       source={require("../assets/icons/currencyIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>[1000]</Text>
+                    <Text style={styles.currencyText}>{patient?.gems || 0}</Text>
                   </View>
                 </View>
               </View>
@@ -131,23 +238,30 @@ const HomeScreen = () => {
 
             <View style={[styles.infoCard, styles.tasksCard]}>
               <Text style={styles.cardTitle}>Upcoming Tasks</Text>
-              <MiniTaskCard
-                icon={require("../assets/icons/breakfast.png")}
-                iconBG= {Colors.taskNutritionBreakfast}
-                title="Breakfast"
-                time="8:00 am"
-                duration="30 mins"
-                energy="100"
-                completed={false}
-              />
-              <MiniTaskCard
-                icon={require("../assets/icons/medicine.png")}
-                iconBG= {Colors.taskMedicine}
-                title="Morning Medication"
-                time="8:15 am"
-                energy="50"
-                completed={false}
-              />
+              
+              {displayTasks.length > 0 ? (
+                displayTasks.map(item => {
+                  const style = getTaskStyle(item.task);
+                  return (
+                    <MiniTaskCard
+                      key={item.id}
+                      id={item.id}
+                      icon={style.icon}
+                      iconBG={style.bg}
+                      title={item.task.name}
+                      time={formatTime(item.scheduled_for)}
+                      energy={item.task.xp_value.toString()}
+                      completed={item.status === 'pending'}
+                      onToggle={handleToggleTask}
+                    />
+                  );
+                })
+              ) : (
+                <Text style={{color: Colors.textSecondary, textAlign: 'center', padding: 10}}>
+                  All caught up!
+                </Text>
+              )}
+              
             </View>
           </View>
 
@@ -201,6 +315,7 @@ const createStyles = (effectiveWidth: number, effectiveHeight: number) =>
       gap: effectiveWidth * 0.02,
     },
     iconButton: {
+      // This style is deprecated but kept for reference
       width: effectiveWidth * 0.08,
       height: effectiveHeight * 0.07,
       borderRadius: (effectiveWidth * 0.1) / 2,
