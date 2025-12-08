@@ -7,16 +7,10 @@
                 <div class="patientIDRow">
                     <input type="text" id="patientID" name="patientID" value="#3768" readonly>
                     <label for="patientID">
-                        <div class="patientIDLabel">
-                            <h4>Patient ID</h4>
-                            <p>Auto Generated</p>
-                        </div>
+                        <h4>Patient ID</h4>
+                        <p>Auto Generated</p>
                     </label>
                 </div>
-                {{-- <div class="inputGroup">
-                    <label for="patientContact">Patient Contact</label>
-                    <input type="text" id="patientContact" name="patientContact" placeholder="Enter email..." required>
-                </div> --}}
                 <div class="twoInputs">
                     <div class="inputGroup">
                         <label for="usernamePart1">Username Prefix</label>
