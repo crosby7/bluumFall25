@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Login - Nurses')
+@section('title', 'Login - Admin')
 
 @section('content')
     <div class="centralHeader">
@@ -32,7 +32,7 @@
             <button class="closeButton xButton" type="button">X</button>
             <h2>Sign into Bluum</h2>
             <div class="inputGroup">
-                <input type="email" id="loginEmail" name="email" placeholder="Email" value="nurse@example.com" required>
+                <input type="email" id="loginEmail" name="email" placeholder="Email" value="admin@example.com" required>
                 <input type="password" id="loginPassword" name="password" value="password" placeholder="Password" required>
             </div>
             <button type="submit" class="submitButton">Log In</button>

@@ -14,8 +14,8 @@ class NurseSeeder extends Seeder
     {
         \App\Models\Nurse::create([
             'first_name' => 'Dev',
-            'last_name' => 'Nurse',
-            'email' => 'nurse@example.com',
+            'last_name' => 'Admin',
+            'email' => 'admin@example.com',
             'password' => 'password', // Will be hashed by model
             'email_verified_at' => now(),
         ]);
