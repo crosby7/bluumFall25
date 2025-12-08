@@ -28,17 +28,17 @@ const SLOT_STYLES: Record<string, ImageStyle> = {
   },
   Shirt: {
     width: '60%',
-    height: '50%',
-    top: '40%',      // Lower down for torso
+    height: '52.5%',
+    top: '38%',      // Lower down for torso
     left: '20%',
     zIndex: 3,
   },
   Footwear: {
-    width: '25%',
-    height: '20%',
+    width: '28%',
+    height: '19%',
     top: undefined,  // Unset top
-    bottom: '0%',    // Position at bottom
-    left: '35%',
+    bottom: '0.7%',    // Position at bottom
+    left: '32%',
     zIndex: 5,
   }
 };
@@ -69,8 +69,8 @@ const CharacterLayer = ({
   );
 };
 
-const BACKEND_URL = 'http://bluum.test';
-
+// const BACKEND_URL = 'http://bluum.test'; //Backend URL for web
+const BACKEND_URL = `http://10.25.202.84:8000`;
 const getClothingUrl = (path?: string | null) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;

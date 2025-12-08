@@ -141,13 +141,34 @@ const ShopScreen = () => {
 
   // --- PURCHASE & EQUIP LOGIC ---
   const handlePurchase = (item: ShopItemProps) => {
-    // 1. Add to owned list
+    // 1. Add item to owned list
     addOwnedItem(item.id); 
-    // 2. Add to equipped list (since they just bought it, put it on)
-    handleEquip(item);
+
+    // 2. Determine the slot of the purchased item (e.g., 'Shirt')
+    let purchasedSlot: keyof EquippedItems | null = null;
+    const cat = item.cat?.toLowerCase() || '';
+
+    if (cat.includes('hat') || cat.includes('beanie') || cat.includes('cap')) purchasedSlot = 'Hat';
+    else if (cat.includes('shirt') || cat.includes('top')) purchasedSlot = 'Shirt';
+    else if (cat.includes('shoe') || cat.includes('foot') || cat.includes('sneaker')) purchasedSlot = 'Footwear';
+    else if (cat.includes('glass') || cat.includes('eye')) purchasedSlot = 'Eyewear';
+    
+    // 3. Call the equip functions to save all currently previewed items globally.
+    //    We loop through the current preview state and push everything to the global context.
+    
+    // FIX: Ensure all items currently in the preview state are saved globally.
+    (Object.keys(previewItems) as Array<keyof EquippedItems>).forEach(slot => {
+        const itemUrl = previewItems[slot];
+        
+        // Only save the slot if it has a URL (i.e., something is equipped there)
+        if (itemUrl) {
+            globalEquip(slot, itemUrl); 
+        }
+    });
+
+
     Alert.alert("Success!", `You bought and equipped the ${item.name}.`);
   };
-
   const handleEquip = (item: ShopItemProps) => {
     const cat = item.cat?.toLowerCase() || '';
     let slot: keyof EquippedItems | null = null;

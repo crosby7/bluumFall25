@@ -25,7 +25,8 @@ type ItemCardProps = {
   actionButton?: React.ReactNode; // NEW: Optional button to render below
 };
 
-const BACKEND_URL = 'http://bluum.test';
+// const BACKEND_URL = 'http://bluum.test'; //Backend URL for web
+const BACKEND_URL = 'http://10.25.202.84:8000';
 const PLACEHOLDER_IMAGE = require("../app/assets/icons/clothingPlaceholder.png");
 
 const getImageSource = (icon: string | any) => {

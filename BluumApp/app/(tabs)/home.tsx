@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import React, { useState, useCallback } from "react";
 import {
   Image,
-  ImageBackground,
+  ImageSourcePropType, // Ensure this is imported
   Platform,
   ScrollView,
   StyleSheet,
@@ -13,31 +13,56 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  RefreshControl // Added for refresh functionality
+  ImageBackground,
+  RefreshControl,
+  Dimensions, // Ensure Dimensions is imported or used correctly
+  ViewStyle, // Import ViewStyle
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { apiClient } from '../../services/api'; 
-import { useFocusEffect } from 'expo-router'; // Used for refreshing data on navigation
-
-// Character Imports
+import { useFocusEffect } from 'expo-router'; 
 import { useCharacter } from "@/context/CharacterContext";
 import { CharacterView } from "@/components/character/CharacterView";
 import { CHARACTER_ASSETS } from "@/components/character/CharacterAssets";
 
+// --- START: New Button Component for consistency ---
+const HomeActionButton = ({ icon, onPress }: { icon: ImageSourcePropType, onPress: () => void }) => {
+    // Get dimensions inside the functional component if needed dynamically
+    const { width, height } = Dimensions.get('window'); 
+    
+    // FIX: Explicitly type the object as ViewStyle to satisfy TypeScript
+    const iconButtonStyle: ViewStyle = {
+      width: width * 0.09,
+      height: width * 0.09,
+      borderRadius: (width * 0.12) / 2,
+      backgroundColor:  '#844AFF',
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+    
+    return (
+        <TouchableOpacity onPress={onPress} style={iconButtonStyle}>
+            <Image 
+                source={icon} 
+                style={{ width: '60%', height: '60%', resizeMode: 'contain', tintColor: 'white'}} 
+            />
+        </TouchableOpacity>
+    );
+};
+// --- END: New Button Component ---
+
+
 const HomeScreen = () => {
   const { patient } = useAuth();
   
-  // Get Live Character Data from Context
   const { species, equippedItems } = useCharacter(); 
   
   const styles = createStyles(effectiveWidth, effectiveHeight);
 
-  // Task State
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Refresh tasks when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       fetchTasks();
@@ -63,10 +88,8 @@ const HomeScreen = () => {
   }, []);
 
   const handleToggleTask = async (taskId: number, isCurrentlyChecked: boolean) => {
-    // If checked, move to 'pending' (green/verify). If unchecked, move back to 'incomplete'.
     const newStatus = isCurrentlyChecked ? 'incomplete' : 'pending';
     
-    // Optimistic Update
     const originalTasks = [...tasks];
     setTasks(prevTasks => prevTasks.map(t => 
       t.id === taskId ? { ...t, status: newStatus } : t
@@ -82,11 +105,9 @@ const HomeScreen = () => {
     }
   };
 
-  // Helper Functions (Time formatting and Styling)
   const formatTime = (isoString: string) => {
     if(!isoString) return "Anytime";
     const date = new Date(isoString);
-    // Fix: Force UTC timezone to display the raw time stored in DB (wall clock time)
     return date.toLocaleTimeString([], { 
       hour: 'numeric', 
       minute: '2-digit', 
@@ -119,12 +140,10 @@ const HomeScreen = () => {
     return { bg: '#ffd093ff', icon: undefined };
   };
 
-  // Filter: Show only top 2 tasks that are NOT verified (completed) yet
   const displayTasks = tasks
     .filter(t => t.status !== 'completed')
     .slice(0, 2);
 
-  // Derive the PFP automatically based on context species
   const currentPfpImage = CHARACTER_ASSETS[species].pfp;
 
   return (
@@ -146,30 +165,16 @@ const HomeScreen = () => {
               style={styles.roomBackground}
             />
             <View style={styles.wall}>
+              
               <View style={styles.roomActions}>
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/closetButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/roomButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ImageBackground
-                    source={require("../assets/icons/poseButton.svg")}
-                    style={styles.iconButton}
-                  />
-                </TouchableOpacity>
+                {/* UPATED BUTTONS: Now using the robust HomeActionButton */}
+                <HomeActionButton icon={require("../assets/icons/closetButton.png")} onPress={() => console.log('Go to Shop/Closet')} />
+                <HomeActionButton icon={require("../assets/icons/roomButton.png")} onPress={() => console.log('Go to Room/Background Shop')} />
+                <HomeActionButton icon={require("../assets/icons/poseButton.png")} onPress={() => console.log('Go to Pose Shop')} />
               </View>
+
             </View>
 
-            {/* DYNAMIC CHARACTER COMPONENT */}
             <CharacterView 
               species={species} 
               equippedItems={equippedItems} 
@@ -310,6 +315,7 @@ const createStyles = (effectiveWidth: number, effectiveHeight: number) =>
       gap: effectiveWidth * 0.02,
     },
     iconButton: {
+      // This style is deprecated but kept for reference
       width: effectiveWidth * 0.08,
       height: effectiveHeight * 0.07,
       borderRadius: (effectiveWidth * 0.1) / 2,
