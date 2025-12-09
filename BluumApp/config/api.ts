@@ -14,7 +14,12 @@ const getBaseURL = (): string => {
 
   // Production builds
   if (process.env.NODE_ENV === 'production') {
-    return 'https://your-production-url.com/api';
+    if (process.env.EXPO_PUBLIC_PRODUCTION_API_URL) {
+      return process.env.EXPO_PUBLIC_PRODUCTION_API_URL;
+    }
+    throw new Error(
+      '[API] EXPO_PUBLIC_PRODUCTION_API_URL is not set. Please configure the production API URL in your environment variables.'
+    );
   }
 
   // Fallback for web development

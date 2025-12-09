@@ -35,12 +35,7 @@ export const CharacterProvider = ({ children }: { children: React.ReactNode }) =
         const patient: Patient = await apiClient.getCurrentPatient();
 
         if (patient.avatar?.species) {
-          const avatarSpecies = patient.avatar.species;
-          if (avatarSpecies === 'axolotl' || avatarSpecies === 'dog' || avatarSpecies === 'cat') {
-            setSpecies(avatarSpecies);
-          } else {
-            console.warn(`Unknown species "${avatarSpecies}", defaulting to axolotl`);
-          }
+          setSpecies(patient.avatar.species);
         }
       } catch (error) {
         console.error('Failed to fetch patient avatar:', error);

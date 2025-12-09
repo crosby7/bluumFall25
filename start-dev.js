@@ -28,7 +28,7 @@ function getLocalIP() {
 /**
  * Check if the Laravel server is accessible
  * @param {string} url The URL to check
- * @returns {Promise<{success: boolean, error?: string}>} Health check result
+ * @returns {Promise<{success: boolean, error?: string}>} A promise that resolves with the health check result
  */
 function checkServerHealth(url) {
   return new Promise((resolve) => {
@@ -103,8 +103,19 @@ async function startExpo() {
       console.log(`${'='.repeat(60)}\n`);
       console.log('IMPORTANT: If your tablet cannot connect:');
       console.log('  1. Make sure your tablet is on the same WiFi network');
-      console.log('  2. Add Windows Firewall rule (run as Administrator):');
-      console.log(`     netsh advfirewall firewall add rule name="Laravel Dev Server" dir=in action=allow protocol=TCP localport=8000`);
+      if (process.platform === 'win32') {
+        console.log('  2. Add Windows Firewall rule (run as Administrator):');
+        console.log('     netsh advfirewall firewall add rule name="Laravel Dev Server" dir=in action=allow protocol=TCP localport=8000');
+      } else if (process.platform === 'darwin') {
+        console.log('  2. Allow incoming connections for PHP in System Preferences:');
+        console.log('     System Preferences > Security & Privacy > Firewall > Firewall Options...');
+        console.log('     Ensure "php" or "Terminal" is allowed for incoming connections, or temporarily disable the firewall.');
+      } else {
+        console.log('  2. Allow port 8000 through your firewall (example for ufw):');
+        console.log('     sudo ufw allow 8000/tcp');
+        console.log('     Or use iptables:');
+        console.log('     sudo iptables -A INPUT -p tcp --dport 8000 -j ACCEPT');
+      }
       console.log(`${'='.repeat(60)}\n`);
       break;
     }
@@ -155,4 +166,4 @@ async function startExpo() {
 }
 
 // Start the health check and Expo startup process
-setTimeout(startExpo, 2000);
+startExpo();
