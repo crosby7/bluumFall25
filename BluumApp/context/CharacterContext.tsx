@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { EquippedItems, SpeciesType } from '@/components/character/CharacterAssets';
 import { apiClient } from '@/services/api';
 import { Patient } from '@/types/api';
+import { useAuth } from './AuthContext';
 
 type CharacterContextType = {
   species: SpeciesType;
@@ -17,6 +18,7 @@ type CharacterContextType = {
 const CharacterContext = createContext<CharacterContextType | undefined>(undefined);
 
 export const CharacterProvider = ({ children }: { children: React.ReactNode }) => {
+  const { isLoggedIn } = useAuth();
   const [species, setSpecies] = useState<SpeciesType>('axolotl');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -27,8 +29,14 @@ export const CharacterProvider = ({ children }: { children: React.ReactNode }) =
     Eyewear: null,
   });
 
-  // Fetch user's avatar species on mount
+  // Fetch user's avatar species when logged in
   useEffect(() => {
+    // Only fetch if user is logged in
+    if (!isLoggedIn) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchUserAvatar = async () => {
       try {
         setIsLoading(true);
@@ -45,7 +53,7 @@ export const CharacterProvider = ({ children }: { children: React.ReactNode }) =
     };
 
     fetchUserAvatar();
-  }, []);
+  }, [isLoggedIn]);
 
   const [ownedItemIds, setOwnedItemIds] = useState<Set<number>>(new Set());
 
