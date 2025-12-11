@@ -1,4 +1,5 @@
 import { Colors } from '@/constants/theme';
+import { getAssetBaseURL } from '@/config/api';
 import React, { useState } from 'react';
 import {
   Image,
@@ -25,8 +26,6 @@ type ItemCardProps = {
   actionButton?: React.ReactNode; // NEW: Optional button to render below
 };
 
-// const BACKEND_URL = 'http://bluum.test'; //Backend URL for web
-const BACKEND_URL = 'http://10.25.202.84:8000';
 const PLACEHOLDER_IMAGE = require("../app/assets/icons/clothingPlaceholder.png");
 
 const getImageSource = (icon: string | any) => {
@@ -36,7 +35,7 @@ const getImageSource = (icon: string | any) => {
     if (cleanPath.startsWith('http')) {
       return { uri: cleanPath };
     }
-    return { uri: `${BACKEND_URL}/${cleanPath}` };
+    return { uri: `${getAssetBaseURL()}/${cleanPath}` };
   }
   return icon;
 };

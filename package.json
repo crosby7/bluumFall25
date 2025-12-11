@@ -1,0 +1,9 @@
+{
+  "name": "bluumserver",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bluum development workspace",
+  "scripts": {
+    "dev": "node start-dev.js"
+  }
+}

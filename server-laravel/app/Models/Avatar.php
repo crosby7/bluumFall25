@@ -12,6 +12,7 @@ class Avatar extends Model
 
     protected $fillable = [
         'name',
+        'species',
         'description',
         'base_path',
         'layer_count',
@@ -23,6 +24,7 @@ class Avatar extends Model
         'is_default' => 'boolean',
         'layer_count' => 'integer',
         'sort_order' => 'integer',
+        'species' => 'string',
     ];
 
     /**

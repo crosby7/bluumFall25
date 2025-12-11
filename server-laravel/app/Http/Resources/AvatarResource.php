@@ -17,6 +17,7 @@ class AvatarResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'species' => $this->species,
             'description' => $this->description,
             'base_path' => $this->base_path,
             'layer_count' => $this->layer_count,

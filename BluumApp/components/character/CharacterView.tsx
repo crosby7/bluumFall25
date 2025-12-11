@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Image, StyleSheet, ViewStyle, ImageStyle } from "react-native";
 import { CHARACTER_ASSETS, SpeciesType, EquippedItems } from "./CharacterAssets";
+import { getAssetBaseURL } from "@/config/api";
 
 type CharacterViewProps = {
   species?: SpeciesType;
@@ -69,13 +70,11 @@ const CharacterLayer = ({
   );
 };
 
-// const BACKEND_URL = 'http://bluum.test'; //Backend URL for web
-const BACKEND_URL = `http://10.25.202.84:8000`;
 const getClothingUrl = (path?: string | null) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-  return `${BACKEND_URL}/${cleanPath}`;
+  return `${getAssetBaseURL()}/${cleanPath}`;
 };
 
 export const CharacterView = ({ species = "axolotl", equippedItems = {}, style }: CharacterViewProps) => {
