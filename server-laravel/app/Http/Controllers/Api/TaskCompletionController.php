@@ -89,7 +89,7 @@ class TaskCompletionController extends Controller
         \Log::info('Validated Data: ', $validated);
 
         $taskCompletion->update($validated);
-        $taskCompletion->load(['subscription.task']);
+        $taskCompletion->load(['subscription.task', 'subscription.patient']);
 
         return new TaskCompletionResource($taskCompletion);
     }
