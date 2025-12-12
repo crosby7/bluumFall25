@@ -222,13 +222,6 @@ const HomeScreen = () => {
               style={styles.roomBackground}
             />
             <View style={styles.wall}>
-              <View style={styles.logoutButton}>
-                <HomeActionButton
-                  icon={require("../assets/icons/logoutIcon.png")}
-                  onPress={handleLogout}
-                />
-              </View>
-
               <View style={styles.roomActions}>
                 {/* UPDATED BUTTONS: Now using the robust HomeActionButton */}
                 <HomeActionButton
