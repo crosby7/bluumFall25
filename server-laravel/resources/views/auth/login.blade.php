@@ -33,7 +33,7 @@
             <h2>Sign into Bluum</h2>
             <div class="inputGroup">
                 <input type="email" id="loginEmail" name="email" placeholder="Email" value="admin@example.com" required>
-                <input type="password" id="loginPassword" name="password" value="password" placeholder="Password" required>
+                <input type="password" id="loginPassword" name="password" value="Bluumfall2025" placeholder="Bluumfall2025" required>
             </div>
             <button type="submit" class="submitButton">Log In</button>
         </form>
