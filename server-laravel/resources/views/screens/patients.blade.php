@@ -47,8 +47,8 @@
                             <span class="statusText">{{ ucfirst($task->status) }}</span>
                         </div>
                     </div>
-                    @if($task->status === 'pending')
-                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
+                    @if($task->status === 'pending' && !is_null($task->completion_id))
+                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, {{ $task->completion_id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
                     </button></div>
@@ -180,8 +180,8 @@
                                <span class="statusText">${t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Unknown'}</span>
                             </div>
                         </div>
-                        ${t.status === 'pending' ? `
-                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${t.id})">
+                        ${(t.status === 'pending' && t.completion_id != null) ? `
+                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${t.completion_id})">
                             <img src="/assets/common/complete.svg" alt="Mark Complete">
                             <span class="verifyText">Verify</span>
                         </button></div>` : `<div class="emptyCol"></div>`}

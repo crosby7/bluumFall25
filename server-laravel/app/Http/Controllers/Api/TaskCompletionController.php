@@ -8,6 +8,7 @@ use App\Http\Resources\TaskCompletionResource;
 use App\Models\TaskCompletion;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class TaskCompletionController extends Controller
@@ -71,25 +72,58 @@ class TaskCompletionController extends Controller
      */
     public function update(Request $request, TaskCompletion $taskCompletion): TaskCompletionResource
     {
-        \Log::info('Updating TaskCompletion ID: ' . $taskCompletion->id);
         $this->authorize('update', $taskCompletion);
 
-        try {
-            $validated = $request->validate([
-                'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
-                'scheduled_for' => ['sometimes', 'date'],
-                'completed_at' => ['sometimes', 'nullable', 'date'],
-                'status' => ['sometimes', Rule::enum(TaskStatus::class)],
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation failed: ' . $e->errors());
-            throw $e;
-        }
+        $validated = $request->validate([
+            'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
+            'scheduled_for' => ['sometimes', 'date'],
+            'completed_at' => ['sometimes', 'nullable', 'date'],
+            'status' => ['sometimes', Rule::enum(TaskStatus::class)],
+        ]);
 
-        \Log::info('Validated Data: ', $validated);
+        // Wrap in transaction to prevent race conditions
+        $taskCompletion = DB::transaction(function () use ($taskCompletion, $validated) {
+            // Lock the record to prevent concurrent modifications
+            $taskCompletion = TaskCompletion::where('id', $taskCompletion->id)
+                ->lockForUpdate()
+                ->first();
 
-        $taskCompletion->update($validated);
-        $taskCompletion->load(['subscription.task']);
+            // Check if status is being changed to 'completed' and wasn't already completed
+            $wasCompleted = $taskCompletion->status === TaskStatus::COMPLETED;
+            $isNowCompleted = isset($validated['status']) && $validated['status'] === TaskStatus::COMPLETED->value;
+
+            $taskCompletion->update($validated);
+            $taskCompletion->refresh();
+            $taskCompletion->load(['subscription.task', 'subscription.patient']);
+
+            // Distribute rewards if task was just completed AND rewards haven't been distributed yet
+            if ($isNowCompleted && !$wasCompleted && $taskCompletion->rewards_distributed_at === null) {
+                $patient = $taskCompletion->subscription->patient;
+                $task = $taskCompletion->subscription->task;
+
+                if ($patient && $task) {
+                    $xpValue = $task->xp_value ?? 0;
+                    $gemValue = $task->gem_value ?? 0;
+
+                    $patient->increment('experience', $xpValue);
+                    $patient->increment('gems', $gemValue);
+
+                    // Mark rewards as distributed
+                    $taskCompletion->update(['rewards_distributed_at' => now()]);
+
+                    \Log::info('Rewards distributed to patient', [
+                        'patient_id' => $patient->id,
+                        'task_id' => $task->id,
+                        'task_completion_id' => $taskCompletion->id,
+                        'xp_awarded' => $xpValue,
+                        'gems_awarded' => $gemValue,
+                        'rewards_distributed_at' => $taskCompletion->rewards_distributed_at,
+                    ]);
+                }
+            }
+
+            return $taskCompletion;
+        });
 
         return new TaskCompletionResource($taskCompletion);
     }
