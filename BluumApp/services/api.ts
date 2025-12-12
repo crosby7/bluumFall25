@@ -186,6 +186,13 @@ class ApiClient {
     });
   }
 
+  async purchaseItem(itemId: number): Promise<{ message: string; patient_item: PatientItem }> {
+    return this.request<{ message: string; patient_item: PatientItem }>(
+      `/items/${itemId}/purchase`, 
+      {method: 'POST'}
+    );
+  }
+
   // Generic HTTP methods for testing/flexibility
   async get<T = any>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, {
@@ -219,6 +226,7 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
 }
 
 export const apiClient = new ApiClient();
