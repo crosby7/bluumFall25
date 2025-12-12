@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     @if($task->status === 'pending')
-                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
+                    <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, {{ $task->completion_id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete">
                         <span class="verifyText">Verify</span>
                     </button></div>
@@ -181,7 +181,7 @@
                             </div>
                         </div>
                         ${t.status === 'pending' ? `
-                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${t.id})">
+                        <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${t.completion_id})">
                             <img src="/assets/common/complete.svg" alt="Mark Complete">
                             <span class="verifyText">Verify</span>
                         </button></div>` : `<div class="emptyCol"></div>`}

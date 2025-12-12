@@ -33,14 +33,17 @@ class NurseDashboardController extends Controller
 
         // Fetch task subscriptions and map to unified structure
         $taskItems = TaskSubscription::with('task')->get()->map(function ($subscription) {
+            $latestCompletion = $subscription->completions()->latest()->first();
+
             return (object) [
                 'id' => $subscription->task->id,
+                'completion_id' => $latestCompletion?->id, // Add the TaskCompletion ID for verify action
                 'type' => 'task',
                 'name' => $subscription->task->name,
                 'description' => $subscription->task->description,
                 'scheduled_time' => $subscription->scheduled_time ? \Carbon\Carbon::parse($subscription->scheduled_time)->format('g:i a') : '',
                 'patient_id' => $subscription->patient_id,
-                'status' => $subscription->completions()->latest()->first()?->status->value,
+                'status' => $latestCompletion?->status->value,
                 'created_at' => $subscription->created_at,
             ];
         });

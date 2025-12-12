@@ -59,7 +59,7 @@
                     <p class="dueDate">{{ $task->scheduled_time }}</p>
                     @if ($task->type !== 'event' && $task->status === 'pending')
                     <div class="inboxVerifyContainer">
-                        <button class="inboxVerify" onclick="verifyTask(this, {{ $task->id }})">
+                        <button class="inboxVerify" onclick="verifyTask(this, {{ $task->completion_id }})">
                         <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                         <span class="verifyText">Verify</span>
                     </button>
@@ -122,7 +122,7 @@
                         <div class="inboxRowRight">
                             <p class="dueDate">${item.scheduled_time || ''}</p>
                             ${!isEvent && status === 'pending' ? `
-                            <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${item.id})">
+                            <div class='inboxVerifyContainer'><button class="inboxVerify" onclick="verifyTask(this, ${item.completion_id})">
                                 <img src="{{ asset('assets/common/complete.svg') }}" alt="Mark Complete" />
                                 <span class="verifyText">Verify</span>
                             </button></div>` : ''}

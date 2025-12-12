@@ -19,17 +19,19 @@ class PatientSeeder extends Seeder
     {
         // Create two patients
         $patient1 = Patient::factory()->create([
-            'username' => 'FlufflyThing',
+            'username' => 'FluffyCat',
             'avatar_id' => 1,
             'experience' => 150,
-            'gems' => 100,
+            'gems' => 1000,
+            'pairing_code' => '111111',
         ]);
 
         $patient2 = Patient::factory()->create([
             'username' => 'CuddlyBear',
             'avatar_id' => 2,
             'experience' => 200,
-            'gems' => 150,
+            'gems' => 1000,
+            'pairing_code' => '222222',
         ]);
 
         $patients = [$patient1, $patient2];

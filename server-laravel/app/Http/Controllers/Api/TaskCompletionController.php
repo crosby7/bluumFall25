@@ -71,25 +71,44 @@ class TaskCompletionController extends Controller
      */
     public function update(Request $request, TaskCompletion $taskCompletion): TaskCompletionResource
     {
-        \Log::info('Updating TaskCompletion ID: ' . $taskCompletion->id);
         $this->authorize('update', $taskCompletion);
 
-        try {
-            $validated = $request->validate([
-                'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
-                'scheduled_for' => ['sometimes', 'date'],
-                'completed_at' => ['sometimes', 'nullable', 'date'],
-                'status' => ['sometimes', Rule::enum(TaskStatus::class)],
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation failed: ' . $e->errors());
-            throw $e;
-        }
+        $validated = $request->validate([
+            'subscription_id' => ['sometimes', 'exists:task_subscriptions,id'],
+            'scheduled_for' => ['sometimes', 'date'],
+            'completed_at' => ['sometimes', 'nullable', 'date'],
+            'status' => ['sometimes', Rule::enum(TaskStatus::class)],
+        ]);
 
-        \Log::info('Validated Data: ', $validated);
+        // Check if status is being changed to 'completed' and wasn't already completed
+        $wasCompleted = $taskCompletion->status === TaskStatus::COMPLETED;
+        $isNowCompleted = isset($validated['status']) && $validated['status'] === 'completed';
 
         $taskCompletion->update($validated);
+        $taskCompletion->refresh();
         $taskCompletion->load(['subscription.task', 'subscription.patient']);
+
+        // Distribute rewards if task was just completed
+        if ($isNowCompleted && !$wasCompleted) {
+            $patient = $taskCompletion->subscription->patient;
+            $task = $taskCompletion->subscription->task;
+
+            if ($patient && $task) {
+                $xpValue = $task->xp_value ?? 0;
+                $gemValue = $task->gem_value ?? 0;
+
+                $patient->increment('experience', $xpValue);
+                $patient->increment('gems', $gemValue);
+
+                \Log::info('Rewards distributed to patient', [
+                    'patient_id' => $patient->id,
+                    'task_id' => $task->id,
+                    'task_completion_id' => $taskCompletion->id,
+                    'xp_awarded' => $xpValue,
+                    'gems_awarded' => $gemValue,
+                ]);
+            }
+        }
 
         return new TaskCompletionResource($taskCompletion);
     }

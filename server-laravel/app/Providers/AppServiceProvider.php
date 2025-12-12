@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\TaskCompletion;
-use App\Observers\TaskCompletionObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -43,9 +41,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\TaskCompletion::class, \App\Policies\TaskCompletionPolicy::class);
         Gate::policy(\App\Models\Task::class, \App\Policies\TaskPolicy::class);
         Gate::policy(\App\Models\Item::class, \App\Policies\ItemPolicy::class);
-
-        // Register model observers
-        TaskCompletion::observe(TaskCompletionObserver::class);
     }
 
     /**
