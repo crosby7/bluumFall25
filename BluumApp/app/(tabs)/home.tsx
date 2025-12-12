@@ -54,12 +54,14 @@ const HomeActionButton = ({ icon, onPress }: { icon: ImageSourcePropType, onPres
 
 const HomeScreen = () => {
   const { patient } = useAuth();
-  
-  const { species, equippedItems } = useCharacter(); 
-  
+
+  const { species, equippedItems } = useCharacter();
+
   const styles = createStyles(effectiveWidth, effectiveHeight);
 
   const [tasks, setTasks] = useState<any[]>([]);
+  const [userGems, setUserGems] = useState(0);
+  const [userXP, setUserXP] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -71,9 +73,20 @@ const HomeScreen = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await apiClient.getCurrentTasks();
-      const taskList = Array.isArray(response) ? response : (response.data || []);
+      const [tasksResponse, userResponse] = await Promise.all([
+        apiClient.getCurrentTasks(),
+        apiClient.getCurrentPatient()
+      ]);
+
+      const taskList = Array.isArray(tasksResponse) ? tasksResponse : (tasksResponse.data || []);
       setTasks(taskList);
+
+      if (userResponse && typeof userResponse.gems === 'number') {
+        setUserGems(userResponse.gems);
+      }
+      if (userResponse && typeof userResponse.experience === 'number') {
+        setUserXP(userResponse.experience);
+      }
     } catch (error) {
       console.error("Error fetching tasks", error);
     } finally {
@@ -192,14 +205,14 @@ const HomeScreen = () => {
                       source={require("../assets/icons/xpIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>{patient?.experience || 0} XP</Text>
+                    <Text style={styles.currencyText}>{userXP} XP</Text>
                   </View>
                   <View style={[styles.currencyCount, styles.gemCount]}>
                     <Image
                       source={require("../assets/icons/currencyIcon.png")}
                       style={styles.currencyIcon}
                     />
-                    <Text style={styles.currencyText}>{patient?.gems || 0}</Text>
+                    <Text style={styles.currencyText}>{userGems}</Text>
                   </View>
                 </View>
               </View>

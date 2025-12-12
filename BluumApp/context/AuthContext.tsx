@@ -10,6 +10,7 @@ interface AuthContextType {
     error: string | null;
     signIn: (pairingCode: string) => Promise<void>;
     signOut: () => Promise<void>;
+    refreshPatient: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -73,8 +74,17 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         }
     };
 
+    const refreshPatient = async () => {
+        try {
+            const patientData = await apiClient.getCurrentPatient();
+            setPatient(patientData);
+        } catch (err) {
+            console.error("Failed to refresh patient data:", err);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{isLoggedIn, isLoading, patient, error, signIn, signOut}}>
+        <AuthContext.Provider value={{isLoggedIn, isLoading, patient, error, signIn, signOut, refreshPatient}}>
             {children}
         </AuthContext.Provider>
     );

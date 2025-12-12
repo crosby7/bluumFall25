@@ -14,9 +14,11 @@ import { effectiveHeight, effectiveWidth } from "@/constants/dimensions";
 import { Colors } from "@/constants/theme";
 import { TaskCard } from "../../components/taskCard";
 import { apiClient } from '../../services/api';
+import { useAuth } from '@/context/AuthContext';
 
 export default function TasksScreen() {
   const styles = createStyles(effectiveWidth, effectiveHeight);
+  const { refreshPatient } = useAuth();
 
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,8 +67,9 @@ export default function TasksScreen() {
     try {
       await apiClient.updateTaskCompletion(taskId, {
         // 5. FIXED ERROR: Cast as 'any' because 'incomplete' isn't in the strict type definition yet
-        status: newStatus as any 
+        status: newStatus as any
       });
+      await refreshPatient();
     } catch (error) {
       setTasks(originalTasks);
       Alert.alert("Error", "Could not update task status");

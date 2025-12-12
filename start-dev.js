@@ -70,6 +70,22 @@ console.log(`API URL: ${API_URL}\n`);
 console.log('='.repeat(60));
 console.log();
 
+// Reseed patients table
+console.log('Reseeding patients table...\n');
+const { spawnSync } = require('child_process');
+const seedResult = spawnSync('php', ['artisan', 'db:seed', '--class=PatientSeeder'], {
+  cwd: path.join(__dirname, 'server-laravel'),
+  shell: true,
+  stdio: 'inherit'
+});
+
+if (seedResult.error) {
+  console.error('Error reseeding patients table:', seedResult.error);
+  process.exit(1);
+}
+
+console.log('Patients table reseeded successfully!\n');
+
 // Start Laravel server
 console.log('Starting Laravel server...\n');
 const laravel = spawn('php', ['artisan', 'serve', '--host=0.0.0.0', '--port=8000'], {

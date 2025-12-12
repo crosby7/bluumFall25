@@ -17,6 +17,11 @@ class PatientSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clear existing patient data and related records
+        TaskCompletion::truncate();
+        TaskSubscription::truncate();
+        Patient::truncate();
+
         // Create two patients
         $patient1 = Patient::factory()->create([
             'username' => 'FluffyCat',
