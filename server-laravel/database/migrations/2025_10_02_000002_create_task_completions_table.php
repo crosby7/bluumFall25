@@ -28,6 +28,7 @@ return new class extends Migration
             // Instance fields
             $table->timestamp('scheduled_for');
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('rewards_distributed_at')->nullable();
             $table->string('status')->default('pending');
 
             // Timestamps

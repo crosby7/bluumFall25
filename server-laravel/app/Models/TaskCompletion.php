@@ -16,12 +16,14 @@ class TaskCompletion extends Model
         'subscription_id',
         'scheduled_for',
         'completed_at',
+        'rewards_distributed_at',
         'status',
     ];
 
     protected $casts = [
         'scheduled_for' => 'datetime',
         'completed_at' => 'datetime',
+        'rewards_distributed_at' => 'datetime',
         'status' => TaskStatus::class,
     ];
 
