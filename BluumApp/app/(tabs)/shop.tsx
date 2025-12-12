@@ -143,7 +143,7 @@ const ShopScreen = () => {
   const handlePurchase = (item: ShopItemProps) => {
     // 1. Add item to owned list
     addOwnedItem(item.id); 
-
+    apiClient.purchaseItem(item.id);
     // 2. Determine the slot of the purchased item (e.g., 'Shirt')
     let purchasedSlot: keyof EquippedItems | null = null;
     const cat = item.cat?.toLowerCase() || '';
