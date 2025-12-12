@@ -16,7 +16,7 @@ class NurseSeeder extends Seeder
             'first_name' => 'Dev',
             'last_name' => 'Admin',
             'email' => 'admin@example.com',
-            'password' => 'password', // Will be hashed by model
+            'password' => 'Bluumfall2025', // Will be hashed by model
             'email_verified_at' => now(),
         ]);
     }
