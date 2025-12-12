@@ -308,19 +308,17 @@ async function showTaskModal(patientId = null) {
             taskSelect.appendChild(option);
         });
 
-        // Fetch patients from the page (they're already loaded)
-        const patientCards = document.querySelectorAll("[data-patient-id]");
+        // Fetch patients from window.baseContext
+        const patients = window.baseContext?.patients || [];
         const assigneeSelect = document.getElementById("taskAssignee");
         assigneeSelect.innerHTML =
             '<option value="" disabled selected>No assignee</option>';
 
-        patientCards.forEach((card) => {
-            const patientIdFromCard = card.dataset.patientId;
-            const patientName =
-                card.querySelector(".patientName")?.textContent ||
-                `Patient ${patientIdFromCard}`;
+        patients.forEach((patient) => {
+            const patientId = patient.id;
+            const patientName = patient.username || `Patient ${patientId}`;
             const option = document.createElement("option");
-            option.value = patientIdFromCard;
+            option.value = patientId;
             option.textContent = patientName;
             assigneeSelect.appendChild(option);
         });

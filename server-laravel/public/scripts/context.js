@@ -1,4 +1,5 @@
 // This script will fetch baseContext from NurseDashboardController. It can be used across multiple pages.
+window.baseContext = null;
 
 async function fetchBaseContext() {
     try {
@@ -16,6 +17,9 @@ async function fetchBaseContext() {
         }
 
         const data = await response.json();
+        window.baseContext = data;
+        console.log("BaseContext fetched:", data);
+        console.log("window object: ", window.baseContext);
         return data;
     } catch (error) {
         console.error("Error fetching BaseContext:", error);
