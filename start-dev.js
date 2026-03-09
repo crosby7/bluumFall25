@@ -70,25 +70,9 @@ console.log(`API URL: ${API_URL}\n`);
 console.log('='.repeat(60));
 console.log();
 
-// Reseed patients table
-console.log('Reseeding patients table...\n');
-const { spawnSync } = require('child_process');
-const seedResult = spawnSync('php', ['artisan', 'db:seed', '--class=PatientSeeder'], {
-  cwd: path.join(__dirname, 'server-laravel'),
-  shell: true,
-  stdio: 'inherit'
-});
-
-if (seedResult.error) {
-  console.error('Error reseeding patients table:', seedResult.error);
-  process.exit(1);
-}
-
-console.log('Patients table reseeded successfully!\n');
-
-// Start Laravel server
-console.log('Starting Laravel server...\n');
-const laravel = spawn('php', ['artisan', 'serve', '--host=0.0.0.0', '--port=8000'], {
+// Start Laravel via Docker
+console.log('Starting Laravel via Docker...\n');
+const laravel = spawn('docker', ['compose', 'up', '-d', 'app'], {
   cwd: path.join(__dirname, 'server-laravel'),
   shell: true,
   stdio: 'inherit'
@@ -103,15 +87,29 @@ laravel.on('error', (err) => {
 async function startExpo() {
   console.log('\nWaiting for Laravel server to be ready...');
 
-  // Poll for server health
+  // Poll for server health (use localhost since Docker maps port)
   let attempts = 0;
-  const maxAttempts = 10;
-  const serverUrl = `http://${localIP}:8000`;
+  const maxAttempts = 60;
+  const serverUrl = `http://localhost:8000`;
 
   while (attempts < maxAttempts) {
     const result = await checkServerHealth(serverUrl);
 
     if (result.success) {
+      // Reseed patients table now that the container is confirmed running
+      console.log('\nReseeding patients table...');
+      const { spawnSync } = require('child_process');
+      const seedResult = spawnSync('docker', ['compose', 'exec', '-T', 'app', 'php', 'artisan', 'db:seed', '--class=PatientSeeder'], {
+        cwd: path.join(__dirname, 'server-laravel'),
+        shell: true,
+        stdio: 'inherit'
+      });
+      if (seedResult.error) {
+        console.error('Error reseeding patients table:', seedResult.error);
+        process.exit(1);
+      }
+      console.log('Patients table reseeded successfully!');
+
       console.log(`\n${'='.repeat(60)}`);
       console.log('✓ Laravel server is ready!');
       console.log(`Server accessible at: ${serverUrl}`);
@@ -139,7 +137,7 @@ async function startExpo() {
     attempts++;
     if (attempts < maxAttempts) {
       process.stdout.write('.');
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
     } else {
       console.error('\n\nWARNING: Could not verify Laravel server health!');
       console.error(`Error: ${result.error || 'Unknown'}`);
@@ -176,7 +174,12 @@ async function startExpo() {
   process.on('SIGINT', () => {
     console.log('\n\nShutting down...');
     expo.kill();
-    laravel.kill();
+    // Stop Docker containers
+    spawn('docker', ['compose', 'down'], {
+      cwd: path.join(__dirname, 'server-laravel'),
+      shell: true,
+      stdio: 'inherit'
+    });
     process.exit(0);
   });
 }
