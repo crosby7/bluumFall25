@@ -34,6 +34,49 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bluum-laravel-dev
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:80"
+    volumes:
+      # Mount code for hot-reload
+      - .:/var/www/html
+      # Persist storage
+      - laravel_storage:/var/www/html/storage/app
+      - laravel_logs:/var/www/html/storage/logs
+      # Exclude vendor - use container's version
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_URL=http://localhost:8000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - QUEUE_CONNECTION=database
+      - CACHE_STORE=database
+      - SESSION_DRIVER=database
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
 volumes:
   pg_data:
   pgadmin_data:
+  laravel_storage:
+  laravel_logs:
